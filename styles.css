@@ -1,0 +1,115 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin-top: 2rem;
+  display: grid;
+  row-gap: 4rem;
+  place-items: center;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  /* grid-gap: 3cm; */
+  /* border: #000 1px solid; */
+  font-family: "Noto Sans Mono", monospace;
+}
+
+.grid > div {
+  /* border: 1px solid rgba(36, 34, 34, 0.4); */
+  /* border-radius: 10px; */
+  padding: 10px;
+}
+
+#prevMonth {
+  padding: 0;
+  border: none;
+  background: none;
+  /* reset the default button properties */
+
+  font-family: "Noto Sans Mono", monospace;
+  background-color: rgb(42, 41, 41);
+  color: whitesmoke;
+  border-radius: 10px;
+  justify-self: end;
+  margin-right: 1rem;
+  width: 10rem;
+  height: 3rem;
+}
+
+#nextMonth {
+  padding: 0;
+  border: none;
+  background: none;
+  /* reset the default button properties */
+
+  font-family: "Noto Sans Mono", monospace;
+  background-color: rgb(42, 41, 41);
+  color: whitesmoke;
+  border-radius: 10px;
+  justify-self: start;
+  margin-left: 1rem;
+  width: 10rem;
+  height: 3rem;
+}
+
+#monthAndYear {
+  font-family: "Noto Sans Mono", monospace;
+}
+
+#monthAndYear::after {
+  content: "";
+  display: block;
+  width: 100%;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.373);
+  margin-top: 3px;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-gap: 10px;
+  font-family: "Noto Sans Mono", monospace;
+  margin-bottom: 3rem;
+}
+
+.days p::after {
+  content: "";
+  display: block;
+  width: 40%;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.373);
+  margin-top: 5px;
+}
+
+.calendarAndDays {
+  grid-column: span 3;
+  width: 85%;
+  background-color: rgba(216, 215, 223, 0.4);
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  /* background-color: rgb(238, 238, 228); */
+}
+
+/* Highlighting current day */
+
+.cell {
+  position: relative;
+}
+
+.abs {
+  position: absolute;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 10px;
+  background-color: yellow;
+  color: black;
+}
