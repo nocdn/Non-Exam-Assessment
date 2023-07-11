@@ -70,12 +70,6 @@ function updateCalendar(month, year) {
   // Update month and year header
   let monthAndYear = document.getElementById("monthAndYear");
   monthAndYear.innerText = `${month + 1}/${year}`;
-
-  // make the current day highlight breathe on load then return to normal size
-  const currentDaySpanElement = document.querySelector(
-    ".current-day-span::after"
-  );
-  console.log(currentDaySpanElement);
 }
 
 // Initialize calendar with current month and year
