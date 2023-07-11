@@ -57,18 +57,25 @@ function updateCalendar(month, year) {
   }
 
   // Highlight current day
+  // Highlight current day
   if (month === today.getMonth() && year === today.getFullYear()) {
     let currentDayCell = document.querySelector(`.day-${todayDay}`);
+    currentDayCell.classList.add("current-day");
     if (currentDayCell) {
       let dateSpan = currentDayCell.querySelector(".date"); // Select the date span within the cell
-      dateSpan.style.backgroundColor = "yellow"; // Change the background color of the text
-      dateSpan.style.color = "black"; // Change the color of the text
+      dateSpan.classList.add("current-day-span"); // Add the class to the span
     }
   }
 
   // Update month and year header
   let monthAndYear = document.getElementById("monthAndYear");
   monthAndYear.innerText = `${month + 1}/${year}`;
+
+  // make the current day highlight breathe on load then return to normal size
+  const currentDaySpanElement = document.querySelector(
+    ".current-day-span::after"
+  );
+  console.log(currentDaySpanElement);
 }
 
 // Initialize calendar with current month and year

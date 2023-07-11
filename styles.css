@@ -99,17 +99,38 @@ body {
 
 /* Highlighting current day */
 
-.cell {
+/* select the current day span element - an element which is inside the current day cell */
+.current-day-span {
   position: relative;
 }
 
-.abs {
+/* add a pseudo element to the current day span element */
+@keyframes pulse {
+  0% {
+    width: 45px;
+    height: 45px;
+  }
+  50% {
+    width: 55px;
+    height: 55px;
+  }
+  100% {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+.current-day-span::after {
+  content: "";
+  display: block;
   position: absolute;
-  transform: translateY(-50%);
-  left: 0;
-  right: 0;
-  text-align: center;
-  padding: 10px;
-  background-color: yellow;
-  color: black;
+  top: 50%;
+  left: 50%;
+  width: 45px;
+  height: 45px;
+  background-color: lightblue;
+  border-radius: 50%;
+  z-index: -1;
+  transform: translate(-50%, -50%);
+  animation: pulse 1s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
