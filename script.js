@@ -45,7 +45,6 @@ function updateCalendar(month, year) {
       let dateSpan = document.createElement("span");
       dateSpan.innerText = date;
       dateSpan.classList.add("date");
-      // dateSpan.classList.add("abs"); // Give the span a class that we can select in CSS
 
       cell.appendChild(dateSpan); // Add the span to the cell
       cell.style.height = "100px";
@@ -56,7 +55,6 @@ function updateCalendar(month, year) {
     calendar.appendChild(cell);
   }
 
-  // Highlight current day
   // Highlight current day
   if (month === today.getMonth() && year === today.getFullYear()) {
     let currentDayCell = document.querySelector(`.day-${todayDay}`);
