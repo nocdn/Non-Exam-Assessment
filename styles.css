@@ -141,3 +141,11 @@ body {
   transform: translate(-50%, -50%);
   animation: pulse 1s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
+
+.cell .event {
+  background-color: rgb(199, 201, 203);
+  margin-top: 5px;
+  border-radius: 5px;
+  padding: 5px 8px 5px 5px;
+  font-size: 14px;
+}

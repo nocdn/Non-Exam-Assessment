@@ -3,6 +3,42 @@ let currentMonth = today.getMonth();
 let currentYear = today.getFullYear();
 let todayDay = today.getDate();
 
+// list of events, if nothing is happening, then empty string, if something is happening, then string with event name, enough strings for all the days in the month
+
+const calendarEventsList = [
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "Job interview",
+  "",
+  "",
+  "",
+  "Meeting with friends",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "Doctor's appointment",
+  "",
+  "",
+];
+
 document.getElementById("prevMonth").addEventListener("click", () => {
   if (currentMonth === 0) {
     currentMonth = 11;
@@ -50,6 +86,12 @@ function updateCalendar(month, year) {
       cell.style.height = "100px";
       cell.classList.add("cell");
       cell.classList.add(`day-${date}`);
+      if (calendarEventsList[date - 1] !== "") {
+        let eventSpan = document.createElement("p");
+        eventSpan.innerText = calendarEventsList[date - 1];
+        eventSpan.classList.add("event");
+        cell.appendChild(eventSpan);
+      }
     }
 
     calendar.appendChild(cell);
