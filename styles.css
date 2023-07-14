@@ -80,15 +80,22 @@ body {
   margin-bottom: 3rem;
 }
 
-.days p::after {
+.days .day p::after {
   content: "";
   display: block;
-  width: 40%;
+  width: 120%;
   border-bottom: 2px solid rgba(0, 0, 0, 0.373);
   margin-top: 5px;
 }
 
+/* so that the underline under each day can just slightly extend past each day, without having to hardcode the width of the underline */
+.days .day {
+  display: block;
+  width: fit-content;
+}
+
 .calendarAndDays {
+  max-width: 64rem;
   grid-column: span 3;
   width: 85%;
   background-color: rgba(216, 215, 223, 0.4);
