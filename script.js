@@ -3,9 +3,7 @@ let currentMonth = today.getMonth();
 let currentYear = today.getFullYear();
 let todayDay = today.getDate();
 
-// list of events, if nothing is happening, then empty string, if something is happening, then string with event name, enough strings for all the days in the month
-
-const calendarEventsList = [
+let calendarEventsList = [
   "",
   "",
   "",
@@ -38,6 +36,17 @@ const calendarEventsList = [
   "",
   "",
 ];
+
+const inputName = document.getElementById("event-name");
+const inputDate = document.getElementById("event-date");
+const inputButton = document.getElementById("add-event");
+
+inputButton.addEventListener("click", () => {
+  let date = inputDate.value - 1;
+  let name = inputName.value;
+  calendarEventsList[date] = name;
+  updateCalendar(currentMonth, currentYear);
+});
 
 document.getElementById("prevMonth").addEventListener("click", () => {
   if (currentMonth === 0) {
@@ -86,6 +95,7 @@ function updateCalendar(month, year) {
       cell.style.height = "100px";
       cell.classList.add("cell");
       cell.classList.add(`day-${date}`);
+      // Adding the event to the box
       if (calendarEventsList[date - 1] !== "") {
         let eventSpan = document.createElement("p");
         eventSpan.innerText = calendarEventsList[date - 1];
