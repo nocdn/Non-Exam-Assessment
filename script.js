@@ -122,5 +122,57 @@ function updateCalendar(month, year) {
   monthAndYear.innerText = `${month + 1}/${year}`;
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  // Create floating element with a delete button
+  let floatingElement = document.createElement("div");
+  let deleteButton = document.createElement("button");
+  deleteButton.innerText = "Yes";
+  floatingElement.innerHTML = "Delete Event?";
+  floatingElement.appendChild(deleteButton); // Add the delete button to the floating element
+  floatingElement.classList.add("floating"); // for CSS styling
+  document.body.appendChild(floatingElement);
+
+  let floating = false;
+  let clickedEvent;
+
+  // Attach the onclick event
+  document.querySelectorAll(".event").forEach((item) => {
+    item.addEventListener("click", (e) => {
+      e.stopPropagation(); // prevent event from bubbling up to the document
+      item.classList.toggle("event-clicked");
+      floatingElement.style.left = `${e.clientX}px`;
+      floatingElement.style.top = `${e.clientY}px`;
+      floatingElement.style.display = "block";
+      floating = true;
+
+      clickedEvent = item; // Remember this event
+    });
+  });
+
+  deleteButton.addEventListener("click", (e) => {
+    e.stopPropagation(); // prevent event from bubbling up to the document
+    if (clickedEvent) {
+      // Remove the event from the calendarEventsList array
+      let eventDay = clickedEvent.parentElement.classList[1].split("-")[1]; // Get the day of the event
+      calendarEventsList[eventDay - 1] = ""; // Remove the event from the list
+
+      // Remove the event from the DOM
+      clickedEvent.remove();
+
+      // Hide the floating element
+      floatingElement.style.display = "none";
+      floating = false;
+    }
+  });
+
+  // Hide floating element when anything other than an .event element is clicked
+  document.addEventListener("click", (e) => {
+    if (floating && !e.target.classList.contains("event")) {
+      floatingElement.style.display = "none";
+      floating = false;
+    }
+  });
+});
+
 // Initialize calendar with current month and year
 updateCalendar(currentMonth, currentYear);
