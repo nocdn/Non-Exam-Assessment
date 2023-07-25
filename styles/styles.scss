@@ -142,13 +142,15 @@ body {
   animation: pulse 1s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-.cell .event {
-  background-color: rgb(199, 201, 203);
-  margin-top: 5px;
-  border-radius: 5px;
-  padding: 5px 8px 5px 5px;
-  font-size: 14px;
-  transition: opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+.cell {
+  .event {
+    background-color: rgb(199, 201, 203);
+    margin-top: 5px;
+    border-radius: 5px;
+    padding: 5px 8px 5px 5px;
+    font-size: 14px;
+    transition: opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
 }
 
 .inputting-event {
@@ -170,13 +172,13 @@ body {
     background-color: rgb(68, 67, 67);
     color: whitesmoke;
     transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-  }
 
-  button:hover {
-    background-color: rgb(68, 67, 67);
-    color: whitesmoke;
+    &:hover {
+      background-color: rgb(68, 67, 67);
+      color: whitesmoke;
 
-    letter-spacing: 2px;
+      letter-spacing: 2px;
+    }
   }
 }
 
