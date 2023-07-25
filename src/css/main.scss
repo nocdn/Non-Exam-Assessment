@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap");
+@use "abstracts/fonts";
 
 * {
   margin: 0;
@@ -19,7 +19,7 @@ body {
   grid-template-columns: repeat(7, 1fr);
   /* grid-gap: 3cm; */
   /* border: #000 1px solid; */
-  font-family: "Noto Sans Mono", monospace;
+  font-family: fonts.$mono-font;
 }
 
 .grid > div {
@@ -34,7 +34,7 @@ body {
   background: none;
   /* reset the default button properties */
 
-  font-family: "Noto Sans Mono", monospace;
+  font-family: fonts.$mono-font;
   background-color: rgb(42, 41, 41);
   color: whitesmoke;
   /* border-radius: 10px; */
@@ -50,7 +50,7 @@ body {
   background: none;
   /* reset the default button properties */
 
-  font-family: "Noto Sans Mono", monospace;
+  font-family: fonts.$mono-font;
   background-color: rgb(42, 41, 41);
   color: whitesmoke;
   /* border-radius: 10px; */
@@ -61,7 +61,7 @@ body {
 }
 
 #monthAndYear {
-  font-family: "Noto Sans Mono", monospace;
+  font-family: fonts.$mono-font;
 }
 
 #monthAndYear::after {
@@ -76,7 +76,7 @@ body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-gap: 10px;
-  font-family: "Noto Sans Mono", monospace;
+  font-family: fonts.$mono-font;
   margin-bottom: 3rem;
 
   .day {
@@ -196,7 +196,7 @@ body {
   padding: 12px;
   background-color: rgb(74, 74, 74);
   color: white;
-  font-family: "Noto Sans Mono", monospace;
+  font-family: fonts.$mono-font;
 
   button {
     display: block;
