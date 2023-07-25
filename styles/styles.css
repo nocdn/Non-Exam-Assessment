@@ -82,6 +82,7 @@ body {
   width: fit-content;
 }
 .days .day p::after {
+  /* so that the underline under each day can just slightly extend past each day, without having to hardcode the width of the underline */
   content: "";
   display: block;
   width: 120%;
@@ -89,7 +90,6 @@ body {
   margin-top: 5px;
 }
 
-/* so that the underline under each day can just slightly extend past each day, without having to hardcode the width of the underline */
 .calendarAndDays {
   max-width: 64rem;
   grid-column: span 3;
@@ -195,4 +195,4 @@ body {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}/*# sourceMappingURL=styles.css.map */
+} /*# sourceMappingURL=styles.css.map */

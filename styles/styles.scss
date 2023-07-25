@@ -84,6 +84,7 @@ body {
     width: fit-content;
 
     p::after {
+      /* so that the underline under each day can just slightly extend past each day, without having to hardcode the width of the underline */
       content: "";
       display: block;
       width: 120%;
@@ -91,13 +92,6 @@ body {
       margin-top: 5px;
     }
   }
-}
-
-.days .day p::after {
-}
-
-/* so that the underline under each day can just slightly extend past each day, without having to hardcode the width of the underline */
-.days .day {
 }
 
 .calendarAndDays {
@@ -186,15 +180,6 @@ body {
   }
 }
 
-.inputting-event * {
-}
-
-.inputting-event button {
-}
-
-.inputting-event button:hover {
-}
-
 .event-clicked {
   outline: 2px solid black;
 }
@@ -221,7 +206,4 @@ body {
     border-radius: 5px;
     cursor: pointer;
   }
-}
-
-.floating button {
 }
