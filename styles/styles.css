@@ -1,0 +1,198 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin-top: 2rem;
+  display: grid;
+  row-gap: 4rem;
+  place-items: center;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  /* grid-gap: 3cm; */
+  /* border: #000 1px solid; */
+  font-family: "Noto Sans Mono", monospace;
+}
+
+.grid > div {
+  /* border: 1px solid rgba(36, 34, 34, 0.4); */
+  /* border-radius: 10px; */
+  padding: 10px;
+}
+
+#prevMonth {
+  padding: 0;
+  border: none;
+  background: none;
+  /* reset the default button properties */
+  font-family: "Noto Sans Mono", monospace;
+  background-color: rgb(42, 41, 41);
+  color: whitesmoke;
+  /* border-radius: 10px; */
+  justify-self: end;
+  margin-right: 1rem;
+  width: 10rem;
+  height: 3rem;
+}
+
+#nextMonth {
+  padding: 0;
+  border: none;
+  background: none;
+  /* reset the default button properties */
+  font-family: "Noto Sans Mono", monospace;
+  background-color: rgb(42, 41, 41);
+  color: whitesmoke;
+  /* border-radius: 10px; */
+  justify-self: start;
+  margin-left: 1rem;
+  width: 10rem;
+  height: 3rem;
+}
+
+#monthAndYear {
+  font-family: "Noto Sans Mono", monospace;
+}
+
+#monthAndYear::after {
+  content: "";
+  display: block;
+  width: 100%;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.373);
+  margin-top: 3px;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-gap: 10px;
+  font-family: "Noto Sans Mono", monospace;
+  margin-bottom: 3rem;
+}
+.days .day {
+  display: block;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.days .day p::after {
+  content: "";
+  display: block;
+  width: 120%;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.373);
+  margin-top: 5px;
+}
+
+/* so that the underline under each day can just slightly extend past each day, without having to hardcode the width of the underline */
+.calendarAndDays {
+  max-width: 64rem;
+  grid-column: span 3;
+  width: 85%;
+  background-color: rgba(216, 215, 223, 0.4);
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  /* background-color: rgb(238, 238, 228); */
+}
+
+/* Highlighting current day */
+/* select the current day span element - an element which is inside the current day cell */
+.current-day-span {
+  position: relative;
+}
+
+/* add a pseudo element to the current day span element */
+@keyframes pulse {
+  0% {
+    width: 45px;
+    height: 45px;
+  }
+  50% {
+    width: 55px;
+    height: 55px;
+  }
+  100% {
+    width: 45px;
+    height: 45px;
+  }
+}
+.current-day-span::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 45px;
+  height: 45px;
+  background-color: lightblue;
+  border-radius: 50%;
+  z-index: -1;
+  transform: translate(-50%, -50%);
+  animation: pulse 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.cell .event {
+  background-color: rgb(199, 201, 203);
+  margin-top: 5px;
+  border-radius: 5px;
+  padding: 5px 8px 5px 5px;
+  font-size: 14px;
+  transition: opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.inputting-event {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  grid-column: span 3;
+  margin-bottom: 4rem;
+}
+.inputting-event * {
+  border-radius: 0;
+  padding: 5px;
+}
+.inputting-event button {
+  background-color: rgb(68, 67, 67);
+  color: whitesmoke;
+  transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.inputting-event button:hover {
+  background-color: rgb(68, 67, 67);
+  color: whitesmoke;
+  letter-spacing: 2px;
+}
+
+.event-clicked {
+  outline: 2px solid black;
+}
+
+.event:hover {
+  cursor: pointer;
+}
+
+.floating {
+  position: absolute;
+  /* display: none; */
+  padding: 12px;
+  background-color: rgb(74, 74, 74);
+  color: white;
+  font-family: "Noto Sans Mono", monospace;
+}
+.floating button {
+  display: block;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #ff0000;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}/*# sourceMappingURL=styles.css.map */

@@ -78,20 +78,26 @@ body {
   grid-gap: 10px;
   font-family: "Noto Sans Mono", monospace;
   margin-bottom: 3rem;
+
+  .day {
+    display: block;
+    width: fit-content;
+
+    p::after {
+      content: "";
+      display: block;
+      width: 120%;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.373);
+      margin-top: 5px;
+    }
+  }
 }
 
 .days .day p::after {
-  content: "";
-  display: block;
-  width: 120%;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.373);
-  margin-top: 5px;
 }
 
 /* so that the underline under each day can just slightly extend past each day, without having to hardcode the width of the underline */
 .days .day {
-  display: block;
-  width: fit-content;
 }
 
 .calendarAndDays {
@@ -160,24 +166,33 @@ body {
   gap: 5px;
   grid-column: span 3;
   margin-bottom: 4rem;
+
+  * {
+    border-radius: 0;
+    padding: 5px;
+  }
+
+  button {
+    background-color: rgb(68, 67, 67);
+    color: whitesmoke;
+    transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  button:hover {
+    background-color: rgb(68, 67, 67);
+    color: whitesmoke;
+
+    letter-spacing: 2px;
+  }
 }
 
 .inputting-event * {
-  border-radius: 0;
-  padding: 5px;
 }
 
 .inputting-event button {
-  background-color: rgb(68, 67, 67);
-  color: whitesmoke;
-  transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .inputting-event button:hover {
-  background-color: rgb(68, 67, 67);
-  color: whitesmoke;
-
-  letter-spacing: 2px;
 }
 
 .event-clicked {
@@ -195,15 +210,18 @@ body {
   background-color: rgb(74, 74, 74);
   color: white;
   font-family: "Noto Sans Mono", monospace;
+
+  button {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #ff0000;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 }
 
 .floating button {
-  display: block;
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #ff0000;
-  color: #ffffff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
