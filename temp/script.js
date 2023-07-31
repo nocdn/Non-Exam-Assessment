@@ -35,5 +35,3 @@ app.get("/readFile", function (req, res) {
     textData: dataFromFile,
   });
 });
-
-// ... (rest of your code)
