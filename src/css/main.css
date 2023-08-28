@@ -169,6 +169,9 @@ body {
   color: whitesmoke;
   letter-spacing: 2px;
 }
+.inputting-event .natural-language {
+  height: auto;
+}
 
 .event-clicked {
   outline: 2px solid black;
