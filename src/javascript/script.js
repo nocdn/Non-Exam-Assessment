@@ -186,34 +186,3 @@ inputButton.addEventListener("click", () => {
   console.log(naturalLanguageInputField.value);
   naturalLanguageInput = naturalLanguageInputField.value;
 });
-
-// const { Configuration, OpenAIApi } = require("openai");
-
-// const configuration = new Configuration({
-//   apiKey: process.env.OPENAI_API_KEY,
-// });
-// const openai = new OpenAIApi(configuration);
-
-// async function runCompletion() {
-//   const completion = await openai.createCompletion({
-//     model: "gpt-3.5-turbo",
-//     prompt: "How are you today?",
-//     max_tokens: 4000,
-//   });
-//   console.log(completion.data.choices[0].text);
-// }
-// runCompletion();
-
-fetch("/api/query", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    prompt: 'Translate the following English text to French: "{}"',
-  }),
-})
-  .then((response) => response.json())
-  .then((data) => {
-    console.log(data); // Process the API response
-  });
