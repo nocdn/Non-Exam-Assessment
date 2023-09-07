@@ -4,3 +4,4 @@ node_modules/
 public/
 __pycache__/
 venv/
+test.py
