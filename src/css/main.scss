@@ -196,11 +196,18 @@ body {
 
 .floating {
   position: absolute;
-  /* display: none; */
   padding: 12px;
   background-color: rgb(74, 74, 74);
   color: white;
-  font-family: fonts.$mono-font;
+  font-family: $mono-font; // Make sure fonts.$mono-font is defined
+  filter: blur(50px); // Start blurred
+  opacity: 0; // Start with opacity 0
+  transition: filter 0.5s ease-in-out, opacity 0.5s ease-in-out;
+
+  &.show {
+    filter: blur(0);
+    opacity: 1; // Fade in to opacity 1
+  }
 
   button {
     display: block;

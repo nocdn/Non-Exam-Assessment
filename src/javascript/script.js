@@ -123,55 +123,78 @@ function updateCalendar(month, year) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Create floating element with a delete button
-  let floatingElement = document.createElement("div");
-  let deleteButton = document.createElement("button");
-  deleteButton.innerText = "Yes";
-  floatingElement.innerHTML = "Delete Event?";
-  floatingElement.appendChild(deleteButton); // Add the delete button to the floating element
-  floatingElement.classList.add("floating"); // for CSS styling
-  document.body.appendChild(floatingElement);
+  const createFloatingElement = () => {
+    const element = document.createElement("div");
+    element.classList.add("floating");
+    element.innerHTML = "Delete Event?";
+    const button = document.createElement("button");
+    button.innerText = "Yes";
+    element.appendChild(button);
+    return { element, button };
+  };
 
-  let floating = false;
-  let clickedEvent;
+  const attachEventListeners = (floatingElement, deleteButton) => {
+    let isFloatingVisible = false;
+    let clickedEvent;
 
-  // Attach the onclick event
-  document.querySelectorAll(".event").forEach((item) => {
-    item.addEventListener("click", (e) => {
-      e.stopPropagation(); // prevent event from bubbling up to the document
-      item.classList.toggle("event-clicked");
+    // Helper function to show the floating element
+    const showFloatingElement = (e, eventElement) => {
+      clickedEvent = eventElement;
       floatingElement.style.left = `${e.clientX}px`;
       floatingElement.style.top = `${e.clientY}px`;
+      floatingElement.style.filter = "blur(20px)";
+      floatingElement.style.opacity = "0";
       floatingElement.style.display = "block";
-      floating = true;
 
-      clickedEvent = item; // Remember this event
+      setTimeout(() => {
+        floatingElement.classList.add("show");
+        floatingElement.style.filter = "blur(0px)";
+        floatingElement.style.opacity = "1";
+      }, 0);
+
+      isFloatingVisible = true;
+    };
+
+    // Helper function to hide the floating element
+    const hideFloatingElement = () => {
+      floatingElement.classList.remove("show");
+      floatingElement.style.opacity = "0";
+
+      setTimeout(() => {
+        floatingElement.style.display = "none";
+        floatingElement.style.filter = "blur(20px)";
+      }, 500);
+
+      isFloatingVisible = false;
+    };
+
+    document.querySelectorAll(".event").forEach((eventElement) => {
+      eventElement.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showFloatingElement(e, eventElement);
+      });
     });
-  });
 
-  deleteButton.addEventListener("click", (e) => {
-    e.stopPropagation(); // prevent event from bubbling up to the document
-    if (clickedEvent) {
-      // Remove the event from the calendarEventsList array
-      let eventDay = clickedEvent.parentElement.classList[1].split("-")[1]; // Get the day of the event
-      calendarEventsList[eventDay - 1] = ""; // Remove the event from the list
+    deleteButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (clickedEvent) {
+        clickedEvent.remove();
+        hideFloatingElement();
+      }
+    });
 
-      // Remove the event from the DOM
-      clickedEvent.remove();
+    document.addEventListener("click", () => {
+      if (isFloatingVisible) {
+        hideFloatingElement();
+      }
+    });
+  };
 
-      // Hide the floating element
-      floatingElement.style.display = "none";
-      floating = false;
-    }
-  });
+  const { element: floatingElement, button: deleteButton } =
+    createFloatingElement();
+  document.body.appendChild(floatingElement);
 
-  // Hide floating element when anything other than an .event element is clicked
-  document.addEventListener("click", (e) => {
-    if (floating && !e.target.classList.contains("event")) {
-      floatingElement.style.display = "none";
-      floating = false;
-    }
-  });
+  attachEventListeners(floatingElement, deleteButton);
 });
 
 // Initialize calendar with current month and year

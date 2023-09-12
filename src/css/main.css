@@ -183,11 +183,12 @@ body {
 
 .floating {
   position: absolute;
-  /* display: none; */
   padding: 12px;
   background-color: rgb(74, 74, 74);
   color: white;
   font-family: "Noto Sans Mono", monospace;
+  filter: blur(12px);
+  transition: filter 0.5s ease-in-out;
 }
 .floating button {
   display: block;
