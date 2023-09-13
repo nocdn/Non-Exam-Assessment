@@ -209,3 +209,25 @@ inputButton.addEventListener("click", () => {
   console.log(naturalLanguageInputField.value);
   naturalLanguageInput = naturalLanguageInputField.value;
 });
+
+// picking a random colour for the background of the event
+const randomColor = () => {
+  // for colors, [first color is the background, second color is the text]
+  const colors = [
+    ["#E1F5E7", "#475C4C"],
+    ["#E5D7F9", "#56446F"],
+    ["#DCEAFC", "#4A596C"],
+  ];
+  const randomIndex = Math.floor(Math.random() * colors.length);
+  return colors[randomIndex];
+};
+
+console.log(randomColor());
+
+// iterate over every event and add a background color and a text color
+const events = document.querySelectorAll(".event");
+events.forEach((event) => {
+  let [eventBackgroundColor, eventTextColor] = randomColor();
+  event.style.backgroundColor = eventBackgroundColor;
+  event.style.color = eventTextColor;
+});

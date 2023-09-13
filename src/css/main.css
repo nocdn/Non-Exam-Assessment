@@ -1,4 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap");
+
+@font-face {
+  font-family: "Basier Circle";
+  src: url("../assets/fonts/basiercircle-regular-webfont.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Basier Square";
+  src: url("../assets/fonts/basiersquare-regular-webfont.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -32,7 +47,8 @@ body {
   border: none;
   background: none;
   /* reset the default button properties */
-  font-family: "Noto Sans Mono", monospace;
+  /* font-family: "Noto Sans Mono", monospace; */
+  font-family: "Basier Square", sans-serif;
   background-color: rgb(42, 41, 41);
   color: whitesmoke;
   /* border-radius: 10px; */
@@ -47,7 +63,8 @@ body {
   border: none;
   background: none;
   /* reset the default button properties */
-  font-family: "Noto Sans Mono", monospace;
+  /* font-family: "Noto Sans Mono", monospace; */
+  font-family: "Basier Square", sans-serif;
   background-color: rgb(42, 41, 41);
   color: whitesmoke;
   /* border-radius: 10px; */
@@ -186,7 +203,8 @@ body {
   padding: 12px;
   background-color: rgb(74, 74, 74);
   color: white;
-  font-family: "Noto Sans Mono", monospace;
+  font-family: "Basier Square", sans-serif;
+
   filter: blur(12px);
   transition: filter 0.5s ease-in-out;
 }
@@ -199,4 +217,4 @@ body {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}/*# sourceMappingURL=main.css.map */
+} /*# sourceMappingURL=main.css.map */

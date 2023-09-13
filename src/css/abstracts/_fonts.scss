@@ -1,3 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap");
 
+@font-face {
+  font-family: "Basier Circle";
+  src: url("../../assets/fonts/basiercircle-regular-webfont.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Basier Square";
+  src: url("../../assets/fonts/basiersquare-regular-webfont.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
 $mono-font: "Noto Sans Mono", monospace;
+
+$basier-circle: "Basier Circle", sans-serif;
+$basier-square: "Basier Square", sans-serif;
