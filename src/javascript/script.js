@@ -213,11 +213,23 @@ inputButton.addEventListener("click", () => {
 // picking a random colour for the background of the event
 const randomColor = () => {
   // for colors, [first color is the background, second color is the text]
+  // const colors = [
+  //   ["#E1F5E7", "#475C4C"],
+  //   ["#E5D7F9", "#56446F"],
+  //   ["#DCEAFC", "#4A596C"],
+  // ];
+
   const colors = [
     ["#E1F5E7", "#475C4C"],
     ["#E5D7F9", "#56446F"],
     ["#DCEAFC", "#4A596C"],
+    ["#FFEDD9", "#bd8463"],
+    ["#F2F4C3", "#798B5F"],
+    ["#D3F3EE", "#4F7B74"],
+    ["#FFEEFF", "#B085B5"],
+    ["#D1F2EB", "#5D737E"],
   ];
+
   const randomIndex = Math.floor(Math.random() * colors.length);
   return colors[randomIndex];
 };

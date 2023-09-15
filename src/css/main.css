@@ -1,13 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap");
 @font-face {
   font-family: "Basier Circle";
-  src: url("../../assets/fonts/basiercircle-regular-webfont.woff2") format("woff2");
+  src: url("../../assets/fonts/basiercircle-regular-webfont.woff2")
+    format("woff2");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: "Basier Square";
-  src: url("../../assets/fonts/basiersquare-regular-webfont.woff2") format("woff2");
+  src: url("../../assets/fonts/basiersquare-regular-webfont.woff2")
+    format("woff2");
   font-weight: normal;
   font-style: normal;
 }
@@ -39,7 +41,7 @@ body {
 .month-switcher {
   display: flex;
   align-items: center;
-  width: 85%;
+  width: 75%;
   grid-column: span 3;
 }
 
@@ -66,7 +68,7 @@ body {
   content: "";
   display: block;
   width: 100%;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.373);
+  border-bottom: 2px solid rgba(196, 196, 196, 0.373);
   margin-top: 3px;
 }
 
@@ -88,6 +90,7 @@ body {
   display: block;
   width: 120%;
   border-bottom: 2px solid rgba(0, 0, 0, 0.373);
+  color: #bd8463;
   margin-top: 5px;
 }
 
@@ -95,7 +98,7 @@ body {
   max-width: 64rem;
   grid-column: span 3;
   width: 85%;
-  background-color: rgba(216, 215, 223, 0.4);
+  background-color: rgba(216, 215, 223, 0.244);
   padding: 1rem 1.5rem;
   border-radius: 10px;
   /* background-color: rgb(238, 238, 228); */
@@ -202,4 +205,4 @@ body {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}/*# sourceMappingURL=main.css.map */
+} /*# sourceMappingURL=main.css.map */
