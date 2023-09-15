@@ -234,8 +234,6 @@ const randomColor = () => {
   return colors[randomIndex];
 };
 
-console.log(randomColor());
-
 // iterate over every event and add a background color and a text color
 const events = document.querySelectorAll(".event");
 events.forEach((event) => {

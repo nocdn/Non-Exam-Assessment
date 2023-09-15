@@ -133,7 +133,7 @@ body {
   left: 50%;
   width: 45px;
   height: 45px;
-  background-color: lightblue;
+  background-color: #e1f5e7;
   border-radius: 50%;
   z-index: -1;
   transform: translate(-50%, -50%);
