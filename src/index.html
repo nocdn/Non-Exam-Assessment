@@ -2,11 +2,17 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <script
+      src="https://kit.fontawesome.com/7d2900409e.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
-    <button id="prevMonth">Previous Month</button>
-    <div id="monthAndYear"></div>
-    <button id="nextMonth">Next Month</button>
+    <div class="month-switcher">
+      <i id="prevMonth" class="fa-solid fa-arrow-left"></i>
+      <i id="nextMonth" class="fa-solid fa-arrow-right"></i>
+      <div id="monthAndYear"></div>
+    </div>
     <div class="calendarAndDays">
       <div class="days">
         <div class="day"><p>Mon</p></div>

@@ -1,16 +1,15 @@
-@use "abstracts/fonts";
+@import "./abstracts/fonts";
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: fonts.$basier-circle;
 }
 
 body {
   margin-top: 2rem;
   display: grid;
-  row-gap: 4rem;
+  row-gap: 2rem;
   place-items: center;
   grid-template-columns: repeat(3, 1fr);
 }
@@ -20,48 +19,37 @@ body {
   grid-template-columns: repeat(7, 1fr);
   /* grid-gap: 3cm; */
   /* border: #000 1px solid; */
-  font-family: fonts.$basier-circle;
+  font-family: $mono-font;
 
   > div {
     padding: 10px;
   }
 }
 
-#prevMonth {
-  padding: 0;
-  border: none;
-  background: none;
-  /* reset the default button properties */
-
-  font-family: fonts.$mono-font;
-  font-family: fonts.$basier-circle;
-  background-color: rgb(42, 41, 41);
-  color: whitesmoke;
-  /* border-radius: 10px; */
-  justify-self: end;
-  margin-right: 1rem;
-  width: 10rem;
-  height: 3rem;
+.month-switcher {
+  display: flex;
+  align-items: center;
+  width: 85%;
+  grid-column: span 3;
 }
 
+#prevMonth,
 #nextMonth {
+  display: flex; // Make this a flex container
+  align-items: center; // Center vertically
+  justify-content: center; // Center horizontally
   padding: 0;
   border: none;
   background: none;
-  /* reset the default button properties */
-
-  font-family: fonts.$mono-font;
-  background-color: rgb(42, 41, 41);
-  color: whitesmoke;
-  /* border-radius: 10px; */
-  justify-self: start;
-  margin-left: 1rem;
-  width: 10rem;
+  margin-right: 1rem; // for prevMonth
+  margin-left: 1rem; // for nextMonth
+  width: 3rem;
   height: 3rem;
 }
 
 #monthAndYear {
-  font-family: fonts.$mono-font;
+  font-family: $mono-font;
+  margin-left: 2rem;
 }
 
 #monthAndYear::after {
@@ -76,7 +64,7 @@ body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-gap: 10px;
-  font-family: fonts.$mono-font;
+  font-family: $mono-font;
   margin-bottom: 3rem;
 
   .day {
