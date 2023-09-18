@@ -241,3 +241,16 @@ events.forEach((event) => {
   event.style.backgroundColor = eventBackgroundColor;
   event.style.color = eventTextColor;
 });
+
+// makes the month switcher the same width as the calendar (to "anchor" the forward and back buttons)
+const resizeMonthSwitcher = () => {
+  const calendarWidth = document.querySelector(".calendarAndDays").offsetWidth;
+  const monthSwitcher = document.querySelector(".month-switcher");
+  monthSwitcher.style.width = `${calendarWidth}px`;
+};
+
+resizeMonthSwitcher();
+// makes it actively listen for a resize event to trigger the resizing function
+window.addEventListener("resize", () => {
+  resizeMonthSwitcher();
+});

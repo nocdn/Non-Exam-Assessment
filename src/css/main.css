@@ -1,15 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap");
 @font-face {
   font-family: "Basier Circle";
-  src: url("../../assets/fonts/basiercircle-regular-webfont.woff2")
-    format("woff2");
+  src: url("../../assets/fonts/basiercircle-regular-webfont.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: "Basier Square";
-  src: url("../../assets/fonts/basiersquare-regular-webfont.woff2")
-    format("woff2");
+  src: url("../../assets/fonts/basiersquare-regular-webfont.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
 }
@@ -41,7 +39,6 @@ body {
 .month-switcher {
   display: flex;
   align-items: center;
-  width: 75%;
   grid-column: span 3;
 }
 
@@ -90,7 +87,6 @@ body {
   display: block;
   width: 120%;
   border-bottom: 2px solid rgba(0, 0, 0, 0.373);
-  color: #bd8463;
   margin-top: 5px;
 }
 
@@ -133,7 +129,7 @@ body {
   left: 50%;
   width: 45px;
   height: 45px;
-  background-color: #e1f5e7;
+  background-color: lightblue;
   border-radius: 50%;
   z-index: -1;
   transform: translate(-50%, -50%);
@@ -205,4 +201,4 @@ body {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-} /*# sourceMappingURL=main.css.map */
+}/*# sourceMappingURL=main.css.map */

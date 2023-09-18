@@ -27,9 +27,10 @@ body {
 }
 
 .month-switcher {
+  // place-items: initial;
   display: flex;
   align-items: center;
-  width: 75%;
+  // width: 65%;
   grid-column: span 3;
 }
 
