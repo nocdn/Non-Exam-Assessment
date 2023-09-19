@@ -1,0 +1,70 @@
+{
+  "events": [
+    {
+      "name": "Quarterly Review",
+      "date": "2023-10-01",
+      "start_time": "10:00",
+      "end_time": "12:00",
+      "location": "Board Room",
+      "color": {
+        "background": "#F2F4C3",
+        "text": "#798B5F"
+      }
+    },
+    {
+      "name": "Networking Event",
+      "date": "2023-10-07",
+      "start_time": "18:30",
+      "end_time": "21:30",
+      "location": "Downtown Hotel",
+      "color": {
+        "background": "#E1F5E7",
+        "text": "#475C4C"
+      }
+    },
+    {
+      "name": "Halloween Party",
+      "date": "2023-10-14",
+      "start_time": "20:00",
+      "end_time": "23:59",
+      "location": "Friend's House",
+      "color": {
+        "background": "#FFEDD9",
+        "text": "#bd8463"
+      }
+    },
+    {
+      "name": "Workshop",
+      "date": "2023-10-20",
+      "start_time": "09:00",
+      "end_time": "17:00",
+      "location": "Local Library",
+      "color": {
+        "background": "#DCEAFC",
+        "text": "#4A596C"
+      }
+    },
+    {
+      "name": "Conference",
+      "date": "2023-10-27",
+      "start_time": "10:00",
+      "end_time": "18:00",
+      "location": "Exhibition Center",
+      "color": {
+        "background": "#E5D7F9",
+        "text": "#56446F"
+      }
+    },
+    {
+      "name": "Halloween",
+      "date": "2023-10-31",
+      "start_time": "19:00",
+      "end_time": "23:59",
+      "location": "Home",
+      "color": {
+        "background": "#FFEEFF",
+        "text": "#B085B5"
+      }
+    }
+  ]
+}

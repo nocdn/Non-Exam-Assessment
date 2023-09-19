@@ -45,7 +45,9 @@ let eventsList;
 
 async function fetchEvents() {
   try {
-    const response = await fetch("http://localhost:8000/api/events");
+    const response = await fetch(
+      `http://localhost:8000/api/events/${currentYear}/${currentMonth + 1}`
+    );
     const events = await response.json();
     eventsList = events;
     // console.log(events);
