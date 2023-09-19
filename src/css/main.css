@@ -180,13 +180,14 @@ body {
 
 .floating {
   position: absolute;
-  padding: 12px;
-  background-color: rgb(74, 74, 74);
-  color: white;
+  padding: 18px;
+  background-color: #ffd6d6;
+  color: #a84848;
   font-family: "Noto Sans Mono", monospace;
   filter: blur(50px);
   opacity: 0;
   transition: filter 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  border-radius: 15px;
 }
 .floating.show {
   filter: blur(0);
@@ -196,9 +197,9 @@ body {
   display: block;
   margin-top: 10px;
   padding: 10px;
-  background-color: #ff0000;
-  color: #ffffff;
-  border: none;
+  background-color: none;
+  color: #8f4d4d;
+  border: red 1px solid;
   border-radius: 5px;
   cursor: pointer;
 }/*# sourceMappingURL=main.css.map */
