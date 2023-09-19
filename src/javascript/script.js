@@ -248,9 +248,14 @@ window.addEventListener("resize", () => {
   resizeMonthSwitcher();
 });
 
-fetch("http://localhost:8000/api/events")
-  .then((response) => response.json())
-  .then((events) => {
+let eventsList;
+
+async function fetchEvents() {
+  try {
+    const response = await fetch("http://localhost:8000/api/events");
+    const events = await response.json();
+    eventsList = events;
+
     // this one gets just the array of all 5 events
     console.log(events.events);
     // this one logs the first event
@@ -259,5 +264,14 @@ fetch("http://localhost:8000/api/events")
     console.log(events.events[0].name);
     // getting length of array
     console.log(events.events.length);
-  })
-  .catch((error) => console.error("Error:", error));
+
+    return events;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+// Call fetchEvents and then log fetchedEvents after it's done
+fetchEvents().then(() => {
+  console.log(eventsList);
+});
