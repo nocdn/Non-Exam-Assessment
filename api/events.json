@@ -1,0 +1,39 @@
+{
+  "events": [
+    {
+      "name": "Meeting with Team",
+      "start_time": "2023-09-01T14:00:00Z",
+      "end_time": "2023-09-01T15:00:00Z",
+      "location": "Conference Room A",
+      "color": "#FF5733"
+    },
+    {
+      "name": "Birthday Party",
+      "start_time": "2023-09-07T18:00:00Z",
+      "end_time": "2023-09-07T21:00:00Z",
+      "location": "Local Restaurant",
+      "color": "#33FF57"
+    },
+    {
+      "name": "Hackathon",
+      "start_time": "2023-09-13T09:00:00Z",
+      "end_time": "2023-09-13T18:00:00Z",
+      "location": "Online",
+      "color": "#5733FF"
+    },
+    {
+      "name": "Project Deadline",
+      "start_time": "2023-09-20T00:00:00Z",
+      "end_time": "2023-09-20T23:59:59Z",
+      "location": "Work",
+      "color": "#FF33F6"
+    },
+    {
+      "name": "Weekend Getaway",
+      "start_time": "2023-09-27T15:00:00Z",
+      "end_time": "2023-09-29T10:00:00Z",
+      "location": "Countryside",
+      "color": "#33FFF5"
+    }
+  ]
+}
