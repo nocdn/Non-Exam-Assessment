@@ -3,6 +3,7 @@ let currentMonth = today.getMonth();
 let currentYear = today.getFullYear();
 let todayDay = today.getDate();
 
+/*
 let calendarEventsList = [
   "",
   "Nothing here",
@@ -36,6 +37,35 @@ let calendarEventsList = [
   "",
   "",
 ];
+*/
+
+let calendarEventsList = Array(31).fill("");
+
+let eventsList;
+
+async function fetchEvents() {
+  try {
+    const response = await fetch("http://localhost:8000/api/events");
+    const events = await response.json();
+    eventsList = events;
+    // console.log(events);
+
+    // this one gets just the array of all 5 events
+    // console.log(events.events);
+    // this one logs the first event
+    // console.log(events.events[0]);
+    // this one logs the first event's name
+    // console.log(events.events[0].name);
+    // getting length of array
+    // console.log(events.events.length);
+
+    return events;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+// Call fetchEvents and then log fetchedEvents after it's done (the .then() makes sure it's done)
 
 const inputName = document.getElementById("event-name");
 const inputDate = document.getElementById("event-date");
@@ -89,19 +119,32 @@ function updateCalendar(month, year) {
       let date = i - firstDay + 1;
       let dateSpan = document.createElement("span");
       dateSpan.innerText = date;
-      dateSpan.classList.add("date");
+      dateSpan.classList.add("date"); // Add the class to the span
 
       cell.appendChild(dateSpan); // Add the span to the cell
       cell.style.height = "100px";
       cell.classList.add("cell");
       cell.classList.add(`day-${date}`);
-      // Adding the event to the box
-      if (calendarEventsList[date - 1] !== "") {
-        let eventSpan = document.createElement("p");
-        eventSpan.innerText = calendarEventsList[date - 1];
-        eventSpan.classList.add("event");
-        cell.appendChild(eventSpan);
-      }
+      fetchEvents().then(() => {
+        console.log(eventsList);
+        // go through the eventsList and add the events to the calendarEventsList, but the day of the event should match the array index, for example if the event is on the 5th, it should be added to the 4th index of the array
+        for (let i = 0; i < eventsList.events.length; i++) {
+          eventDate = eventsList.events[i].date;
+          eventDate = eventDate.split("-");
+          eventDate = eventDate[2];
+          eventDate = parseInt(eventDate);
+          eventDate = eventDate - 1;
+          calendarEventsList[eventDate] = eventsList.events[i].name;
+        }
+        // Adding the event to the box
+        if (calendarEventsList[date - 1] !== "") {
+          let eventSpan = document.createElement("p");
+          eventSpan.innerText = calendarEventsList[date - 1];
+          eventSpan.classList.add("event");
+          cell.appendChild(eventSpan);
+        }
+        assigningColors();
+      });
     }
 
     calendar.appendChild(cell);
@@ -228,12 +271,17 @@ const randomColor = () => {
 };
 
 // iterate over every event and add a background color and a text color
-const events = document.querySelectorAll(".event");
-events.forEach((event) => {
-  let [eventBackgroundColor, eventTextColor] = randomColor();
-  event.style.backgroundColor = eventBackgroundColor;
-  event.style.color = eventTextColor;
-});
+
+const assigningColors = () => {
+  const events = document.querySelectorAll(".event");
+  events.forEach((event) => {
+    let [eventBackgroundColor, eventTextColor] = randomColor();
+    event.style.backgroundColor = eventBackgroundColor;
+    event.style.color = eventTextColor;
+  });
+};
+
+assigningColors();
 
 // makes the month switcher the same width as the calendar (to "anchor" the forward and back buttons)
 const resizeMonthSwitcher = () => {
@@ -246,32 +294,4 @@ resizeMonthSwitcher();
 // makes it actively listen for a resize event to trigger the resizing function
 window.addEventListener("resize", () => {
   resizeMonthSwitcher();
-});
-
-let eventsList;
-
-async function fetchEvents() {
-  try {
-    const response = await fetch("http://localhost:8000/api/events");
-    const events = await response.json();
-    eventsList = events;
-
-    // this one gets just the array of all 5 events
-    console.log(events.events);
-    // this one logs the first event
-    console.log(events.events[0]);
-    // this one logs the first event's name
-    console.log(events.events[0].name);
-    // getting length of array
-    console.log(events.events.length);
-
-    return events;
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
-// Call fetchEvents and then log fetchedEvents after it's done
-fetchEvents().then(() => {
-  console.log(eventsList);
 });
