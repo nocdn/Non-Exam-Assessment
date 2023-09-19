@@ -247,3 +247,11 @@ resizeMonthSwitcher();
 window.addEventListener("resize", () => {
   resizeMonthSwitcher();
 });
+
+fetch("http://localhost:8000/api/events")
+  .then((response) => response.json())
+  .then((events) => {
+    console.log(events); // Logs the entire JSON object to the console
+    // Additional code to handle events if needed
+  })
+  .catch((error) => console.error("Error:", error));
