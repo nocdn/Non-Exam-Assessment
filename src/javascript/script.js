@@ -251,7 +251,13 @@ window.addEventListener("resize", () => {
 fetch("http://localhost:8000/api/events")
   .then((response) => response.json())
   .then((events) => {
-    console.log(events); // Logs the entire JSON object to the console
-    // Additional code to handle events if needed
+    // this one gets just the array of all 5 events
+    console.log(events.events);
+    // this one logs the first event
+    console.log(events.events[0]);
+    // this one logs the first event's name
+    console.log(events.events[0].name);
+    // getting length of array
+    console.log(events.events.length);
   })
   .catch((error) => console.error("Error:", error));
