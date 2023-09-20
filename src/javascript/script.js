@@ -3,69 +3,12 @@ let currentMonth = today.getMonth();
 let currentYear = today.getFullYear();
 let todayDay = today.getDate();
 
-/*
-let calendarEventsList = [
-  "",
-  "Nothing here",
-  "",
-  "",
-  "",
-  "Same here",
-  "",
-  "",
-  "Job interview",
-  "",
-  "",
-  "",
-  "Meeting with friends",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "Doctor's appointment",
-  "",
-  "",
-];
-*/
+console.log(currentMonth);
+console.log(currentYear);
 
 let calendarEventsList = Array(31).fill("");
 
 let eventsList;
-
-async function fetchEvents() {
-  try {
-    const response = await fetch(
-      `http://localhost:8000/api/events/${currentYear}/${currentMonth + 1}`
-    );
-    const events = await response.json();
-    eventsList = events;
-    // console.log(events);
-
-    // this one gets just the array of all 5 events
-    // console.log(events.events);
-    // this one logs the first event
-    // console.log(events.events[0]);
-    // this one logs the first event's name
-    // console.log(events.events[0].name);
-    // getting length of array
-    // console.log(events.events.length);
-
-    return events;
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
 
 // Call fetchEvents and then log fetchedEvents after it's done (the .then() makes sure it's done)
 
@@ -77,26 +20,6 @@ inputButton.addEventListener("click", () => {
   let date = inputDate.value - 1;
   let name = inputName.value;
   calendarEventsList[date] = name;
-  updateCalendar(currentMonth, currentYear);
-});
-
-document.getElementById("prevMonth").addEventListener("click", () => {
-  if (currentMonth === 0) {
-    currentMonth = 11;
-    currentYear -= 1;
-  } else {
-    currentMonth -= 1;
-  }
-  updateCalendar(currentMonth, currentYear);
-});
-
-document.getElementById("nextMonth").addEventListener("click", () => {
-  if (currentMonth === 11) {
-    currentMonth = 0;
-    currentYear += 1;
-  } else {
-    currentMonth += 1;
-  }
   updateCalendar(currentMonth, currentYear);
 });
 
@@ -127,26 +50,6 @@ function updateCalendar(month, year) {
       cell.style.height = "100px";
       cell.classList.add("cell");
       cell.classList.add(`day-${date}`);
-      fetchEvents().then(() => {
-        console.log(eventsList);
-        // go through the eventsList and add the events to the calendarEventsList, but the day of the event should match the array index, for example if the event is on the 5th, it should be added to the 4th index of the array
-        for (let i = 0; i < eventsList.events.length; i++) {
-          eventDate = eventsList.events[i].date;
-          eventDate = eventDate.split("-");
-          eventDate = eventDate[2];
-          eventDate = parseInt(eventDate);
-          eventDate = eventDate - 1;
-          calendarEventsList[eventDate] = eventsList.events[i].name;
-        }
-        // Adding the event to the box
-        if (calendarEventsList[date - 1] !== "") {
-          let eventSpan = document.createElement("p");
-          eventSpan.innerText = calendarEventsList[date - 1];
-          eventSpan.classList.add("event");
-          cell.appendChild(eventSpan);
-        }
-        assigningColors();
-      });
     }
 
     calendar.appendChild(cell);
@@ -168,6 +71,86 @@ function updateCalendar(month, year) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  async function fetchEvents(year, month) {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/events/${year}/${month}`
+      );
+      const events = await response.json();
+      eventsList = events;
+
+      // Reset and populate the calendarEventsList array with new events
+      calendarEventsList = Array(31).fill("");
+      for (let i = 0; i < eventsList.events.length; i++) {
+        let eventDate = eventsList.events[i].date;
+        eventDate = eventDate.split("-");
+        eventDate = parseInt(eventDate[2]);
+        eventDate = eventDate - 1;
+        calendarEventsList[eventDate] = eventsList.events[i].name;
+      }
+
+      // Update the calendar after fetching new events
+      updateCalendar(currentMonth, currentYear);
+      populateCalendar();
+    } catch (error) {
+      console.error("Error:", error);
+      setTimeout(() => {
+        fetchEvents(year, month);
+      }, 2000);
+    }
+  }
+
+  fetchEvents(currentYear, currentMonth + 1).then(() => {
+    // reset the calendarEventsList
+    calendarEventsList = Array(31).fill("");
+    console.log(eventsList);
+    for (let i = 0; i < eventsList.events.length; i++) {
+      eventDate = eventsList.events[i].date;
+      eventDate = eventDate.split("-");
+      eventDate = eventDate[2];
+      eventDate = parseInt(eventDate);
+      eventDate = eventDate - 1;
+      calendarEventsList[eventDate] = eventsList.events[i].name;
+    }
+  });
+
+  function populateCalendar() {
+    // Adding the event to the box
+    for (let i = 0; i < calendarEventsList.length; i++) {
+      if (calendarEventsList[i] !== "") {
+        let cell = document.querySelector(`.day-${i + 1}`);
+        let eventSpan = document.createElement("p");
+        eventSpan.innerText = calendarEventsList[i];
+        eventSpan.classList.add("event");
+        cell.appendChild(eventSpan);
+      }
+    }
+
+    assigningColors();
+  }
+
+  document.getElementById("prevMonth").addEventListener("click", () => {
+    if (currentMonth === 0) {
+      currentMonth = 11;
+      currentYear -= 1;
+    } else {
+      currentMonth -= 1;
+    }
+
+    fetchEvents(currentYear, currentMonth + 1);
+  });
+
+  document.getElementById("nextMonth").addEventListener("click", () => {
+    if (currentMonth === 11) {
+      currentMonth = 0;
+      currentYear += 1;
+    } else {
+      currentMonth += 1;
+    }
+
+    fetchEvents(currentYear, currentMonth + 1);
+  });
+
   const createFloatingElement = () => {
     const element = document.createElement("div");
     element.classList.add("floating");
