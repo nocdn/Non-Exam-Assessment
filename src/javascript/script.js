@@ -10,6 +10,8 @@ let calendarEventsList = Array(31).fill("");
 
 let eventsList;
 
+// Call fetchEvents and then log fetchedEvents after it's done (the .then() makes sure it's done)
+
 const inputName = document.getElementById("event-name");
 const inputDate = document.getElementById("event-date");
 const inputButton = document.getElementById("add-event");
@@ -30,14 +32,11 @@ function updateCalendar(month, year) {
     firstDay--; // shift other days one place towards the start of the week
   }
 
-  // This line calculates the number of days in the given month and year by creating a new Date object with the value 32 as the day parameter.
-  // Since the getDate() method returns the actual date value of the object, subtracting this value from 32 gives us the number of days in the month.
   let daysInMonth = 32 - new Date(year, month, 32).getDate();
 
   let calendar = document.getElementById("calendar");
   calendar.innerHTML = ""; // Clear previous calendar
 
-  // adding the days of the week (35 to make a 5x7 grid)
   for (let i = 0; i < 35; i++) {
     let cell = document.createElement("div");
 
@@ -56,7 +55,7 @@ function updateCalendar(month, year) {
     calendar.appendChild(cell);
   }
 
-  // Highlight current day with a dot
+  // Highlight current day
   if (month === today.getMonth() && year === today.getFullYear()) {
     let currentDayCell = document.querySelector(`.day-${todayDay}`);
     currentDayCell.classList.add("current-day");
@@ -72,6 +71,35 @@ function updateCalendar(month, year) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  async function fetchEvents(year, month) {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/events/${year}/${month}`
+      );
+      const events = await response.json();
+      eventsList = events;
+
+      // Reset and populate the calendarEventsList array with new events
+      calendarEventsList = Array(31).fill("");
+      for (let i = 0; i < eventsList.events.length; i++) {
+        let eventDate = eventsList.events[i].date;
+        eventDate = eventDate.split("-");
+        eventDate = parseInt(eventDate[2]);
+        eventDate = eventDate - 1;
+        calendarEventsList[eventDate] = eventsList.events[i].name;
+      }
+
+      // Update the calendar after fetching new events
+      updateCalendar(currentMonth, currentYear);
+      populateCalendar();
+    } catch (error) {
+      console.error("Error:", error);
+      setTimeout(() => {
+        fetchEvents(year, month);
+      }, 10000);
+    }
+  }
+
   fetchEvents(currentYear, currentMonth + 1).then(() => {
     // reset the calendarEventsList
     calendarEventsList = Array(31).fill("");
