@@ -1,0 +1,81 @@
+{
+  "events": [
+    {
+      "name": "Super Bowl Party",
+      "date": "2022-02-06",
+      "start_time": "18:30",
+      "end_time": "22:30",
+      "location": "Friend's House",
+      "color": {
+        "background": "#F9EBB2",
+        "text": "#7F7C23"
+      }
+    },
+    {
+      "name": "Valentine's Day Dinner",
+      "date": "2022-02-14",
+      "start_time": "19:00",
+      "end_time": "22:00",
+      "location": "Romantic Restaurant",
+      "color": {
+        "background": "#FADBD8",
+        "text": "#943126"
+      }
+    },
+    {
+      "name": "Presidents' Day Parade",
+      "date": "2022-02-21",
+      "start_time": "10:00",
+      "end_time": "12:00",
+      "location": "Main Street",
+      "color": {
+        "background": "#D4E6F1",
+        "text": "#2874A6"
+      }
+    },
+    {
+      "name": "Networking Lunch",
+      "date": "2022-02-09",
+      "start_time": "12:30",
+      "end_time": "14:00",
+      "location": "Business Center",
+      "color": {
+        "background": "#FCF3CF",
+        "text": "#8E793E"
+      }
+    },
+    {
+      "name": "Film Festival",
+      "date": "2022-02-25",
+      "start_time": "15:00",
+      "end_time": "22:00",
+      "location": "Cinema Complex",
+      "color": {
+        "background": "#D2B4DE",
+        "text": "#512E5F"
+      }
+    },
+    {
+      "name": "Yoga Workshop",
+      "date": "2022-02-18",
+      "start_time": "09:00",
+      "end_time": "16:00",
+      "location": "Yoga Studio",
+      "color": {
+        "background": "#AED6F1",
+        "text": "#21618C"
+      }
+    },
+    {
+      "name": "Tech Meetup",
+      "date": "2022-02-28",
+      "start_time": "18:00",
+      "end_time": "20:00",
+      "location": "Tech Hub",
+      "color": {
+        "background": "#A2D9CE",
+        "text": "#196F3D"
+      }
+    }
+  ]
+}

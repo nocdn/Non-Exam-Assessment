@@ -74,7 +74,8 @@ document.addEventListener("DOMContentLoaded", () => {
   async function fetchEvents(year, month) {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/events/${year}/${month}`
+        // `http://localhost:8000/api/events/${year}/${month}`
+        `https://p6kbzyq4s7.execute-api.eu-west-2.amazonaws.com/dev/fetchEvents?year=${year}&month=${month}`
       );
       const events = await response.json();
       eventsList = events;

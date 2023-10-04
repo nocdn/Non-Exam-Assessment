@@ -1,0 +1,81 @@
+{
+  "events": [
+    {
+      "name": "New Year's Celebration",
+      "date": "2022-01-01",
+      "start_time": "00:00",
+      "end_time": "01:00",
+      "location": "Downtown Square",
+      "color": {
+        "background": "#F9E79F",
+        "text": "#7D6608"
+      }
+    },
+    {
+      "name": "Winter Workshop",
+      "date": "2022-01-05",
+      "start_time": "10:00",
+      "end_time": "15:00",
+      "location": "Community Center",
+      "color": {
+        "background": "#D6EAF8",
+        "text": "#1F618D"
+      }
+    },
+    {
+      "name": "Tech Conference",
+      "date": "2022-01-15",
+      "start_time": "09:00",
+      "end_time": "18:00",
+      "location": "Convention Center",
+      "color": {
+        "background": "#D5F5E3",
+        "text": "#117A65"
+      }
+    },
+    {
+      "name": "Art Exhibition",
+      "date": "2022-01-20",
+      "start_time": "18:00",
+      "end_time": "21:00",
+      "location": "City Art Gallery",
+      "color": {
+        "background": "#FADBD8",
+        "text": "#943126"
+      }
+    },
+    {
+      "name": "Networking Mixer",
+      "date": "2022-01-25",
+      "start_time": "19:00",
+      "end_time": "21:00",
+      "location": "Hotel Lounge",
+      "color": {
+        "background": "#FCF3CF",
+        "text": "#8E793E"
+      }
+    },
+    {
+      "name": "Yoga Retreat",
+      "date": "2022-01-27",
+      "start_time": "08:00",
+      "end_time": "20:00",
+      "location": "Wellness Center",
+      "color": {
+        "background": "#A2D9CE",
+        "text": "#196F3D"
+      }
+    },
+    {
+      "name": "Book Club Meeting",
+      "date": "2022-01-30",
+      "start_time": "17:00",
+      "end_time": "19:00",
+      "location": "Local Library",
+      "color": {
+        "background": "#FDEBD0",
+        "text": "#784212"
+      }
+    }
+  ]
+}
