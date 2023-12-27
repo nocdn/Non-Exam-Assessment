@@ -1,0 +1,125 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 1rem 0 0 1rem;
+}
+
+.heading {
+  font-size: 3rem;
+  font-family: sans-serif;
+}
+
+.event {
+  margin: 1rem 0;
+  font-size: 1.5rem;
+  font-family: sans-serif;
+}
+
+.date-picker {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+.date-picker * {
+  font-family: sans-serif;
+  font-size: 2rem;
+}
+
+.delete-event {
+  display: flex;
+  flex-direction: column;
+  width: 16rem;
+  padding-bottom: 1rem;
+}
+.delete-event .input-delete {
+  padding: 0.5rem 0 0.5rem 0.5rem;
+}
+.delete-event .delete-event-btn {
+  padding: 0.25rem;
+}
+
+.natural-language {
+  display: flex;
+  flex-direction: column;
+  width: 16rem;
+}
+.natural-language * {
+  padding: 0 0 0 0.5rem;
+}
+.natural-language .input-natural {
+  padding-top: 0.5rem;
+}
+.natural-language .natural-language-btn {
+  padding: 0.25rem;
+}
+
+.no-events {
+  font-size: 2rem;
+  font-family: sans-serif;
+  color: red;
+}
+
+.add-event {
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 16rem;
+}
+.add-event * {
+  height: 1.5rem;
+  padding: 0 0 0 0.5rem;
+}
+.add-event .input-title {
+  height: 2rem;
+}
+
+.individual_event_times {
+  display: flex;
+  gap: 1rem;
+}
+.individual_event_times * {
+  font-size: 1rem;
+}
+
+.individual_event_dates {
+  display: flex;
+  gap: 1rem;
+}
+
+.date_divider {
+  font-size: 1.15rem;
+}
+
+.event__location,
+.event__id,
+.event__user {
+  font-size: 1rem;
+}
+
+.event__title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.event__date {
+  font-size: 1.25rem;
+}
+
+.delete-event {
+  margin-top: 2rem;
+}
+
+.delete-icon {
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.previous-month,
+.next-month {
+  cursor: pointer;
+}/*# sourceMappingURL=index.css.map */
