@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  display: grid;
+  place-content: center;
+  height: 100vh;
+}
+
+.hidden {
+  display: none;
+}
+
+.input-fields {
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.input-fields * {
+  height: 2rem;
+  padding-left: 0.25rem;
+}
+
+.login-screen {
+  display: flex;
+  flex-direction: column;
+}
+.login-screen h2 {
+  text-align: center;
+}
+.login-screen .login-btn {
+  height: 2rem;
+}
+
+.signup-screen {
+  display: flex;
+  flex-direction: column;
+}
+.signup-screen h2 {
+  text-align: center;
+}
+.signup-screen .signup-btn {
+  height: 2rem;
+}
+
+.signup-or-login {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100px;
+}
+.signup-or-login * {
+  height: 2rem;
+}/*# sourceMappingURL=login.css.map */

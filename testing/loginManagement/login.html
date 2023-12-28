@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="login.css" />
+    <title>Login page</title>
+  </head>
+  <body>
+    <div class="signup-or-login">
+      <button class="choose-login">Login</button>
+      <button class="choose-signup">Sign up</button>
+    </div>
+    <div class="login-screen" style="display: none">
+      <h2>Login</h2>
+      <div class="input-fields">
+        <input
+          class="login-field input-username"
+          type="text"
+          placeholder="Username"
+        />
+        <input
+          class="login-field input-password"
+          type="password"
+          placeholder="Password"
+        />
+      </div>
+      <button class="login-btn">Login</button>
+    </div>
+    <div class="signup-screen" style="display: none">
+      <h2>Sign up</h2>
+      <div class="input-fields">
+        <input
+          class="signup-field signup-input-username"
+          type="text"
+          placeholder="Username"
+        />
+        <input
+          class="signup-field signup-input-password"
+          type="password"
+          placeholder="Password"
+        />
+        <input
+          class="signup-field confirm-password"
+          type="password"
+          placeholder="Confirm password"
+        />
+      </div>
+      <button class="signup-btn">Sign up</button>
+    </div>
+    <script src="login.js"></script>
+  </body>
+</html>
