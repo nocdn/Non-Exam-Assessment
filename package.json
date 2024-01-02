@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "autoprefixer": "^10.4.2",
+    "aws-amplify": "^6.0.9",
     "browser-sync": "^2.27.7",
     "copyfiles": "^2.4.1",
     "cssnano": "^5.0.17",

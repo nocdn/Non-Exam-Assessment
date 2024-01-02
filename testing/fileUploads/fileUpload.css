@@ -1,0 +1,22 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+h1 {
+  margin: 1rem 0 2rem 1rem;
+}
+
+main {
+  margin: 0 0 0 1rem;
+  display: flex;
+  flex-direction: column;
+  width: 12rem;
+  gap: 1rem;
+}
+
+.upload-btn {
+  height: 2rem;
+}/*# sourceMappingURL=fileUpload.css.map */
