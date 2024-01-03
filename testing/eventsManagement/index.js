@@ -33,7 +33,6 @@ fetchOpenAIKey();
 async function fetchEvents(year, month) {
   const formattedMonth = getFormattedMonth(month.toString());
   try {
-    // Assuming backend is modified to return a list of all events for the month
     const response = await fetch(
       `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${formattedMonth}`
     );
