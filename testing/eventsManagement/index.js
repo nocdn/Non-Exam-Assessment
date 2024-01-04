@@ -1,8 +1,13 @@
 eventsList = [];
 
 function getFormattedMonth(month) {
-  // Add a leading zero to single-digit months
-  return month.length === 1 ? `0${month}` : month;
+  // Convert month to a string and add a leading zero to single-digit months
+  const monthString = month.toString();
+  if (monthString.length === 1) {
+    return `0${month}`;
+  } else {
+    return month;
+  }
 }
 
 let openAIKey = "";
@@ -31,7 +36,7 @@ async function fetchOpenAIKey() {
 fetchOpenAIKey();
 
 async function fetchEvents(year, month) {
-  const formattedMonth = getFormattedMonth(month.toString());
+  const formattedMonth = getFormattedMonth(month);
   try {
     const response = await fetch(
       `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${formattedMonth}`
@@ -115,7 +120,7 @@ const day = date.getDate();
 
 const joinedDate = `${day}/${month}/${year}`;
 
-fetchEvents(year, month);
+fetchEvents(year, getFormattedMonth(month));
 
 const dateElement = document.querySelector(".date");
 dateElement.textContent = `${day}/${month}/${year}`;
@@ -123,7 +128,7 @@ dateElement.textContent = `${day}/${month}/${year}`;
 nextMonthArrow = document.querySelector(".next-month");
 previousMonthArrow = document.querySelector(".previous-month");
 let selectedDay = day;
-let selectedMonth = month;
+let selectedMonth = getFormattedMonth(month);
 let selectedYear = year;
 
 nextMonthArrow.addEventListener("click", function () {
@@ -132,9 +137,11 @@ nextMonthArrow.addEventListener("click", function () {
     selectedMonth = 1;
     selectedYear++;
   }
+  selectedMonth = getFormattedMonth(selectedMonth);
   updateDatePicker(selectedYear, selectedMonth);
   fetchEvents(selectedYear, selectedMonth);
   clearEventsScreen();
+  console.log(selectedMonth);
 });
 
 previousMonthArrow.addEventListener("click", function () {
@@ -143,6 +150,7 @@ previousMonthArrow.addEventListener("click", function () {
     selectedMonth = 12;
     selectedYear--;
   }
+  selectedMonth = getFormattedMonth(selectedMonth);
   updateDatePicker(selectedYear, selectedMonth);
   fetchEvents(selectedYear, selectedMonth);
   clearEventsScreen();
@@ -284,7 +292,8 @@ deleteEventButton.addEventListener("click", function () {
 });
 
 const OPENAI_API_KEY = "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";
-
+const dateForOpenAI = `${day}/${getFormattedMonth(month)}/${year}`;
+console.log(dateForOpenAI);
 const sendToOpenAI = function (textToParse) {
   const prompt = `Today is ${joinedDate}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “start_date”, “end_date”, “start_time”, “end_time”, “location”.
 
