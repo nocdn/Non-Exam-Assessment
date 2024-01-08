@@ -31,8 +31,9 @@ def lambda_handler(event, context):
         return handle_post_request(event, context)  # Corrected to include context
     elif http_method == 'DELETE':
         logger.info('Handling DELETE request')
+        handle_delete_request(event)
     elif http_method == 'PUT':
-        logger.info('Handling DELETE request')
+        logger.info('Handling PUT request')
         return handle_put_request(event)
     else:
         logger.warning('Received unexpected HTTP method')
@@ -95,7 +96,7 @@ def handle_post_request(event, context):
         is_pinned = note_body['is_pinned']
 
         # Generate a unique note_id
-        note_id = str(uuid.uuid4())
+        note_id = "noteID-" + str(uuid.uuid4())
         
         # Generate creation_time
         creation_time = datetime.now().strftime('%H:%M:%S')

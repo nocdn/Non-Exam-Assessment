@@ -7,6 +7,11 @@ async function fetchNotes() {
     // Handle the case where no notes are found or handle the list of note file names
     if (data.notes.length === 0) {
       console.log("No notes found");
+      // Clear existing notes if any
+      const pinnedContainer = document.querySelector(".pinnedNotesContainer");
+      const regularContainer = document.querySelector(".regularNotesContainer");
+      pinnedContainer.innerHTML = "";
+      regularContainer.innerHTML = "";
     } else {
       displayNotes(data.notes); // Call function to display notes
     }
@@ -103,6 +108,7 @@ function displayNotes(notes) {
           return;
         } else {
           updateNote(note.note_id, noteTextAreaElementToEdit.value);
+          fetchNotes(); // Refetch notes to update the list after updating
         }
       };
 
