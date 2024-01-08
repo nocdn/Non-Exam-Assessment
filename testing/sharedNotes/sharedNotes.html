@@ -7,7 +7,14 @@
     <link rel="stylesheet" href="sharedNotes.css" />
   </head>
   <body>
-    <h1>Shared notes:</h1>
+    <h1 class="notesHeading">Shared notes:</h1>
+    <div id="notesContainer">
+      <h2>Pinned</h2>
+      <div class="pinnedNotesContainer"></div>
+      <h2>Other</h2>
+      <div class="regularNotesContainer"></div>
+    </div>
+
     <textarea name="noteInput" id="noteInput" style="resize: both"></textarea>
 
     <input
