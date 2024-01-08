@@ -84,9 +84,11 @@ function displayNotes(notes) {
       noteTextAreaElementToEdit.style.padding = "0.25rem";
 
       // Create Confirm button for submitting updated text
-      const confirmButton = document.createElement("button");
-      confirmButton.textContent = "Confirm";
-      confirmButton.className = "confirm-button"; // Add class for styling if needed
+      const confirmButton = document.createElement("i");
+      confirmButton.className = "fa-solid fa-circle-check"; // Set Font Awesome classes
+      confirmButton.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
+      confirmButton.style.color = "green";
+      confirmButton.style.opacity = "1";
       confirmButton.onclick = function () {
         updateNote(note.note_id, noteTextAreaElementToEdit.value);
       };
