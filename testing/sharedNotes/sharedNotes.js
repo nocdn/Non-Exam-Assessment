@@ -1,14 +1,3 @@
-import { createWysimark } from "@wysimark/standalone";
-
-// Get the Markdown content from the element
-const markdownContent = document.getElementById("markdown-content").textContent;
-
-// Convert the Markdown content to HTML
-const htmlContent = marked.parse(markdownContent);
-
-// Set the converted HTML content back into the element
-document.getElementById("markdown-content").innerHTML = htmlContent;
-
 async function fetchNotes() {
   try {
     const response = await fetch(
@@ -31,18 +20,36 @@ async function fetchNotes() {
 
 fetchNotes();
 
-/**
- * Get the editor container element
- */
-const container = document.getElementById("editor-container");
-
-/**
- * Create the Wysimark component
- */
-const wysimark = createWysimark(container, {
-  initialMarkdown: "# Hello World",
+const noteInput = document.getElementById("noteInput");
+const priorityNoteCheckbox = document.getElementById("priorityNoteCheckbox");
+const noteSendButton = document.querySelector(".sendNote");
+noteSendButton.addEventListener("click", function () {
+  console.log("Send note button clicked");
+  sendNote();
 });
 
-wysimark.on("change", (markdown) => {
-  console.log(markdown);
-});
+function sendNote() {
+  const noteData = {
+    note_text: noteInput.value,
+    creation_date: new Date().toLocaleDateString("en-GB"), // Current date in DD/MM/YYYY
+    is_pinned: priorityNoteCheckbox.checked ? 1 : 0, // 1 if checked, 0 if not
+  };
+
+  fetch(
+    "https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(noteData),
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Success:", data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}

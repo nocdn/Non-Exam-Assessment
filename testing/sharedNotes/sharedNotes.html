@@ -8,9 +8,14 @@
   </head>
   <body>
     <h1>Shared notes:</h1>
-    <div id="editor-container"></div>
-    <div id="markdown-content"># Hello World This is *Markdown* content.</div>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <textarea name="noteInput" id="noteInput" style="resize: both"></textarea>
+
+    <input
+      type="checkbox"
+      name="priorityNoteCheckbox"
+      id="priorityNoteCheckbox"
+    />
+    <button class="sendNote">Send Note</button>
     <script src="sharedNotes.js"></script>
   </body>
 </html>

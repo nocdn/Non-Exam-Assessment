@@ -3,4 +3,15 @@
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+}
+
+#noteInput {
+  width: 8rem;
+  height: 6rem;
+  margin: 1rem 0 0 1rem;
+  border: none;
+  outline: none;
+  resize: none;
+  background-color: #f5f5f5;
+  padding: 0.5rem;
 }/*# sourceMappingURL=sharedNotes.css.map */
