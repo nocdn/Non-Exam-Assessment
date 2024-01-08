@@ -40,6 +40,21 @@ function displayNotes(notes) {
     noteElement.appendChild(noteText);
     noteElement.appendChild(creationDate);
 
+    // Create delete button for each note
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "🗑️"; // Bin emoji
+    deleteButton.style.display = "block"; // Make it display as a block element
+    deleteButton.style.cursor = "pointer"; // Change cursor to pointer on hover
+    deleteButton.style.border = "none"; // Remove border
+    deleteButton.onclick = function () {
+      console.log("Delete button clicked");
+      console.log(note.note_id); // Log the note ID to the console
+      deleteNote(note.note_id);
+    }; // Add click event to delete note
+
+    // Append delete button to the note element
+    noteElement.appendChild(deleteButton);
+
     // Check if the note is pinned and append to the corresponding container
     if (note.is_pinned === 1) {
       pinnedContainer.appendChild(noteElement);
@@ -48,8 +63,6 @@ function displayNotes(notes) {
     }
   });
 }
-
-fetchNotes();
 
 fetchNotes();
 
@@ -81,6 +94,28 @@ function sendNote() {
     .then((response) => response.json())
     .then((data) => {
       console.log("Success:", data);
+      fetchNotes(); // Refetch notes to update the list after adding a new note
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+function deleteNote(noteId) {
+  console.log("Delete note function called with note ID: ", noteId);
+  fetch(
+    `https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/?noteId=${noteId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Delete successful:", data);
+      fetchNotes(); // Refetch notes to update the list after deletion
     })
     .catch((error) => {
       console.error("Error:", error);

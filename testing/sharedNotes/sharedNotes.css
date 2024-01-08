@@ -28,8 +28,11 @@
 }
 
 .note {
-  padding: 0.5rem;
+  padding: 1rem;
   margin-bottom: 0.5rem;
+  width: 16rem;
+  background-color: rgba(211, 211, 211, 0.257);
+  border-radius: 0.5rem;
 }
 .note span {
   color: rgba(0, 0, 0, 0.399);
