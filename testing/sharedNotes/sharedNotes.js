@@ -36,9 +36,13 @@ function displayNotes(notes) {
     const creationDate = document.createElement("span");
     creationDate.textContent = `Created on: ${note.creation_date}`;
 
+    const creationDateTime = document.createElement("span");
+    creationDateTime.textContent = `Created on: ${note.creation_date} at ${note.creation_time}`;
+
     // Append the individual elements to the note element
     noteElement.appendChild(noteText);
-    noteElement.appendChild(creationDate);
+    // noteElement.appendChild(creationDate);
+    noteElement.appendChild(creationDateTime);
 
     // Create delete button for each note
     const deleteButton = document.createElement("button");

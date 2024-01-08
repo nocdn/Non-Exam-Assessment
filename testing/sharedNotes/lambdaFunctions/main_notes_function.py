@@ -3,6 +3,8 @@ import json
 import logging
 from botocore.exceptions import ClientError
 import uuid
+from datetime import datetime
+
 
 s3_client = boto3.client('s3')
 bucket_name = 'sharednotesbucket'
@@ -92,9 +94,13 @@ def handle_post_request(event, context):
 
         # Generate a unique note_id
         note_id = str(uuid.uuid4())
+        
+        # Generate creation_time
+        creation_time = datetime.now().strftime('%H:%M:%S')
 
-        # Update note_body with generated note_id
+        # Update note_body with generated note_id and creation_time
         note_body['note_id'] = note_id
+        note_body['creation_time'] = creation_time
 
         # Prepare and store the note in S3
         object_key = f'{note_id}.json'
