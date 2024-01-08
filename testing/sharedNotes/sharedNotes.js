@@ -33,6 +33,7 @@ function displayNotes(notes) {
     const noteText = document.createElement("p");
     noteText.innerHTML = note.note_text.replace(/\n/g, "<br>");
     noteText.classList.add(note.note_id); // Add the note ID as a class to the note text element (for later use)
+    noteText.classList.add("note-text");
 
     const creationDate = document.createElement("span");
     creationDate.textContent = `Created on: ${note.creation_date}`;
