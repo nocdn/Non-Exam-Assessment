@@ -31,11 +31,21 @@
 .note {
   padding: 1rem;
   margin-bottom: 0.5rem;
-  width: 16rem;
+  min-width: 16rem;
+  max-width: 32rem;
   background-color: rgba(211, 211, 211, 0.257);
   border-radius: 0.5rem;
   span {
     color: rgba(0, 0, 0, 0.399);
+    display: block;
+  }
+  p {
+    font-size: 1rem;
+  }
+  textarea {
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    transition: padding 5s ease-in-out;
   }
 }
 

@@ -31,7 +31,9 @@ def lambda_handler(event, context):
         return handle_post_request(event, context)  # Corrected to include context
     elif http_method == 'DELETE':
         logger.info('Handling DELETE request')
-        return handle_delete_request(event)
+    elif http_method == 'PUT':
+        logger.info('Handling DELETE request')
+        return handle_put_request(event)
     else:
         logger.warning('Received unexpected HTTP method')
         return {
@@ -160,4 +162,34 @@ def handle_delete_request(event):
         return {
             'statusCode': 500,
             'body': json.dumps({'message': 'An unexpected error occurred', 'error': str(e)})
+        }
+        
+
+def handle_put_request(event):
+    try:
+        note_id = event.get('queryStringParameters', {}).get('noteId')
+        body = json.loads(event['body'])
+        
+        # Load the existing note from S3
+        existing_note_object = s3_client.get_object(Bucket=bucket_name, Key=f'{note_id}.json')
+        existing_note_content = existing_note_object['Body'].read().decode('utf-8')
+        existing_note_data = json.loads(existing_note_content)
+
+        # Update the note text and add updated date and time
+        existing_note_data['note_text'] = body['note_text']
+        existing_note_data['updated_date'] = body['updated_date']
+        existing_note_data['updated_time'] = body['updated_time']
+
+        # Save the updated note back to S3
+        s3_client.put_object(Bucket=bucket_name, Key=f'{note_id}.json', Body=json.dumps(existing_note_data))
+
+        return {
+            'statusCode': 200,
+            'body': json.dumps({'message': 'Note updated successfully', 'note_id': note_id})
+        }
+
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'message': 'Error updating note', 'error': str(e)})
         }

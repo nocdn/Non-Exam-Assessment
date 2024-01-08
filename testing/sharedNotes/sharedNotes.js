@@ -32,6 +32,7 @@ function displayNotes(notes) {
     // You can format and style it further as needed
     const noteText = document.createElement("p");
     noteText.innerHTML = note.note_text.replace(/\n/g, "<br>");
+    noteText.classList.add(note.note_id); // Add the note ID as a class to the note text element (for later use)
 
     const creationDate = document.createElement("span");
     creationDate.textContent = `Created on: ${note.creation_date}`;
@@ -64,9 +65,34 @@ function displayNotes(notes) {
     const editIcon = document.createElement("i");
     editIcon.className = "fa-solid fa-pen"; // Set Font Awesome classes
     editIcon.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
+    editIcon.classList.add(note.note_id); // Add the note ID as a class to the delete icon (for later use)
     editIcon.onclick = function () {
       console.log("Edit action clicked for note ID: ", note.note_id);
-      // Add your edit note logic here
+      // Get the note text element by class name of the note ID
+      const noteTextElementToEdit = document.querySelector(`.${note.note_id}`);
+      // Get the note text from the element and set it as a placeholder for the input field
+      const noteTextToEdit = noteTextElementToEdit.textContent;
+      // Change the p element with the class of the note ID to a textarea field
+      noteTextElementToEdit.outerHTML = `<textarea class='${note.note_id} textarea-editable'>${noteTextToEdit}</textarea>`;
+      // Get the textarea element by class name of the note ID
+      const noteTextAreaElementToEdit = document.querySelector(
+        `.${note.note_id}`
+      );
+
+      // Style adjustments for the textarea
+      noteTextAreaElementToEdit.style.width = "100%";
+      noteTextAreaElementToEdit.style.padding = "0.25rem";
+
+      // Create Confirm button for submitting updated text
+      const confirmButton = document.createElement("button");
+      confirmButton.textContent = "Confirm";
+      confirmButton.className = "confirm-button"; // Add class for styling if needed
+      confirmButton.onclick = function () {
+        updateNote(note.note_id, noteTextAreaElementToEdit.value);
+      };
+
+      // Append the confirm button to the icon container or wherever appropriate
+      iconContainer.appendChild(confirmButton);
     };
 
     // Append both icons to the container
@@ -139,6 +165,39 @@ function deleteNote(noteId) {
     .then((data) => {
       console.log("Delete successful:", data);
       fetchNotes(); // Refetch notes to update the list after deletion
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+function updateNote(noteId, updatedText) {
+  console.log("Updating note with ID: ", noteId);
+  const updatedNoteData = {
+    note_text: updatedText,
+    updated_date: new Date().toLocaleDateString("en-GB"),
+    updated_time: new Date().toLocaleTimeString("en-GB", {
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    }),
+  };
+  fetch(
+    `https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/?noteId=${noteId}`,
+    {
+      // Replace with your Lambda function URL
+      method: "PUT", // Assuming you're using PUT for update operations
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedNoteData),
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Update successful:", data);
+      fetchNotes(); // Refetch notes to update the list after updating
     })
     .catch((error) => {
       console.error("Error:", error);
