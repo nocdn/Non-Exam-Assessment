@@ -31,7 +31,7 @@ function displayNotes(notes) {
 
     // You can format and style it further as needed
     const noteText = document.createElement("p");
-    noteText.textContent = note.note_text;
+    noteText.innerHTML = note.note_text.replace(/\n/g, "<br>");
 
     const creationDate = document.createElement("span");
     creationDate.textContent = `Created on: ${note.creation_date}`;
