@@ -56,6 +56,8 @@ function displayNotes(notes) {
     const deleteIcon = document.createElement("i");
     deleteIcon.className = "fa-solid fa-trash"; // Set Font Awesome classes
     deleteIcon.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
+    deleteIcon.title = "Delete note";
+    deleteIcon.style.color = "red";
     deleteIcon.onclick = function () {
       console.log("Delete action clicked");
       deleteNote(note.note_id);
@@ -65,6 +67,7 @@ function displayNotes(notes) {
     const editIcon = document.createElement("i");
     editIcon.className = "fa-solid fa-pen"; // Set Font Awesome classes
     editIcon.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
+    editIcon.title = "Edit note";
     editIcon.classList.add(note.note_id); // Add the note ID as a class to the delete icon (for later use)
     editIcon.onclick = function () {
       console.log("Edit action clicked for note ID: ", note.note_id);
@@ -81,19 +84,39 @@ function displayNotes(notes) {
 
       // Style adjustments for the textarea
       noteTextAreaElementToEdit.style.width = "100%";
-      noteTextAreaElementToEdit.style.padding = "0.25rem";
+      noteTextAreaElementToEdit.style.padding = "0.5rem";
 
       // Create Confirm button for submitting updated text
       const confirmButton = document.createElement("i");
       confirmButton.className = "fa-solid fa-circle-check"; // Set Font Awesome classes
       confirmButton.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
+      confirmButton.title = "Confirm changes";
       confirmButton.style.color = "green";
       confirmButton.style.opacity = "1";
       confirmButton.onclick = function () {
-        updateNote(note.note_id, noteTextAreaElementToEdit.value);
+        // check if old text is same as new text and if the same then revert back to p element
+        if (noteTextToEdit === noteTextAreaElementToEdit.value) {
+          noteTextAreaElementToEdit.outerHTML = `<p class='${note.note_id}'>${noteTextToEdit}</p>`;
+          iconContainer.removeChild(confirmButton);
+          iconContainer.removeChild(discardButton);
+          return;
+        } else {
+          updateNote(note.note_id, noteTextAreaElementToEdit.value);
+        }
       };
 
       // Append the confirm button to the icon container or wherever appropriate
+      const discardButton = document.createElement("i");
+      discardButton.className = "fa-solid fa-circle-xmark"; // Set Font Awesome classes
+      discardButton.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
+      discardButton.style.color = "red";
+      discardButton.title = "Discard changes";
+      discardButton.onclick = function () {
+        noteTextAreaElementToEdit.outerHTML = `<p class='${note.note_id}'>${noteTextToEdit}</p>`;
+        iconContainer.removeChild(confirmButton);
+        iconContainer.removeChild(discardButton);
+      };
+      iconContainer.appendChild(discardButton);
       iconContainer.appendChild(confirmButton);
     };
 
