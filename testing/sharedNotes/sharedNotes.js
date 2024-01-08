@@ -44,20 +44,37 @@ function displayNotes(notes) {
     // noteElement.appendChild(creationDate);
     noteElement.appendChild(creationDateTime);
 
-    // Create delete button for each note
-    const deleteButton = document.createElement("button");
-    deleteButton.textContent = "🗑️"; // Bin emoji
-    deleteButton.style.display = "block"; // Make it display as a block element
-    deleteButton.style.cursor = "pointer"; // Change cursor to pointer on hover
-    deleteButton.style.border = "none"; // Remove border
-    deleteButton.onclick = function () {
-      console.log("Delete button clicked");
-      console.log(note.note_id); // Log the note ID to the console
-      deleteNote(note.note_id);
-    }; // Add click event to delete note
+    // Create a container div for the icons
+    const iconContainer = document.createElement("div");
+    iconContainer.style.display = "flex";
+    iconContainer.style.justifyContent = "space-between"; // Spread items far apart
+    iconContainer.style.alignItems = "center"; // Align items vertically in the center
+    iconContainer.style.marginTop = "8px"; // Add some margin at the top, adjust as needed
 
-    // Append delete button to the note element
-    noteElement.appendChild(deleteButton);
+    // Create Font Awesome delete icon
+    const deleteIcon = document.createElement("i");
+    deleteIcon.className = "fa-solid fa-trash"; // Set Font Awesome classes
+    deleteIcon.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
+    deleteIcon.onclick = function () {
+      console.log("Delete action clicked");
+      deleteNote(note.note_id);
+    };
+
+    // Create Font Awesome edit icon
+    const editIcon = document.createElement("i");
+    editIcon.className = "fa-solid fa-pen"; // Set Font Awesome classes
+    editIcon.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
+    editIcon.onclick = function () {
+      console.log("Edit action clicked for note ID: ", note.note_id);
+      // Add your edit note logic here
+    };
+
+    // Append both icons to the container
+    iconContainer.appendChild(deleteIcon);
+    iconContainer.appendChild(editIcon);
+
+    // Append the icon container to the note element
+    noteElement.appendChild(iconContainer);
 
     // Check if the note is pinned and append to the corresponding container
     if (note.is_pinned === 1) {
@@ -76,6 +93,8 @@ const noteSendButton = document.querySelector(".sendNote");
 noteSendButton.addEventListener("click", function () {
   console.log("Send note button clicked");
   sendNote();
+  // Reset input field
+  noteInput.value = "";
 });
 
 function sendNote() {

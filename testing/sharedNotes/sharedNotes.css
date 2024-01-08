@@ -36,4 +36,8 @@
 }
 .note span {
   color: rgba(0, 0, 0, 0.399);
+}
+
+.fa-solid {
+  opacity: 40%;
 }/*# sourceMappingURL=sharedNotes.css.map */
