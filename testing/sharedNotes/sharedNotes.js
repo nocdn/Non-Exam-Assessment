@@ -26,148 +26,178 @@ function displayNotes(notes) {
   const pinnedContainer = document.querySelector(".pinnedNotesContainer");
   const regularContainer = document.querySelector(".regularNotesContainer");
 
-  // Clear existing notes if any
-  pinnedContainer.innerHTML = "";
-  regularContainer.innerHTML = "";
+  clearExistingNotes(pinnedContainer, regularContainer);
 
   notes.forEach((note) => {
-    // Create elements for each note
-    const noteElement = document.createElement("div");
-    noteElement.classList.add("note");
+    const noteElement = createNoteElement(note);
 
-    // You can format and style it further as needed
-    const noteText = document.createElement("p");
-    noteText.innerHTML = note.note_text.replace(/\n/g, "<br>");
-    noteText.classList.add(note.note_id); // Add the note ID as a class to the note text element (for later use)
-    noteText.classList.add("note-text");
-
-    const creationDate = document.createElement("span");
-    creationDate.textContent = `Created on: ${note.creation_date}`;
-
-    const creationDateTime = document.createElement("span");
-    creationDateTime.classList.add("creation-date-time");
-    creationDateTime.textContent = `Created on: ${note.creation_date} at ${note.creation_time}`;
-
-    // Append the individual elements to the note element
-    noteElement.appendChild(noteText);
-    // noteElement.appendChild(creationDate);
-    noteElement.appendChild(creationDateTime);
-
-    if (note.updated_date) {
-      const updatedDate = document.createElement("span");
-      updatedDate.classList.add("updated-date-time");
-      updatedDate.textContent = `Updated on: ${note.updated_date} at ${note.updated_time}`;
-      noteElement.appendChild(updatedDate);
-    }
-
-    // Create a container div for the icons
-    const iconContainer = document.createElement("div");
-    iconContainer.style.display = "flex";
-    iconContainer.style.justifyContent = "space-between"; // Spread items far apart
-    iconContainer.style.alignItems = "center"; // Align items vertically in the center
-    iconContainer.style.marginTop = "8px"; // Add some margin at the top, adjust as needed
-
-    // Create Font Awesome delete icon
-    const deleteIcon = document.createElement("i");
-    deleteIcon.className = "fa-solid fa-trash"; // Set Font Awesome classes
-    deleteIcon.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
-    deleteIcon.title = "Delete note";
-    deleteIcon.style.color = "red";
-    deleteIcon.onclick = function () {
-      console.log("Delete action clicked");
-      deleteNote(note.note_id);
-    };
-
-    // Create Font Awesome edit icon
-    const editIcon = document.createElement("i");
-    editIcon.className = "fa-solid fa-pen"; // Set Font Awesome classes
-    editIcon.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
-    editIcon.title = "Edit note";
-    editIcon.classList.add(note.note_id); // Add the note ID as a class to the delete icon (for later use)
-    editIcon.onclick = function () {
-      console.log("Edit action clicked for note ID: ", note.note_id);
-      // Get the note text element by class name of the note ID
-      const noteTextElementToEdit = document.querySelector(`.${note.note_id}`);
-      // Get the note text from the element and set it as a placeholder for the input field
-      const noteTextToEdit = noteTextElementToEdit.textContent;
-      // Change the p element with the class of the note ID to a textarea field
-      noteTextElementToEdit.outerHTML = `<textarea class='${note.note_id} textarea-editable'>${noteTextToEdit}</textarea>`;
-      // Get the textarea element by class name of the note ID
-      const noteTextAreaElementToEdit = document.querySelector(
-        `.${note.note_id}`
-      );
-
-      // Style adjustments for the textarea
-      noteTextAreaElementToEdit.style.width = "100%";
-      noteTextAreaElementToEdit.style.padding = "0.5rem";
-
-      // Create Confirm button for submitting updated text
-      const confirmButton = document.createElement("i");
-      confirmButton.className = "fa-solid fa-circle-check"; // Set Font Awesome classes
-      confirmButton.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
-      confirmButton.title = "Confirm changes";
-      confirmButton.style.color = "green";
-      confirmButton.style.opacity = "1";
-      confirmButton.onclick = function () {
-        // check if old text is same as new text and if the same then revert back to p element
-        if (noteTextToEdit === noteTextAreaElementToEdit.value) {
-          noteTextAreaElementToEdit.outerHTML = `<p class='${note.note_id}'>${noteTextToEdit}</p>`;
-          iconContainer.removeChild(confirmButton);
-          iconContainer.removeChild(discardButton);
-          return;
-        } else {
-          updateNote(note.note_id, noteTextAreaElementToEdit.value);
-          fetchNotes(); // Refetch notes to update the list after updating
-          fetchNotes(); // Refetch notes to update the list after updating
-        }
-      };
-
-      // Append the confirm button to the icon container or wherever appropriate
-      const discardButton = document.createElement("i");
-      discardButton.className = "fa-solid fa-circle-xmark"; // Set Font Awesome classes
-      discardButton.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
-      discardButton.style.color = "red";
-      discardButton.title = "Discard changes";
-      discardButton.onclick = function () {
-        noteTextAreaElementToEdit.outerHTML = `<p class='${note.note_id}'>${noteTextToEdit}</p>`;
-        iconContainer.removeChild(confirmButton);
-        iconContainer.removeChild(discardButton);
-      };
-
-      const pinButton = document.createElement("i");
-      pinButton.className = "fa-solid fa-thumbtack"; // Set Font Awesome classes
-      pinButton.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
-      pinButton.title = "Pin note";
-      pinButton.style.color = "blue";
-      pinButton.onclick = function () {
-        updateNote(
-          note.note_id,
-          noteTextAreaElementToEdit.value,
-          (toPin = true)
-        );
-        fetchNotes(); // Refetch notes to update the list after updating
-      };
-
-      // Appending all new buttons to the icon container
-      iconContainer.appendChild(pinButton);
-      iconContainer.appendChild(discardButton);
-      iconContainer.appendChild(confirmButton);
-    };
-
-    // Append both icons to the container
-    iconContainer.appendChild(deleteIcon);
-    iconContainer.appendChild(editIcon);
-
-    // Append the icon container to the note element
-    noteElement.appendChild(iconContainer);
-
-    // Check if the note is pinned and append to the corresponding container
     if (note.is_pinned === 1) {
       pinnedContainer.appendChild(noteElement);
     } else {
       regularContainer.appendChild(noteElement);
     }
   });
+}
+
+function clearExistingNotes(pinnedContainer, regularContainer) {
+  pinnedContainer.innerHTML = "";
+  regularContainer.innerHTML = "";
+}
+
+function createNoteElement(note) {
+  const noteElement = document.createElement("div");
+  noteElement.classList.add("note");
+
+  const noteText = createNoteTextElement(note);
+  const creationDateTime = createCreationDateTimeElement(note);
+  noteElement.appendChild(noteText);
+  noteElement.appendChild(creationDateTime);
+
+  if (note.updated_date) {
+    const updatedDateTime = createUpdatedDateTimeElement(note);
+    noteElement.appendChild(updatedDateTime);
+  }
+
+  const iconContainer = createIconContainer();
+  const deleteIcon = createDeleteIcon(note);
+  const editIcon = createEditIcon(note);
+  iconContainer.appendChild(deleteIcon);
+  iconContainer.appendChild(editIcon);
+
+  noteElement.appendChild(iconContainer);
+
+  return noteElement;
+}
+
+function createNoteTextElement(note) {
+  const noteText = document.createElement("p");
+  noteText.innerHTML = note.note_text.replace(/\n/g, "<br>");
+  noteText.classList.add(note.note_id, "note-text");
+  return noteText;
+}
+
+function createCreationDateTimeElement(note) {
+  const creationDateTime = document.createElement("span");
+  creationDateTime.classList.add("creation-date-time");
+  creationDateTime.textContent = `Created on: ${note.creation_date} at ${note.creation_time}`;
+  return creationDateTime;
+}
+
+function createUpdatedDateTimeElement(note) {
+  const updatedDateTime = document.createElement("span");
+  updatedDateTime.classList.add("updated-date-time");
+  updatedDateTime.textContent = `Updated on: ${note.updated_date} at ${note.updated_time}`;
+  return updatedDateTime;
+}
+
+function createIconContainer() {
+  const iconContainer = document.createElement("div");
+  iconContainer.style.display = "flex";
+  iconContainer.style.justifyContent = "space-between";
+  iconContainer.style.alignItems = "center";
+  iconContainer.style.marginTop = "8px";
+  return iconContainer;
+}
+
+function createDeleteIcon(note) {
+  const deleteIcon = document.createElement("i");
+  deleteIcon.className = "fa-solid fa-trash";
+  deleteIcon.style.cursor = "pointer";
+  deleteIcon.title = "Delete note";
+  deleteIcon.style.color = "red";
+  deleteIcon.onclick = function () {
+    console.log("Delete action clicked");
+    deleteNote(note.note_id);
+  };
+  return deleteIcon;
+}
+
+function createEditIcon(note) {
+  const editIcon = document.createElement("i");
+  editIcon.className = "fa-solid fa-pen";
+  editIcon.style.cursor = "pointer";
+  editIcon.title = "Edit note";
+  editIcon.classList.add(note.note_id);
+  editIcon.onclick = function () {
+    handleEditClick(note, editIcon.parentElement);
+  };
+  return editIcon;
+}
+
+function handleEditClick(note, iconContainer) {
+  console.log("Edit action clicked for note ID: ", note.note_id);
+  const noteTextElement = document.querySelector(`.note-text.${note.note_id}`);
+  const noteTextToEdit = noteTextElement.innerHTML.replace(/<br>/g, "\n");
+  noteTextElement.outerHTML = `<textarea class='${note.note_id} textarea-editable'>${noteTextToEdit}</textarea>`;
+  const textArea = document.querySelector(`.${note.note_id}.textarea-editable`);
+
+  // Style adjustments for the textarea
+  textArea.style.width = "100%";
+  textArea.style.padding = "0.5rem";
+
+  const confirmButton = createButton(
+    "fa-solid fa-circle-check",
+    "Confirm changes",
+    "green",
+    () => {
+      if (noteTextToEdit === textArea.value) {
+        revertToParagraph(noteTextElement, noteTextToEdit, iconContainer);
+        return;
+      }
+      updateNote(note.note_id, textArea.value);
+      fetchNotes();
+    }
+  );
+
+  const discardButton = createButton(
+    "fa-solid fa-circle-xmark",
+    "Discard changes",
+    "red",
+    () => {
+      revertToParagraph(noteTextElement, noteTextToEdit, iconContainer);
+    }
+  );
+
+  const pinButton = createButton(
+    "fa-solid fa-thumbtack",
+    "Pin note",
+    "blue",
+    () => {
+      updateNote(note.note_id, textArea.value, true);
+      fetchNotes();
+    }
+  );
+
+  iconContainer.appendChild(pinButton);
+  iconContainer.appendChild(discardButton);
+  iconContainer.appendChild(confirmButton);
+}
+
+function createButton(iconClass, title, color, onClickHandler) {
+  const button = document.createElement("i");
+  button.className = iconClass;
+  button.style.cursor = "pointer";
+  button.title = title;
+  button.style.color = color;
+  button.onclick = onClickHandler;
+  return button;
+}
+
+function revertToParagraph(noteTextElement, noteTextToEdit, iconContainer) {
+  noteTextElement.outerHTML = `<p class='${noteTextElement.classList}'></p>`;
+  const newNoteTextElement = document.querySelector(
+    `.${noteTextElement.classList}`
+  );
+  newNoteTextElement.innerHTML = noteTextToEdit.replace(/\n/g, "<br>");
+
+  // Remove confirm and discard buttons
+  const confirmButton = iconContainer.querySelector(".fa-circle-check");
+  const discardButton = iconContainer.querySelector(".fa-circle-xmark");
+  const pinButton = iconContainer.querySelector(".fa-thumbtack");
+
+  if (confirmButton) iconContainer.removeChild(confirmButton);
+  if (discardButton) iconContainer.removeChild(discardButton);
+  if (pinButton) iconContainer.removeChild(pinButton);
 }
 
 fetchNotes();
