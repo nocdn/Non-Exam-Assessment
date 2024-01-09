@@ -53,4 +53,12 @@
 
 .fa-solid {
   opacity: 40%;
+}
+
+.creation-date-time {
+  font-size: 1rem;
+}
+
+.updated-date-time {
+  font-size: 0.75rem;
 }/*# sourceMappingURL=sharedNotes.css.map */

@@ -12,6 +12,11 @@ async function fetchNotes() {
       const regularContainer = document.querySelector(".regularNotesContainer");
       pinnedContainer.innerHTML = "";
       regularContainer.innerHTML = "";
+      // Clear existing notes if any
+      const pinnedContainer = document.querySelector(".pinnedNotesContainer");
+      const regularContainer = document.querySelector(".regularNotesContainer");
+      pinnedContainer.innerHTML = "";
+      regularContainer.innerHTML = "";
     } else {
       displayNotes(data.notes); // Call function to display notes
       console.log("Notes found:", data.notes);
@@ -45,6 +50,7 @@ function displayNotes(notes) {
     creationDate.textContent = `Created on: ${note.creation_date}`;
 
     const creationDateTime = document.createElement("span");
+    creationDateTime.classList.add("creation-date-time");
     creationDateTime.textContent = `Created on: ${note.creation_date} at ${note.creation_time}`;
 
     // Append the individual elements to the note element
@@ -54,6 +60,7 @@ function displayNotes(notes) {
 
     if (note.updated_date) {
       const updatedDate = document.createElement("span");
+      updatedDate.classList.add("updated-date-time");
       updatedDate.textContent = `Updated on: ${note.updated_date} at ${note.updated_time}`;
       noteElement.appendChild(updatedDate);
     }
@@ -115,6 +122,7 @@ function displayNotes(notes) {
           return;
         } else {
           updateNote(note.note_id, noteTextAreaElementToEdit.value);
+          fetchNotes(); // Refetch notes to update the list after updating
           fetchNotes(); // Refetch notes to update the list after updating
         }
       };
@@ -210,6 +218,7 @@ function deleteNote(noteId) {
     });
 }
 
+function updateNote(noteId, updatedText, toPin = false) {
 function updateNote(noteId, updatedText, toPin = false) {
   console.log("Updating note with ID: ", noteId);
   const updatedNoteData = {
