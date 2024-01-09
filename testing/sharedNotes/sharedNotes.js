@@ -221,11 +221,23 @@ function revertToParagraph(noteId, noteTextToEdit, iconContainer) {
 
 fetchNotes();
 
+const isTextareaOnlySpaces = function () {
+  const textareaValueToCheck = document.getElementById("noteInput").value;
+  return (
+    textareaValueToCheck.trim().length === 0 && textareaValueToCheck.length > 0
+  );
+};
+
 const noteInput = document.getElementById("noteInput");
 const priorityNoteCheckbox = document.getElementById("priorityNoteCheckbox");
 const noteSendButton = document.querySelector(".sendNote");
 noteSendButton.addEventListener("click", function () {
-  if (noteInput.value === "") {
+  if (isTextareaOnlySpaces()) {
+    console.log("Sending empty note");
+    createSpinner(".sendNote", 15, "right", 3);
+    noteInput.value = "(empty)";
+    sendNote();
+  } else if (noteInput.value === "") {
     console.log(document.querySelector(".sendNote"));
     createErrorIcon(".sendNote", "Note cannot be empty", true);
     console.log("Note cannot be empty");
