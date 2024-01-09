@@ -147,6 +147,16 @@ function handleEditClick(note, iconContainer) {
   textarea.value = noteTextToEdit;
   textarea.style.width = "100%";
   textarea.style.padding = "0.5rem";
+  textarea.style.resize = "vertical"; // Allow the textarea to be resized vertically
+
+  // Make the textarea the same height as the original note text and resizeable
+  const computedStyle = window.getComputedStyle(noteTextElement);
+  const height =
+    noteTextElement.offsetHeight +
+    parseInt(computedStyle.marginTop, 10) +
+    parseInt(computedStyle.marginBottom, 10);
+  textarea.style.height = `${height}px`;
+
   noteTextElement.replaceWith(textarea);
 
   // Create and add buttons
@@ -155,6 +165,7 @@ function handleEditClick(note, iconContainer) {
     "Confirm changes",
     "green",
     () => {
+      createSpinner(`.fa-circle-check.${note.note_id}`, 15, "left", 3);
       if (noteTextToEdit === textarea.value) {
         revertToParagraph(note.note_id, noteTextToEdit, iconContainer);
         return;
