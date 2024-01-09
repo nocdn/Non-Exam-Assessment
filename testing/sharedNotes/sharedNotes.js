@@ -211,8 +211,15 @@ const noteInput = document.getElementById("noteInput");
 const priorityNoteCheckbox = document.getElementById("priorityNoteCheckbox");
 const noteSendButton = document.querySelector(".sendNote");
 noteSendButton.addEventListener("click", function () {
-  console.log("Send note button clicked");
-  sendNote();
+  if (noteInput.value === "") {
+    console.log(document.querySelector(".sendNote"));
+    createErrorIcon(".sendNote", "Note cannot be empty", true);
+    console.log("Note cannot be empty");
+    return;
+  } else {
+    console.log("Sending note: ", noteInput.value);
+    sendNote();
+  }
   // Reset input field
   noteInput.value = "";
 });
@@ -297,3 +304,78 @@ function updateNote(noteId, updatedText, toPin = false) {
       console.error("Error:", error);
     });
 }
+
+const createErrorIcon = (elementToAttach, errorText, centered = false) => {
+  // Remove existing error icon and text if they exist
+  const existingError = document.querySelector(".error-icon-text-container");
+  if (existingError) {
+    existingError.remove();
+  }
+
+  // Create the container div
+  const errorContainer = document.createElement("div");
+  errorContainer.className = "error-icon-text-container";
+  errorContainer.style.display = "flex";
+  errorContainer.style.alignItems = "center";
+  errorContainer.style.gap = "10px";
+  errorContainer.style.color = "red"; // Sets the text color same as the icon
+  errorContainer.style.opacity = "0"; // Start with low opacity
+  errorContainer.style.filter = "blur(10px)"; // Start with blur
+  errorContainer.style.transition = "opacity 0.8s, filter 0.8s"; // Transition effect
+
+  // Create the error icon
+  const errorIcon = document.createElement("i");
+  errorIcon.className = "fa-solid fa-circle-exclamation";
+
+  // Create the error text element
+  const errorTextElement = document.createElement("span");
+  errorTextElement.textContent = errorText;
+  errorTextElement.style.opacity = "0.6";
+  errorTextElement.style.fontWeight = "600";
+
+  // Append the icon and text to the container
+  errorContainer.appendChild(errorIcon);
+  errorContainer.appendChild(errorTextElement);
+
+  // Append the error container to the body to calculate its dimensions
+  document.body.appendChild(errorContainer);
+
+  // Transition to full opacity and no blur after appending
+  setTimeout(() => {
+    errorContainer.style.opacity = "1";
+    errorContainer.style.filter = "blur(0)";
+  }, 0);
+
+  const elementToAttachTo = document.querySelector(elementToAttach);
+  const elementRect = elementToAttachTo.getBoundingClientRect();
+
+  // Setting the position of the error container
+  errorContainer.style.position = "absolute";
+  errorContainer.style.left = `${elementRect.right + 20}px`; // Adding x pixels to the right edge
+
+  if (centered) {
+    // Align the vertical center of the error container with the vertical center of the element
+    const elementCenterY = elementRect.top + elementRect.height / 2;
+    const containerHeight = errorContainer.offsetHeight;
+    const containerTop = elementCenterY - containerHeight / 2;
+    errorContainer.style.top = `${containerTop}px`;
+  } else {
+    // Aligning top edge
+    errorContainer.style.top = `${elementRect.top}px`;
+  }
+
+  setTimeout(() => {
+    errorContainer.style.animationName = "horizontal-shaking";
+    errorContainer.style.animationDuration = "0.5s";
+    errorContainer.style.animationIterationCount = "1";
+  }, 400);
+
+  setTimeout(() => {
+    // Smoothly fade out opacity and then remove the error container
+    errorContainer.style.opacity = "0";
+    errorContainer.style.filter = "blur(10px)";
+    setTimeout(() => {
+      errorContainer.remove();
+    }, 800); // Match the transition duration
+  }, 2000);
+};
