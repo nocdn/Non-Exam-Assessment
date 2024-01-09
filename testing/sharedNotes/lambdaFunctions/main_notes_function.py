@@ -170,17 +170,17 @@ def handle_put_request(event):
     try:
         note_id = event.get('queryStringParameters', {}).get('noteId')
         body = json.loads(event['body'])
-        
+
         # Load the existing note from S3
         existing_note_object = s3_client.get_object(Bucket=bucket_name, Key=f'{note_id}.json')
         existing_note_content = existing_note_object['Body'].read().decode('utf-8')
         existing_note_data = json.loads(existing_note_content)
 
-        # Update the note text and add updated date and time
+        # Update the note text, updated date and time, and pinning status
         existing_note_data['note_text'] = body['note_text']
         existing_note_data['updated_date'] = body['updated_date']
         existing_note_data['updated_time'] = body['updated_time']
-
+        existing_note_data['is_pinned'] = body.get('is_pinned', existing_note_data.get('is_pinned', 0))
         # Save the updated note back to S3
         s3_client.put_object(Bucket=bucket_name, Key=f'{note_id}.json', Body=json.dumps(existing_note_data))
 

@@ -133,6 +133,23 @@ function displayNotes(notes) {
         iconContainer.removeChild(confirmButton);
         iconContainer.removeChild(discardButton);
       };
+
+      const pinButton = document.createElement("i");
+      pinButton.className = "fa-solid fa-thumbtack"; // Set Font Awesome classes
+      pinButton.style.cursor = "pointer"; // Change cursor on hover to indicate clickability
+      pinButton.title = "Pin note";
+      pinButton.style.color = "blue";
+      pinButton.onclick = function () {
+        updateNote(
+          note.note_id,
+          noteTextAreaElementToEdit.value,
+          (toPin = true)
+        );
+        fetchNotes(); // Refetch notes to update the list after updating
+      };
+
+      // Appending all new buttons to the icon container
+      iconContainer.appendChild(pinButton);
       iconContainer.appendChild(discardButton);
       iconContainer.appendChild(confirmButton);
     };
@@ -217,6 +234,7 @@ function updateNote(noteId, updatedText, toPin = false) {
   console.log("Updating note with ID: ", noteId);
   const updatedNoteData = {
     note_text: updatedText,
+    is_pinned: toPin ? 1 : 0,
     updated_date: new Date().toLocaleDateString("en-GB"),
     updated_time: new Date().toLocaleTimeString("en-GB", {
       hour12: false,
@@ -226,10 +244,9 @@ function updateNote(noteId, updatedText, toPin = false) {
     }),
   };
   fetch(
-    `https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/?noteId=${noteId}`,
+    `https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/?noteId=${noteId}`, // Replace with your Lambda function URL
     {
-      // Replace with your Lambda function URL
-      method: "PUT", // Assuming you're using PUT for update operations
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
