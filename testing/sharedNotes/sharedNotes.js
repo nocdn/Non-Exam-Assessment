@@ -14,6 +14,7 @@ async function fetchNotes() {
       regularContainer.innerHTML = "";
     } else {
       displayNotes(data.notes); // Call function to display notes
+      console.log("Notes found:", data.notes);
     }
   } catch (error) {
     console.error("Error:", error);
@@ -50,6 +51,12 @@ function displayNotes(notes) {
     noteElement.appendChild(noteText);
     // noteElement.appendChild(creationDate);
     noteElement.appendChild(creationDateTime);
+
+    if (note.updated_date) {
+      const updatedDate = document.createElement("span");
+      updatedDate.textContent = `Updated on: ${note.updated_date} at ${note.updated_time}`;
+      noteElement.appendChild(updatedDate);
+    }
 
     // Create a container div for the icons
     const iconContainer = document.createElement("div");
@@ -203,7 +210,7 @@ function deleteNote(noteId) {
     });
 }
 
-function updateNote(noteId, updatedText) {
+function updateNote(noteId, updatedText, toPin = false) {
   console.log("Updating note with ID: ", noteId);
   const updatedNoteData = {
     note_text: updatedText,
