@@ -12,11 +12,6 @@ async function fetchNotes() {
       const regularContainer = document.querySelector(".regularNotesContainer");
       pinnedContainer.innerHTML = "";
       regularContainer.innerHTML = "";
-      // Clear existing notes if any
-      const pinnedContainer = document.querySelector(".pinnedNotesContainer");
-      const regularContainer = document.querySelector(".regularNotesContainer");
-      pinnedContainer.innerHTML = "";
-      regularContainer.innerHTML = "";
     } else {
       displayNotes(data.notes); // Call function to display notes
       console.log("Notes found:", data.notes);
@@ -218,7 +213,6 @@ function deleteNote(noteId) {
     });
 }
 
-function updateNote(noteId, updatedText, toPin = false) {
 function updateNote(noteId, updatedText, toPin = false) {
   console.log("Updating note with ID: ", noteId);
   const updatedNoteData = {
