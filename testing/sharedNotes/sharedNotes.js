@@ -131,6 +131,13 @@ function createEditIcon(note) {
 
 function handleEditClick(note, iconContainer) {
   console.log("Edit action clicked for note ID: ", note.note_id);
+
+  // Hide the edit icon when editing starts
+  const editIcon = iconContainer.querySelector(
+    `.fa-pen.edit-icon-${note.note_id}`
+  );
+  editIcon.style.display = "none";
+
   const noteTextElement = document.querySelector(`.note-text.${note.note_id}`);
   const noteTextToEdit = noteTextElement.innerHTML.replace(/<br>/g, "\n");
 
@@ -197,6 +204,12 @@ function createButton(iconClass, title, color, onClickHandler) {
 }
 
 function revertToParagraph(noteId, noteTextToEdit, iconContainer) {
+  // Show the edit icon again when editing is discarded or confirmed
+  const editIcon = iconContainer.querySelector(`.fa-pen`);
+  if (editIcon) {
+    editIcon.style.display = "inline-block"; // Ensure the display matches initial style
+  }
+
   const textarea = document.querySelector(`.${noteId}.textarea-editable`);
   if (!textarea) {
     console.error("Textarea for editing not found");
