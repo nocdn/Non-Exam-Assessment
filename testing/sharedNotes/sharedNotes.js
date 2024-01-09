@@ -244,7 +244,6 @@ noteSendButton.addEventListener("click", function () {
     return;
   } else {
     console.log("Sending note: ", noteInput.value);
-    // handleLoadingSpinner(".sendNote", "add", "right", 10);
     createSpinner(".sendNote", 15, "right", 3);
 
     sendNote();

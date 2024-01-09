@@ -25,11 +25,15 @@
   background-color: rgba(211, 211, 211, 0.257);
   border-radius: 0.5rem;
   span {
-    color: rgba(0, 0, 0, 0.399);
+    color: rgba(0, 0, 0, 0.25);
     display: block;
   }
   p {
     font-size: 1rem;
+    background-color: rgba(0, 0, 0, 0.02);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin: 0 0 0.5rem 0;
   }
   textarea {
     font-size: 1rem;
