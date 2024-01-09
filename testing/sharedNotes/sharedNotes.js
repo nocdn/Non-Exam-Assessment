@@ -163,7 +163,12 @@ function handleEditClick(note, iconContainer) {
     "Pin note",
     "blue",
     () => {
-      updateNote(note.note_id, textArea.value, true);
+      // check if note is already pinned
+      if (note.is_pinned === 1) {
+        updateNote(note.note_id, textArea.value, false);
+      } else {
+        updateNote(note.note_id, textArea.value, true);
+      }
       fetchNotes();
     }
   );
