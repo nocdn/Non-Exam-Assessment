@@ -6,6 +6,7 @@ async function fetchNotes() {
     const data = await response.json();
     // Handle the case where no notes are found or handle the list of note file names
     if (data.notes.length === 0) {
+      removeSpinner();
       console.log("No notes found");
       // Clear existing notes if any
       const pinnedContainer = document.querySelector(".pinnedNotesContainer");
@@ -13,6 +14,7 @@ async function fetchNotes() {
       pinnedContainer.innerHTML = "";
       regularContainer.innerHTML = "";
     } else {
+      removeSpinner();
       displayNotes(data.notes); // Call function to display notes
       console.log("Notes found:", data.notes);
     }
@@ -101,20 +103,23 @@ function createIconContainer() {
 
 function createDeleteIcon(note) {
   const deleteIcon = document.createElement("i");
-  deleteIcon.className = "fa-solid fa-trash";
+  deleteIcon.className = `fa-solid fa-trash delete-icon-${note.note_id}`;
   deleteIcon.style.cursor = "pointer";
   deleteIcon.title = "Delete note";
   deleteIcon.style.color = "red";
   deleteIcon.onclick = function () {
     console.log("Delete action clicked");
     deleteNote(note.note_id);
+
+    // Create spinner next to this specific delete icon
+    createSpinner(`.delete-icon-${note.note_id}`, 15, "right", 3);
   };
   return deleteIcon;
 }
 
 function createEditIcon(note) {
   const editIcon = document.createElement("i");
-  editIcon.className = "fa-solid fa-pen";
+  editIcon.className = `fa-solid fa-pen edit-icon-${note.note_id}`;
   editIcon.style.cursor = "pointer";
   editIcon.title = "Edit note";
   editIcon.classList.add(note.note_id);
@@ -128,23 +133,26 @@ function handleEditClick(note, iconContainer) {
   console.log("Edit action clicked for note ID: ", note.note_id);
   const noteTextElement = document.querySelector(`.note-text.${note.note_id}`);
   const noteTextToEdit = noteTextElement.innerHTML.replace(/<br>/g, "\n");
-  noteTextElement.outerHTML = `<textarea class='${note.note_id} textarea-editable'>${noteTextToEdit}</textarea>`;
-  const textArea = document.querySelector(`.${note.note_id}.textarea-editable`);
 
-  // Style adjustments for the textarea
-  textArea.style.width = "100%";
-  textArea.style.padding = "0.5rem";
+  // Replace the p element with a textarea
+  const textarea = document.createElement("textarea");
+  textarea.className = `${note.note_id} textarea-editable`;
+  textarea.value = noteTextToEdit;
+  textarea.style.width = "100%";
+  textarea.style.padding = "0.5rem";
+  noteTextElement.replaceWith(textarea);
 
+  // Create and add buttons
   const confirmButton = createButton(
-    "fa-solid fa-circle-check",
+    `fa-solid fa-circle-check ${note.note_id}`,
     "Confirm changes",
     "green",
     () => {
-      if (noteTextToEdit === textArea.value) {
-        revertToParagraph(noteTextElement, noteTextToEdit, iconContainer);
+      if (noteTextToEdit === textarea.value) {
+        revertToParagraph(note.note_id, noteTextToEdit, iconContainer);
         return;
       }
-      updateNote(note.note_id, textArea.value);
+      updateNote(note.note_id, textarea.value);
       fetchNotes();
     }
   );
@@ -154,20 +162,20 @@ function handleEditClick(note, iconContainer) {
     "Discard changes",
     "red",
     () => {
-      revertToParagraph(noteTextElement, noteTextToEdit, iconContainer);
+      revertToParagraph(note.note_id, noteTextToEdit, iconContainer);
     }
   );
 
   const pinButton = createButton(
-    "fa-solid fa-thumbtack",
+    `fa-solid fa-thumbtack ${note.note_id}`,
     "Pin note",
     "blue",
     () => {
-      // check if note is already pinned
+      createSpinner(`.fa-thumbtack.${note.note_id}`, 15, "right", 3);
       if (note.is_pinned === 1) {
-        updateNote(note.note_id, textArea.value, false);
+        updateNote(note.note_id, textarea.value, false);
       } else {
-        updateNote(note.note_id, textArea.value, true);
+        updateNote(note.note_id, textarea.value, true);
       }
       fetchNotes();
     }
@@ -188,21 +196,27 @@ function createButton(iconClass, title, color, onClickHandler) {
   return button;
 }
 
-function revertToParagraph(noteTextElement, noteTextToEdit, iconContainer) {
-  noteTextElement.outerHTML = `<p class='${noteTextElement.classList}'></p>`;
-  const newNoteTextElement = document.querySelector(
-    `.${noteTextElement.classList}`
-  );
-  newNoteTextElement.innerHTML = noteTextToEdit.replace(/\n/g, "<br>");
+function revertToParagraph(noteId, noteTextToEdit, iconContainer) {
+  const textarea = document.querySelector(`.${noteId}.textarea-editable`);
+  if (!textarea) {
+    console.error("Textarea for editing not found");
+    return;
+  }
 
-  // Remove confirm and discard buttons
+  // Create a new p element to replace the textarea
+  const newNoteTextElement = document.createElement("p");
+  newNoteTextElement.className = `note-text ${noteId}`;
+  newNoteTextElement.innerHTML = noteTextToEdit.replace(/\n/g, "<br>");
+  textarea.replaceWith(newNoteTextElement);
+
+  // Remove confirm, discard, and pin buttons
   const confirmButton = iconContainer.querySelector(".fa-circle-check");
   const discardButton = iconContainer.querySelector(".fa-circle-xmark");
   const pinButton = iconContainer.querySelector(".fa-thumbtack");
 
-  if (confirmButton) iconContainer.removeChild(confirmButton);
-  if (discardButton) iconContainer.removeChild(discardButton);
-  if (pinButton) iconContainer.removeChild(pinButton);
+  confirmButton?.remove();
+  discardButton?.remove();
+  pinButton?.remove();
 }
 
 fetchNotes();
@@ -218,6 +232,9 @@ noteSendButton.addEventListener("click", function () {
     return;
   } else {
     console.log("Sending note: ", noteInput.value);
+    // handleLoadingSpinner(".sendNote", "add", "right", 10);
+    createSpinner(".sendNote", 15, "right", 3);
+
     sendNote();
   }
   // Reset input field
@@ -378,4 +395,66 @@ const createErrorIcon = (elementToAttach, errorText, centered = false) => {
       errorContainer.remove();
     }, 800); // Match the transition duration
   }, 2000);
+};
+
+const createSpinner = (
+  elementToAttach,
+  spinnerSize,
+  side = "right",
+  bladeWidth = 2
+) => {
+  // Remove existing spinner if it exists
+  const existingSpinner = document.querySelector(".ispinner");
+  if (existingSpinner) {
+    existingSpinner.remove();
+  }
+
+  // Create spinner container
+  const spinner = document.createElement("div");
+  spinner.className = "ispinner";
+  spinner.style.width = `${spinnerSize}px`;
+  spinner.style.height = `${spinnerSize}px`;
+
+  // Calculate blade height and position
+  const bladeHeight = spinnerSize / 2;
+  const bladePosition = spinnerSize / 2 - bladeWidth / 2;
+
+  // Add spinner blades
+  for (let i = 0; i < 8; i++) {
+    const blade = document.createElement("div");
+    blade.className = "ispinner-blade";
+    blade.style.width = `${bladeWidth}px`;
+    blade.style.height = `${bladeHeight}px`;
+    blade.style.top = `${bladePosition}px`;
+    blade.style.left = `${bladePosition}px`;
+    blade.style.borderRadius = `${bladeWidth / 2}px`;
+    spinner.appendChild(blade);
+  }
+
+  // Append spinner to the body
+  document.body.appendChild(spinner);
+
+  // Positioning the spinner
+  const elementToAttachTo = document.querySelector(elementToAttach);
+  const elementRect = elementToAttachTo.getBoundingClientRect();
+
+  spinner.style.position = "absolute";
+  spinner.style.zIndex = 1000;
+
+  if (side === "right") {
+    spinner.style.left = `${elementRect.right + 10}px`;
+  } else if (side === "left") {
+    spinner.style.left = `${elementRect.left - spinner.offsetWidth - 10}px`;
+  }
+
+  spinner.style.top = `${
+    elementRect.top + elementRect.height / 2 - spinner.offsetHeight / 2
+  }px`;
+};
+
+const removeSpinner = () => {
+  const spinner = document.querySelector(".ispinner");
+  if (spinner) {
+    spinner.remove();
+  }
 };
