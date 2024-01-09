@@ -16,20 +16,6 @@
   margin: 0.5rem 0 0.5rem 0;
 }
 
-#noteInput {
-  width: 8rem;
-  height: 6rem;
-  margin: 1rem 0 0 1rem;
-  border: none;
-  outline: none;
-  resize: none;
-  background-color: #f5f5f5;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  width: 20rem;
-  height: 7ch;
-}
-
 .note {
   padding: 1rem;
   margin-bottom: 0.5rem;
@@ -61,4 +47,42 @@
 
 .updated-date-time {
   font-size: 0.75rem;
+}
+
+.addNoteContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 16rem;
+  height: 12rem;
+  margin: 1rem 0 0 1rem;
+}
+.addNoteContainer #noteInput {
+  border: none;
+  outline: none;
+  resize: none;
+  background-color: #f5f5f5;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  height: 6rem;
+}
+.addNoteContainer .priorityOption {
+  margin-left: 0.5rem;
+}
+.addNoteContainer .priorityOption input {
+  transform: scale(1.2);
+}
+.addNoteContainer .sendNote {
+  height: 2rem;
+  font-size: 0.85rem;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+.addNoteContainer .sendNote i {
+  color: black;
 }/*# sourceMappingURL=sharedNotes.css.map */

@@ -18,20 +18,27 @@
       <h2>Other</h2>
       <div class="regularNotesContainer"></div>
     </div>
+    <div class="addNoteContainer">
+      <textarea
+        name="noteInput"
+        placeholder="What is on your mind..."
+        id="noteInput"
+        style="resize: both"
+      ></textarea>
+      <div class="priorityOption">
+        <input
+          type="checkbox"
+          name="priorityNoteCheckbox"
+          id="priorityNoteCheckbox"
+        />
+        <label for="priorityNoteCheckbox">Pin Note</label>
+      </div>
 
-    <textarea
-      name="noteInput"
-      placeholder="What is on your mind..."
-      id="noteInput"
-      style="resize: both"
-    ></textarea>
+      <button class="sendNote">
+        <span>Send Note</span> <i class="fa-solid fa-square-arrow-up-right"></i>
+      </button>
+    </div>
 
-    <input
-      type="checkbox"
-      name="priorityNoteCheckbox"
-      id="priorityNoteCheckbox"
-    />
-    <button class="sendNote">Send Note</button>
     <script src="sharedNotes.js"></script>
   </body>
 </html>
