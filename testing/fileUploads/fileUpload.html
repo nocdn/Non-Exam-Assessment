@@ -5,12 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>File Upload test</title>
     <link rel="stylesheet" href="fileUpload.css" />
+    <script
+      src="https://kit.fontawesome.com/7d2900409e.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <h1>File Upload Test</h1>
     <main>
-      <input type="file" name="file-upload-input" class="file-input" multiple />
-      <button class="upload-btn">Upload</button>
+      <input type="file" name="file" id="file" class="inputfile" />
+      <label class="file-input-label" for="file">Choose a file</label>
+      <p class="selected-files-text">Selected Files:</p>
+      <button class="upload-btn">
+        <span>Upload <i class="fa-solid fa-upload"></i></span>
+      </button>
       <div class="upload-progress">
         <progress
           class="progress"
@@ -23,5 +31,7 @@
       <div class="file-list"></div>
       <script src="fileUpload.js"></script>
     </main>
+    <h1>Files</h1>
+    <ul id="file-list"></ul>
   </body>
 </html>

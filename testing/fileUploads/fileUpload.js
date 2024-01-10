@@ -1,6 +1,24 @@
+document
+  .querySelector(".file-input-label")
+  .addEventListener("change", (event) => {
+    const fileList = document.querySelector(".selected-files-text");
+    console.log(fileList);
+    fileList.innerHTML = "";
+    for (let i = 0; i < event.target.files.length; i++) {
+      fileList.innerHTML += `<li>${event.target.files[i].name}</li>`;
+    }
+  });
+
 document.querySelector(".upload-btn").addEventListener("click", () => {
   // Get the selected file
-  const files = document.querySelector(".file-input").files;
+  const files = document.querySelector(".inputfile").files;
+  const fileList = document.querySelector(".selected-files-text");
+  console.log(fileList);
+  fileList.innerHTML = "";
+  for (let i = 0; i < files.length; i++) {
+    fileList.innerHTML += `<li>${files[i].name}</li>`;
+  }
+
   const file = files[0];
   console.log(`Starting upload for: ${file.name}`);
 
@@ -55,3 +73,45 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
     })
     .catch((error) => console.error("Error:", error));
 });
+
+// Function to fetch file list and generate HTML
+function fetchFileList() {
+  const lambdaUrl =
+    "https://24qvw7hqnnxazjuc5ahawcb43a0qdzwp.lambda-url.eu-west-2.on.aws/"; // Replace with your actual Lambda URL
+  fetch(lambdaUrl)
+    .then((response) => response.json())
+    .then((files) => {
+      const fileList = document.getElementById("file-list");
+      fileList.innerHTML = ""; // Clear existing list items if any
+
+      files.forEach((file) => {
+        // Create the container for each file
+        const fileContainer = document.createElement("div");
+        fileContainer.className = "file-to-download-container";
+
+        // Create the download link for the icon only
+        const downloadLink = document.createElement("a");
+        downloadLink.className = "file-download-link";
+        downloadLink.href = file.DownloadUrl;
+        downloadLink.download = file.Key; // This will suggest the filename to save as
+        downloadLink.innerHTML = `<i class="fa-regular fa-circle-down"></i>`; // Insert icon only
+
+        // Append the download link to the container
+        fileContainer.appendChild(downloadLink);
+
+        // Create a span element for the text to prevent it from being a link
+        const fileNameSpan = document.createElement("span");
+        fileNameSpan.textContent = file.Key; // Add the text
+
+        // Append the text span to the container
+        fileContainer.appendChild(fileNameSpan);
+
+        // Append the container to the file list
+        fileList.appendChild(fileContainer);
+      });
+    })
+    .catch((error) => console.error("Error:", error));
+}
+
+// Call the function to fetch and display the file list
+fetchFileList();
