@@ -187,17 +187,19 @@ function handleEditClick(note, iconContainer) {
     `fa-solid fa-circle-check ${note.note_id}`,
     "Confirm changes",
     "green",
-    () => {
+    async () => {
       createSpinner(`.fa-circle-check.${note.note_id}`, 15, "left", 3);
       if (noteTextToEdit === textarea.value) {
         revertToParagraph(note.note_id, noteTextToEdit, iconContainer);
-        return;
+      } else {
+        revertToParagraph(note.note_id, textarea.value, iconContainer);
+        await updateNote(
+          note.note_id,
+          textarea.value,
+          note.is_pinned === 1 ? true : false
+        );
       }
-      updateNote(
-        note.note_id,
-        textarea.value,
-        note.is_pinned === 1 ? true : false
-      );
+
       fetchNotes();
     }
   );
@@ -215,14 +217,21 @@ function handleEditClick(note, iconContainer) {
     `fa-solid fa-thumbtack ${note.note_id}`,
     "Pin note",
     "blue",
-    () => {
+    async () => {
+      // Use async here to be able to use await later
       createSpinner(`.fa-thumbtack.${note.note_id}`, 15, "right", 3);
-      if (note.is_pinned === 1) {
-        updateNote(note.note_id, textarea.value, false);
-      } else {
-        updateNote(note.note_id, textarea.value, true);
+      try {
+        // Update the note with the new pin status
+        await updateNote(
+          note.note_id,
+          textarea.value,
+          note.is_pinned === 1 ? false : true
+        );
+        fetchNotes(); // Refetch notes to update the list after pinning/unpinning
+      } catch (error) {
+        console.error("Error updating note pin status:", error);
+        // Handle error (e.g., show an error message to the user)
       }
-      fetchNotes();
     }
   );
 
@@ -354,6 +363,7 @@ function deleteNote(noteId) {
 
 function updateNote(noteId, updatedText, toPin = false) {
   console.log("Updating note with ID: ", noteId);
+
   const updatedNoteData = {
     note_text: updatedText,
     is_pinned: toPin ? 1 : 0,
@@ -365,24 +375,33 @@ function updateNote(noteId, updatedText, toPin = false) {
       second: "2-digit",
     }),
   };
-  fetch(
-    `https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/?noteId=${noteId}`, // Replace with your Lambda function URL
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedNoteData),
-    }
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Update successful:", data);
-      fetchNotes(); // Refetch notes to update the list after updating
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+
+  return new Promise((resolve, reject) => {
+    fetch(
+      `https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/?noteId=${noteId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedNoteData),
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Update successful:", data);
+        resolve(data); // Resolve the promise with the data
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        reject(error); // Reject the promise if there's an error
+      });
+  });
 }
 
 const createErrorIcon = (elementToAttach, errorText, centered = false) => {
