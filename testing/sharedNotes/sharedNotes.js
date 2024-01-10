@@ -13,6 +13,29 @@ async function fetchNotes() {
       const regularContainer = document.querySelector(".regularNotesContainer");
       pinnedContainer.innerHTML = "";
       regularContainer.innerHTML = "";
+
+      // replace the containers with a "No notes found" message
+      const noNotesFoundMessage = document.createElement("p");
+      noNotesFoundMessage.textContent = "No notes found";
+      noNotesFoundMessage.style.marginLeft = "1rem";
+      noNotesFoundMessage.style.color = "red";
+
+      pinnedContainer.appendChild(noNotesFoundMessage);
+      regularContainer.appendChild(noNotesFoundMessage.cloneNode(true));
+
+      // Create a button to refresh the notes
+      const refreshButton = document.createElement("button");
+      refreshButton.classList.add("refreshButton");
+      refreshButton.textContent = "Refresh";
+      refreshButton.style.marginLeft = "0.5rem";
+      refreshButton.style.marginTop = "0.5rem";
+
+      refreshButton.onclick = () => {
+        fetchNotes();
+        createSpinner(".refreshButton", 12, "right", 3);
+      };
+
+      regularContainer.appendChild(refreshButton);
     } else {
       removeSpinner();
       displayNotes(data.notes); // Call function to display notes
@@ -443,6 +466,8 @@ const createSpinner = (
   side = "right",
   bladeWidth = 2
 ) => {
+  console.log(`Attatching to ${elementToAttach}`);
+
   // Remove existing spinner if it exists
   const existingSpinner = document.querySelector(".ispinner");
   if (existingSpinner) {
@@ -498,3 +523,6 @@ const removeSpinner = () => {
     spinner.remove();
   }
 };
+
+// create initial loading spinner
+createSpinner(".notesHeading", 18, "right", 3);

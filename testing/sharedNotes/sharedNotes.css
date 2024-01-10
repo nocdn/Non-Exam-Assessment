@@ -7,6 +7,8 @@
 
 .notesHeading {
   margin: 1rem 0 0 1rem;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 #notesContainer {
@@ -14,6 +16,20 @@
 }
 #notesContainer h2 {
   margin: 0.5rem 0 0.5rem 0;
+}
+
+.pinned-text {
+  display: block;
+  width: -moz-fit-content;
+  width: fit-content;
+  color: #4d4d4d;
+}
+
+.regular-text {
+  display: block;
+  width: -moz-fit-content;
+  width: fit-content;
+  color: #4d4d4d;
 }
 
 .note {
