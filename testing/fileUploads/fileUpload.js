@@ -30,6 +30,9 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
     content_type: file.type,
   });
 
+  let startTime = Date.now(); // Start time of the upload
+  let lastLoaded = 0; // Last loaded amount to calculate speed
+
   // Make a request to your Lambda function
   fetch(`${lambdaUrl}?${queryParams}`, {
     method: "GET",
@@ -50,6 +53,18 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
           document.getElementById(
             "progressPercentage"
           ).innerText = `${percentage}%`;
+          // calculate upload speed
+          const currentTime = Date.now();
+          const timeElapsedInSeconds = (currentTime - startTime) / 1000;
+          const bytesPerSecond =
+            (event.loaded - lastLoaded) / timeElapsedInSeconds;
+          const speedInMbps = (bytesPerSecond / 1024 / 1024).toFixed(2);
+          document.getElementById(
+            "uploadSpeed"
+          ).innerText = `Speed: ${speedInMbps} MB/s`;
+
+          lastLoaded = event.loaded; // Update last loaded amount
+          startTime = currentTime; // Reset the start time for the next calculation
         }
       };
 
@@ -73,6 +88,21 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
     })
     .catch((error) => console.error("Error:", error));
 });
+
+// Function to calculate and display upload speed
+function calculateSpeed(loaded, startTime, lastLoaded) {
+  const currentTime = Date.now();
+  const timeElapsedInSeconds = (currentTime - startTime) / 1000;
+  const bytesPerSecond = (loaded - lastLoaded) / timeElapsedInSeconds;
+  const speedInKbps = (bytesPerSecond / 1024).toFixed(2);
+
+  document.getElementById(
+    "uploadSpeed"
+  ).innerText = `Speed: ${speedInKbps} KB/s`;
+
+  // Reset the start time for the next calculation
+  startTime = currentTime;
+}
 
 // Function to fetch file list and generate HTML
 function fetchFileList() {

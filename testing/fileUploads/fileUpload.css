@@ -96,4 +96,8 @@ main {
 #file-list {
   margin-left: 1rem;
   list-style: none;
+}
+
+#uploadSpeed {
+  font-size: 0.75rem;
 }/*# sourceMappingURL=fileUpload.css.map */
