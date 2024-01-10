@@ -220,6 +220,7 @@ function createButton(iconClass, title, color, onClickHandler) {
 
 function revertToParagraph(noteId, noteTextToEdit, iconContainer) {
   // Show the edit icon again when editing is discarded or confirmed
+  removeSpinner();
   const editIcon = iconContainer.querySelector(`.fa-pen`);
   if (editIcon) {
     editIcon.style.display = "inline-block"; // Ensure the display matches initial style
