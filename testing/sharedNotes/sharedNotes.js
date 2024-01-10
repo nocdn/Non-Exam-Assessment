@@ -95,9 +95,12 @@ function createNoteElement(note) {
 }
 
 function createNoteTextElement(note) {
-  const noteText = document.createElement("p");
-  noteText.innerHTML = note.note_text.replace(/\n/g, "<br>");
+  const noteText = document.createElement("div"); // Use div instead of p to render HTML
   noteText.classList.add(note.note_id, "note-text");
+
+  // Use marked library to parse Markdown to HTML
+  noteText.innerHTML = marked.parse(note.note_text);
+
   return noteText;
 }
 
@@ -161,8 +164,9 @@ function handleEditClick(note, iconContainer) {
   );
   editIcon.style.display = "none";
 
+  // When editing, set the textarea value to raw Markdown content of the note
   const noteTextElement = document.querySelector(`.note-text.${note.note_id}`);
-  const noteTextToEdit = noteTextElement.innerHTML.replace(/<br>/g, "\n");
+  const noteTextToEdit = note.note_text; // Use raw Markdown content
 
   // Replace the p element with a textarea
   const textarea = document.createElement("textarea");
@@ -264,10 +268,13 @@ function revertToParagraph(noteId, noteTextToEdit, iconContainer) {
     return;
   }
 
-  // Create a new p element to replace the textarea
-  const newNoteTextElement = document.createElement("p");
+  // Create a new div element to replace the textarea
+  const newNoteTextElement = document.createElement("div");
   newNoteTextElement.className = `note-text ${noteId}`;
-  newNoteTextElement.innerHTML = noteTextToEdit.replace(/\n/g, "<br>");
+
+  // Use the marked library to parse the Markdown to HTML
+  newNoteTextElement.innerHTML = marked.parse(noteTextToEdit);
+
   textarea.replaceWith(newNoteTextElement);
 
   // Remove confirm, discard, and pin buttons
@@ -275,9 +282,9 @@ function revertToParagraph(noteId, noteTextToEdit, iconContainer) {
   const discardButton = iconContainer.querySelector(".fa-circle-xmark");
   const pinButton = iconContainer.querySelector(".fa-thumbtack");
 
-  confirmButton?.remove();
-  discardButton?.remove();
-  pinButton?.remove();
+  if (confirmButton) confirmButton.remove();
+  if (discardButton) discardButton.remove();
+  if (pinButton) pinButton.remove();
 }
 
 fetchNotes();
