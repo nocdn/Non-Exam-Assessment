@@ -170,7 +170,11 @@ function handleEditClick(note, iconContainer) {
         revertToParagraph(note.note_id, noteTextToEdit, iconContainer);
         return;
       }
-      updateNote(note.note_id, textarea.value);
+      updateNote(
+        note.note_id,
+        textarea.value,
+        note.is_pinned === 1 ? true : false
+      );
       fetchNotes();
     }
   );
