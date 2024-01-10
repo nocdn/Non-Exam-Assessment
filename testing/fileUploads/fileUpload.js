@@ -1,67 +1,57 @@
-import { Amplify } from "aws-amplify";
-import amplifyconfig from "./src/amplifyconfiguration.json";
-Amplify.configure(amplifyconfig);
+document.querySelector(".upload-btn").addEventListener("click", () => {
+  // Get the selected file
+  const files = document.querySelector(".file-input").files;
+  const file = files[0];
+  console.log(`Starting upload for: ${file.name}`);
 
-const fileInput = document.querySelector(".file-input");
-const uploadButton = document.querySelector(".upload-btn");
-const progressText = document.querySelector(".progress");
-const fileListContainer = document.querySelector(".file-list");
-
-// Update these variables with your information
-const LAMBDA_URL =
-  "https://jvvtcm6ogy3bybmpnxw4gwwtre0drgzl.lambda-url.eu-west-2.on.aws/"; // Replace with your Lambda URL
-
-document.addEventListener("DOMContentLoaded", function () {
-  fetchFiles(); // List files when the page loads
-});
-
-fileInput.addEventListener("change", function (event) {
-  const files = event.target.files;
-  for (let file of files) {
-    uploadFile(file); // Uploading files one by one
-  }
-});
-
-async function uploadFile(file) {
-  console.log("Starting file upload", file.name);
-  progressText.textContent = `Uploading ${file.name}...`;
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const response = await fetch(LAMBDA_URL, {
-    method: "POST",
-    body: formData,
+  // Create URL with query parameters
+  const lambdaUrl =
+    "https://jvvtcm6ogy3bybmpnxw4gwwtre0drgzl.lambda-url.eu-west-2.on.aws/";
+  const queryParams = new URLSearchParams({
+    file_name: file.name,
+    content_type: file.type,
   });
 
-  if (response.ok) {
-    progressText.textContent = "Upload complete!";
-    fetchFiles(); // Refresh the file list
-  } else {
-    progressText.textContent = "Upload failed.";
-  }
-}
+  // Make a request to your Lambda function
+  fetch(`${lambdaUrl}?${queryParams}`, {
+    method: "GET",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // Upload the file to the presigned URL
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", data.url, true);
+      xhr.setRequestHeader("Content-Type", file.type);
 
-async function fetchFiles() {
-  const response = await fetch(LAMBDA_URL);
-  if (response.ok) {
-    const files = await response.json();
-    displayFiles(files);
-  }
-}
+      // Update progress
+      xhr.upload.onprogress = function (event) {
+        if (event.lengthComputable) {
+          const percentage = Math.round((event.loaded / event.total) * 100);
+          console.log(`Uploading: ${percentage}%`); // Log the upload progress percentage
+          document.getElementById("progressBar").value = percentage.toString();
+          document.getElementById(
+            "progressPercentage"
+          ).innerText = `${percentage}%`;
+        }
+      };
 
-const BUCKET_NAME = "sharedfileuploads"; // Replace with your bucket name
+      // Log when the upload is complete
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          console.log("Upload complete"); // Log the successful upload
+          document.querySelector(".progress").innerText = "Upload complete";
+        } else {
+          console.error("Upload failed"); // Log the upload failure
+          document.querySelector(".progress").innerText = "Upload failed";
+        }
+      };
 
-function displayFiles(files) {
-  fileListContainer.innerHTML = ""; // Clear existing list
-  files.forEach((file) => {
-    const fileLink = document.createElement("a");
-    fileLink.href = `https://${BUCKET_NAME}.s3.amazonaws.com/${file}`;
-    fileLink.innerText = file;
-    fileLink.setAttribute("target", "_blank"); // Open in a new tab
+      xhr.onerror = function () {
+        console.error("Upload error"); // Log the upload error
+        document.querySelector(".progress").innerText = "Upload error";
+      };
 
-    const listItem = document.createElement("li");
-    listItem.appendChild(fileLink);
-    fileListContainer.appendChild(listItem);
-  });
-}
+      xhr.send(file);
+    })
+    .catch((error) => console.error("Error:", error));
+});

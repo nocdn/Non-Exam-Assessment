@@ -11,7 +11,15 @@
     <main>
       <input type="file" name="file-upload-input" class="file-input" multiple />
       <button class="upload-btn">Upload</button>
-      <p class="progress">Not uploading</p>
+      <div class="upload-progress">
+        <progress
+          class="progress"
+          value="0"
+          max="100"
+          id="progressBar"
+        ></progress>
+        <span id="progressPercentage">0%</span>
+      </div>
       <div class="file-list"></div>
       <script src="fileUpload.js"></script>
     </main>
