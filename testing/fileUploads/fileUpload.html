@@ -13,24 +13,35 @@
   <body>
     <h1>File Upload Test</h1>
     <main>
-      <input type="file" name="file" id="file" class="inputfile" />
-      <label class="file-input-label" for="file">Choose a file</label>
-      <p class="selected-files-text">Selected Files:</p>
-      <button class="upload-btn">
-        <span>Upload <i class="fa-solid fa-upload"></i></span>
-      </button>
-      <div class="upload-progress">
+      <div class="general-file-picker-container">
+        <input type="file" name="file" id="file" class="inputfile" />
+        <label class="file-input-label" for="file">Choose a file</label>
+        <button class="upload-btn">
+          <span>Upload</span>
+        </button>
+        <p class="selected-files-text">Select a File</p>
+      </div>
+
+      <div class="general-uploading-container">
+        <div class="uploading-text-details-container">
+          <div class="uploading-text-container">
+            <span class="uploading-text">Uploading</span>
+            <span class="percentage-and-speed"
+              ><p id="progressPercentage">0%</p>
+              <i class="fa-solid fa-circle"></i>
+              <p class="upload-speed" id="uploadSpeed">0 MB/s</p></span
+            >
+          </div>
+          <div class="cancel-upload-btn">
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+        </div>
         <progress
           class="progress"
+          id="progressBar"
           value="0"
           max="100"
-          id="progressBar"
         ></progress>
-        <span id="progressPercentage">0%</span>
-      </div>
-      <button class="cancel-upload-btn">Cancel Upload</button>
-      <div class="upload-speed">
-        <span id="uploadSpeed">Speed: 0 KB/s</span>
       </div>
       <div class="file-list"></div>
       <script src="fileUpload.js"></script>

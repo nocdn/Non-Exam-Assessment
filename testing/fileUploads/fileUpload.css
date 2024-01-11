@@ -20,7 +20,8 @@ main {
 .upload-btn {
   height: 2rem;
   padding: 0 0.5rem;
-  background: #f2f2f2;
+  color: #405d7d;
+  background: #d9e9fd;
   border: none;
   outline: none;
   border-radius: 5px;
@@ -44,11 +45,6 @@ main {
   font-size: 0.7rem;
 }
 
-.progress {
-  width: 100%;
-  height: 1em;
-}
-
 .upload-progress {
   display: flex;
   align-items: center;
@@ -67,8 +63,8 @@ main {
 }
 
 .inputfile + label {
-  color: black;
-  background-color: #f2f2f2;
+  color: #6b21a8;
+  background-color: #f1e8fd;
   padding: 0.5rem;
   font-size: 0.8rem;
   border-radius: 5px;
@@ -87,6 +83,9 @@ main {
 .selected-files-text {
   font-size: 0.75rem;
 }
+.selected-files-text li {
+  list-style: none;
+}
 
 .fa-circle-down {
   margin-right: 0.5rem;
@@ -99,7 +98,7 @@ main {
 }
 
 .fa-trash-can {
-  color: lightcoral;
+  color: #b9453d;
   cursor: pointer;
   margin-left: 0.5rem;
   font-size: 0.8rem;
@@ -117,19 +116,88 @@ main {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  width: 30rem;
+  min-height: 20rem;
+  outline: #e9ebf3 solid 2px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
 }
 
 #uploadSpeed {
   font-size: 0.75rem;
 }
 
-.cancel-upload-btn {
-  background-color: rgba(255, 0, 38, 0.551);
-  padding: 0.5rem 1rem;
-  font-size: 0.65rem;
-  width: -moz-fit-content;
-  width: fit-content;
-  border-radius: 5px;
-  border: none;
+.general-uploading-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 20rem;
+  outline: #e9ebf3 solid 2px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+}
+
+.percentage-and-speed {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.progress {
+  width: 100%;
+  height: 0.5em;
   outline: none;
+  color: #00695c;
+}
+.progress ::-webkit-progress-value {
+  background-color: #00695c; /* Change to your desired color */
+}
+
+.general-progress::-webkit-progress-value {
+  background-color: #00695c; /* Change to your desired color */
+}
+
+.uploading-text-details-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.uploading-text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.fa-xmark {
+  color: #b9453d;
+  cursor: pointer;
+}
+
+.cancel-upload-btn {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  background-color: #f9eaef;
+  border-radius: 50px;
+}
+
+.percentage-and-speed {
+  font-size: 0.75rem;
+}
+
+.fa-circle {
+  font-size: 0.25rem;
+  opacity: 0.6;
+}
+
+.general-file-picker-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 20rem;
+  outline: #e9ebf3 solid 2px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
 }/*# sourceMappingURL=fileUpload.css.map */

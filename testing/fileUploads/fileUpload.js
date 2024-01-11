@@ -71,7 +71,7 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
           const speedInMbps = (bytesPerSecond / 1024 / 1024).toFixed(2);
           document.getElementById(
             "uploadSpeed"
-          ).innerText = `Speed: ${speedInMbps} MB/s`;
+          ).innerText = `${speedInMbps} MB/s`;
 
           lastLoaded = event.loaded; // Update last loaded amount
           startTime = currentTime; // Reset the start time for the next calculation
