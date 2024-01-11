@@ -53,6 +53,16 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
           document.getElementById(
             "progressPercentage"
           ).innerText = `${percentage}%`;
+          const uploadCompleteIcon = document.createElement("i");
+          uploadCompleteIcon.className = "fa-solid fa-circle-check";
+          if (percentage === 100) {
+            document.getElementById("progressPercentage").innerHTML = "";
+            document
+              .getElementById("progressPercentage")
+              .appendChild(uploadCompleteIcon);
+            document.getElementById("uploadSpeed").innerHTML = "";
+            fetchFileList();
+          }
           // calculate upload speed
           const currentTime = Date.now();
           const timeElapsedInSeconds = (currentTime - startTime) / 1000;
