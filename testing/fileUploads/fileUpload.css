@@ -114,8 +114,22 @@ main {
 #file-list {
   margin-left: 1rem;
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 #uploadSpeed {
   font-size: 0.75rem;
+}
+
+.cancel-upload-btn {
+  background-color: rgba(255, 0, 38, 0.551);
+  padding: 0.5rem 1rem;
+  font-size: 0.65rem;
+  width: -moz-fit-content;
+  width: fit-content;
+  border-radius: 5px;
+  border: none;
+  outline: none;
 }/*# sourceMappingURL=fileUpload.css.map */

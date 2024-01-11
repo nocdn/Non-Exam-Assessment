@@ -1,13 +1,12 @@
-document
-  .querySelector(".file-input-label")
-  .addEventListener("change", (event) => {
-    const fileList = document.querySelector(".selected-files-text");
-    console.log(fileList);
-    fileList.innerHTML = "";
-    for (let i = 0; i < event.target.files.length; i++) {
-      fileList.innerHTML += `<li>${event.target.files[i].name}</li>`;
-    }
-  });
+document.querySelector(".inputfile").addEventListener("change", (event) => {
+  const files = event.target.files;
+  const fileList = document.querySelector(".selected-files-text");
+  console.log(fileList);
+  fileList.innerHTML = "";
+  for (let i = 0; i < files.length; i++) {
+    fileList.innerHTML += `<li>${files[i].name}</li>`;
+  }
+});
 
 document.querySelector(".upload-btn").addEventListener("click", () => {
   // Get the selected file
@@ -41,6 +40,7 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
     .then((data) => {
       // Upload the file to the presigned URL
       const xhr = new XMLHttpRequest();
+      const abortBtn = document.querySelector(".cancel-upload-btn");
       xhr.open("PUT", data.url, true);
       xhr.setRequestHeader("Content-Type", file.type);
 
@@ -76,6 +76,14 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
           lastLoaded = event.loaded; // Update last loaded amount
           startTime = currentTime; // Reset the start time for the next calculation
         }
+      };
+
+      abortBtn.onclick = () => {
+        xhr.abort(); // This will abort the upload
+        document.getElementById("progressBar").value = 0;
+        document.getElementById("progressPercentage").innerText = "Aborted";
+        document.getElementById("uploadSpeed").innerText = `Speed: 0.00 MB/s`;
+        console.log("Upload aborted");
       };
 
       // Log when the upload is complete
