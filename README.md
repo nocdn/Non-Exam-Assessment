@@ -23,4 +23,6 @@ Some of the things to make it speedy... 🔍
 
 There will be some other features too, like file sharing, photo uploads, contact sharing, storing bank details (for easy money transfers) or pinned notes - but for now, let's focus on getting the basics down!
 
-### 🚧 Progress Tracking 🚧
+### 🚧 License 🚧
+
+This software is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for more information.
