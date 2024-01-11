@@ -33,7 +33,7 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
   let startTime = Date.now(); // Start time of the upload
   let lastLoaded = 0; // Last loaded amount to calculate speed
 
-  // Make a request to your Lambda function
+  // Make a request to Lambda function
   fetch(`${lambdaUrl}?${queryParams}`, {
     method: "GET",
   })
@@ -117,7 +117,7 @@ function calculateSpeed(loaded, startTime, lastLoaded) {
 // Function to fetch file list and generate HTML
 function fetchFileList() {
   const lambdaUrl =
-    "https://24qvw7hqnnxazjuc5ahawcb43a0qdzwp.lambda-url.eu-west-2.on.aws/"; // Replace with your actual Lambda URL
+    "https://24qvw7hqnnxazjuc5ahawcb43a0qdzwp.lambda-url.eu-west-2.on.aws/";
   fetch(lambdaUrl)
     .then((response) => response.json())
     .then((files) => {
@@ -129,22 +129,26 @@ function fetchFileList() {
         const fileContainer = document.createElement("div");
         fileContainer.className = "file-to-download-container";
 
-        // Create the download link for the icon only
+        // Create the download link with the FontAwesome icon
         const downloadLink = document.createElement("a");
         downloadLink.className = "file-download-link";
         downloadLink.href = file.DownloadUrl;
-        downloadLink.download = file.Key; // This will suggest the filename to save as
+        downloadLink.download = file.Key;
         downloadLink.innerHTML = `<i class="fa-regular fa-circle-down"></i>`; // Insert icon only
 
-        // Append the download link to the container
-        fileContainer.appendChild(downloadLink);
-
-        // Create a span element for the text to prevent it from being a link
+        // Create a span for the file name, so it's not part of the download link
         const fileNameSpan = document.createElement("span");
-        fileNameSpan.textContent = file.Key; // Add the text
+        fileNameSpan.textContent = file.Key;
 
-        // Append the text span to the container
+        // Create the delete icon
+        const deleteIcon = document.createElement("i");
+        deleteIcon.className = "fa-solid fa-trash-can";
+        deleteIcon.onclick = () => deleteFile(file.Key);
+
+        // Append the download link, file name span, and delete icon to the container
+        fileContainer.appendChild(downloadLink);
         fileContainer.appendChild(fileNameSpan);
+        fileContainer.appendChild(deleteIcon);
 
         // Append the container to the file list
         fileList.appendChild(fileContainer);
@@ -155,3 +159,19 @@ function fetchFileList() {
 
 // Call the function to fetch and display the file list
 fetchFileList();
+
+function deleteFile(fileName) {
+  const lambdaDeleteUrl =
+    "https://igfzklwuqn5kwxn64icdmbekye0hndew.lambda-url.eu-west-2.on.aws/";
+  const queryParams = new URLSearchParams({ file_name: fileName });
+
+  fetch(`${lambdaDeleteUrl}?${queryParams}`, {
+    method: "DELETE",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.message); // Log the successful deletion message
+      fetchFileList(); // Refresh the file list
+    })
+    .catch((error) => console.error("Error:", error));
+}

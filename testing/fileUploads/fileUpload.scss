@@ -101,6 +101,19 @@ main {
   color: #2e8b57;
 }
 
+.fa-trash-can {
+  color: lightcoral;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.file-to-download-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 #file-list {
   margin-left: 1rem;
   // make bullet points invisible
