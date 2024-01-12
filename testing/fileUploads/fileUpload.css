@@ -7,6 +7,12 @@
 
 h1 {
   margin: 1rem 0 1rem 1rem;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.files-heading {
+  margin: 1rem;
 }
 
 main {
