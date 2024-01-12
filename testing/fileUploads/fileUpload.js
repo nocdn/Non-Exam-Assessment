@@ -1,3 +1,67 @@
+const createSpinner = (
+  elementToAttach,
+  spinnerSize,
+  side = "right",
+  bladeWidth = 2
+) => {
+  console.log(`Attatching to ${elementToAttach}`);
+
+  // Remove existing spinner if it exists
+  const existingSpinner = document.querySelector(".ispinner");
+  if (existingSpinner) {
+    existingSpinner.remove();
+  }
+
+  // Create spinner container
+  const spinner = document.createElement("div");
+  spinner.className = "ispinner";
+  spinner.style.width = `${spinnerSize}px`;
+  spinner.style.height = `${spinnerSize}px`;
+
+  // Calculate blade height and position
+  const bladeHeight = spinnerSize / 2;
+  const bladePosition = spinnerSize / 2 - bladeWidth / 2;
+
+  // Add spinner blades
+  for (let i = 0; i < 8; i++) {
+    const blade = document.createElement("div");
+    blade.className = "ispinner-blade";
+    blade.style.width = `${bladeWidth}px`;
+    blade.style.height = `${bladeHeight}px`;
+    blade.style.top = `${bladePosition}px`;
+    blade.style.left = `${bladePosition}px`;
+    blade.style.borderRadius = `${bladeWidth / 2}px`;
+    spinner.appendChild(blade);
+  }
+
+  // Append spinner to the body
+  document.body.appendChild(spinner);
+
+  // Positioning the spinner
+  const elementToAttachTo = document.querySelector(elementToAttach);
+  const elementRect = elementToAttachTo.getBoundingClientRect();
+
+  spinner.style.position = "absolute";
+  spinner.style.zIndex = 1000;
+
+  if (side === "right") {
+    spinner.style.left = `${elementRect.right + 10}px`;
+  } else if (side === "left") {
+    spinner.style.left = `${elementRect.left - spinner.offsetWidth - 10}px`;
+  }
+
+  spinner.style.top = `${
+    elementRect.top + elementRect.height / 2 - spinner.offsetHeight / 2
+  }px`;
+};
+
+const removeSpinner = () => {
+  const spinner = document.querySelector(".ispinner");
+  if (spinner) {
+    spinner.remove();
+  }
+};
+
 document.querySelector(".inputfile").addEventListener("change", (event) => {
   const files = event.target.files;
   const fileList = document.querySelector(".selected-files-text");
@@ -20,6 +84,8 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
 
   const file = files[0];
   console.log(`Starting upload for: ${file.name}`);
+  document.querySelector(".uploading-text").innerText = `Starting upload`;
+  createSpinner(".uploading-text", 12, "right", 2); // Attach to the right delete icon
 
   // Create URL with query parameters
   const lambdaUrl =
@@ -49,6 +115,8 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
         if (event.lengthComputable) {
           const percentage = Math.round((event.loaded / event.total) * 100);
           console.log(`Uploading: ${percentage}%`); // Log the upload progress percentage
+          document.querySelector(".uploading-text").innerText = `Uploading`;
+          removeSpinner(); // Remove the spinner
           document.getElementById("progressBar").value = percentage.toString();
           document.getElementById(
             "progressPercentage"
@@ -62,6 +130,9 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
               .appendChild(uploadCompleteIcon);
             document.getElementById("uploadSpeed").innerHTML = "";
             fetchFileList();
+            document.querySelector(
+              ".uploading-text"
+            ).innerText = `Upload complete`;
           }
           // calculate upload speed
           const currentTime = Date.now();
@@ -131,8 +202,11 @@ function fetchFileList() {
     .then((files) => {
       const fileList = document.getElementById("file-list");
       fileList.innerHTML = ""; // Clear existing list items if any
+      removeSpinner(); // Remove the spinner
 
-      files.forEach((file) => {
+      // Use a traditional for loop
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
         // Create the container for each file
         const fileContainer = document.createElement("div");
         fileContainer.className = "file-to-download-container";
@@ -144,23 +218,26 @@ function fetchFileList() {
         downloadLink.download = file.Key;
         downloadLink.innerHTML = `<i class="fa-regular fa-circle-down"></i>`; // Insert icon only
 
-        // Create a span for the file name, so it's not part of the download link
+        // Create a span for the file name
         const fileNameSpan = document.createElement("span");
         fileNameSpan.textContent = file.Key;
 
         // Create the delete icon
         const deleteIcon = document.createElement("i");
-        deleteIcon.className = "fa-solid fa-trash-can";
-        deleteIcon.onclick = () => deleteFile(file.Key);
+        deleteIcon.className = `fa-solid fa-trash-can delete-${i}`; // Unique class for each delete icon
+        deleteIcon.onclick = () => {
+          deleteFile(file.Key);
+          createSpinner(`.delete-${i}`, 10, "right", 2); // Attach to the right delete icon
+        };
 
-        // Append the download link, file name span, and delete icon to the container
+        // Append elements to the container
         fileContainer.appendChild(downloadLink);
         fileContainer.appendChild(fileNameSpan);
         fileContainer.appendChild(deleteIcon);
 
         // Append the container to the file list
         fileList.appendChild(fileContainer);
-      });
+      }
     })
     .catch((error) => console.error("Error:", error));
 }
