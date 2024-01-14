@@ -49,6 +49,52 @@ const createSpinner = (elementToAttach, spinnerSize, side = "right") => {
   }
 };
 
+const createSpinnerAsElement = function (
+  elementToSelector,
+  spinnerSize,
+  leftMargin = "1rem",
+  rightMargin = "1rem"
+) {
+  // Select the parent element to attach the spinner to
+  const parentElement = document.querySelector(elementToSelector);
+  if (!parentElement) {
+    console.error(`Parent element (${elementToSelector}) not found.`);
+    return;
+  }
+
+  // Remove existing spinner if it exists within the parent element
+  const existingSpinner = parentElement.querySelector(".spinner");
+  if (existingSpinner) {
+    existingSpinner.remove();
+  }
+
+  // New spinner element
+  const spinner = document.createElement("div");
+  spinner.className = "spinner";
+  spinner.style.fontSize = `${spinnerSize}px`; // Spinner size
+  spinner.innerHTML = `
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+  `.trim();
+
+  // Set margins from parameters
+  spinner.style.marginLeft = leftMargin;
+  spinner.style.marginRight = rightMargin;
+
+  // Append spinner to the parent element
+  parentElement.appendChild(spinner);
+};
+
 const removeSpinner = () => {
   // Select all spinner elements
   const spinners = document.querySelectorAll(".spinner");
@@ -137,6 +183,7 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
             document.querySelector(
               ".uploading-text"
             ).innerText = `Upload complete`;
+            createSpinnerAsElement(".files-heading", 18);
           }
           // calculate upload speed
           const currentTime = Date.now();
@@ -158,6 +205,7 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
         document.getElementById("progressBar").value = 0;
         document.getElementById("progressPercentage").innerText = "Aborted";
         document.getElementById("uploadSpeed").innerText = `Speed: 0.00 MB/s`;
+        document.querySelector(".uploading-text").innerText = `Upload aborted`;
         console.log("Upload aborted");
       };
 
@@ -166,6 +214,7 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
         if (xhr.status === 200) {
           console.log("Upload complete"); // Log the successful upload
           document.querySelector(".progress").innerText = "Upload complete";
+          fetchFileList();
         } else {
           console.error("Upload failed"); // Log the upload failure
           document.querySelector(".progress").innerText = "Upload failed";
@@ -199,16 +248,23 @@ function calculateSpeed(loaded, startTime, lastLoaded) {
 
 // Function to fetch file list and generate HTML
 function fetchFileList() {
-  removeSpinner();
   const lambdaUrl =
     "https://24qvw7hqnnxazjuc5ahawcb43a0qdzwp.lambda-url.eu-west-2.on.aws/";
   fetch(lambdaUrl)
     .then((response) => response.json())
     .then((files) => {
+      console.log(files);
       const fileList = document.getElementById("file-list");
       fileList.innerHTML = ""; // Clear existing list items if any
 
-      // Use a traditional for loop
+      if (files.length === 0) {
+        const noFilesMessage = document.createElement("p");
+        noFilesMessage.innerText = "No files uploaded";
+        noFilesMessage.classList.add("no-files-message");
+        fileList.appendChild(noFilesMessage);
+      }
+      removeSpinner();
+      // Iterate over the files and make an element for each file with a download and delete icon/button
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         // Create the container for each file
@@ -264,3 +320,5 @@ function deleteFile(fileName) {
     })
     .catch((error) => console.error("Error:", error));
 }
+
+createSpinnerAsElement(".files-heading", 20);
