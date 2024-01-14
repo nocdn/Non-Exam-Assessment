@@ -1,64 +1,67 @@
-const createSpinner = (
-  elementToAttach,
-  spinnerSize,
-  side = "right",
-  bladeWidth = 2
-) => {
-  console.log(`Attatching to ${elementToAttach}`);
-
+const createSpinner = (elementToAttach, spinnerSize, side = "right") => {
   // Remove existing spinner if it exists
-  const existingSpinner = document.querySelector(".ispinner");
-  if (existingSpinner) {
-    existingSpinner.remove();
-  }
+  removeSpinner();
 
-  // Create spinner container
+  // New spinner element
   const spinner = document.createElement("div");
-  spinner.className = "ispinner";
-  spinner.style.width = `${spinnerSize}px`;
-  spinner.style.height = `${spinnerSize}px`;
+  spinner.className = "spinner";
+  spinner.style.position = "absolute";
+  spinner.style.zIndex = "9999"; // High z-index to ensure visibility
+  spinner.style.fontSize = `${spinnerSize}px`; // Spinner size
+  spinner.innerHTML = `
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+    <div class="spinner-blade"></div>
+  `.trim();
 
-  // Calculate blade height and position
-  const bladeHeight = spinnerSize / 2;
-  const bladePosition = spinnerSize / 2 - bladeWidth / 2;
-
-  // Add spinner blades
-  for (let i = 0; i < 8; i++) {
-    const blade = document.createElement("div");
-    blade.className = "ispinner-blade";
-    blade.style.width = `${bladeWidth}px`;
-    blade.style.height = `${bladeHeight}px`;
-    blade.style.top = `${bladePosition}px`;
-    blade.style.left = `${bladePosition}px`;
-    blade.style.borderRadius = `${bladeWidth / 2}px`;
-    spinner.appendChild(blade);
-  }
-
-  // Append spinner to the body
+  // Initially append the spinner to the body to measure its dimensions
   document.body.appendChild(spinner);
 
-  // Positioning the spinner
-  const elementToAttachTo = document.querySelector(elementToAttach);
-  const elementRect = elementToAttachTo.getBoundingClientRect();
-
-  spinner.style.position = "absolute";
-  spinner.style.zIndex = 1000;
-
-  if (side === "right") {
-    spinner.style.left = `${elementRect.right + 10}px`;
-  } else if (side === "left") {
-    spinner.style.left = `${elementRect.left - spinner.offsetWidth - 10}px`;
+  // Get the target element
+  const element = document.querySelector(elementToAttach);
+  if (!element) {
+    console.error(`Element to attach to (${elementToAttach}) not found.`);
+    return;
   }
 
-  spinner.style.top = `${
-    elementRect.top + elementRect.height / 2 - spinner.offsetHeight / 2
-  }px`;
+  // Calculate position
+  const rect = element.getBoundingClientRect();
+  const spinnerRect = spinner.getBoundingClientRect();
+
+  // Set top position to align centers
+  const topPosition = rect.top + rect.height / 2 - spinnerRect.height / 2;
+  spinner.style.top = `${topPosition}px`;
+
+  // Set left or right position
+  if (side === "right") {
+    spinner.style.left = `${rect.right + 10}px`; // 10px offset from the right side
+  } else {
+    spinner.style.left = `${rect.left - spinnerRect.width - 10}px`; // 10px offset from the left side
+  }
 };
 
 const removeSpinner = () => {
-  const spinner = document.querySelector(".ispinner");
+  // Select all spinner elements
+  const spinners = document.querySelectorAll(".spinner");
+  // Loop through all spinner elements and remove them
+  spinners.forEach((spinner) => {
+    spinner.parentNode.removeChild(spinner);
+  });
+};
+
+// Function to set spinner size for a specific spinner
+const setSpinnerSize = (spinner, size) => {
   if (spinner) {
-    spinner.remove();
+    spinner.style.setProperty("--spinner-size", `${size}px`);
   }
 };
 
@@ -85,7 +88,8 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
   const file = files[0];
   console.log(`Starting upload for: ${file.name}`);
   document.querySelector(".uploading-text").innerText = `Starting upload`;
-  createSpinner(".uploading-text", 12, "right", 2); // Attach to the right delete icon
+  removeSpinner();
+  createSpinner(".uploading-text", 14, "right");
 
   // Create URL with query parameters
   const lambdaUrl =
@@ -115,8 +119,8 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
         if (event.lengthComputable) {
           const percentage = Math.round((event.loaded / event.total) * 100);
           console.log(`Uploading: ${percentage}%`); // Log the upload progress percentage
+          removeSpinner();
           document.querySelector(".uploading-text").innerText = `Uploading`;
-          removeSpinner(); // Remove the spinner
           document.getElementById("progressBar").value = percentage.toString();
           document.getElementById(
             "progressPercentage"
@@ -195,6 +199,7 @@ function calculateSpeed(loaded, startTime, lastLoaded) {
 
 // Function to fetch file list and generate HTML
 function fetchFileList() {
+  removeSpinner();
   const lambdaUrl =
     "https://24qvw7hqnnxazjuc5ahawcb43a0qdzwp.lambda-url.eu-west-2.on.aws/";
   fetch(lambdaUrl)
@@ -202,7 +207,6 @@ function fetchFileList() {
     .then((files) => {
       const fileList = document.getElementById("file-list");
       fileList.innerHTML = ""; // Clear existing list items if any
-      removeSpinner(); // Remove the spinner
 
       // Use a traditional for loop
       for (let i = 0; i < files.length; i++) {
@@ -227,7 +231,7 @@ function fetchFileList() {
         deleteIcon.className = `fa-solid fa-trash-can delete-${i}`; // Unique class for each delete icon
         deleteIcon.onclick = () => {
           deleteFile(file.Key);
-          createSpinner(`.delete-${i}`, 10, "right", 2); // Attach to the right delete icon
+          createSpinner(`.delete-${i}`, 12, "right"); // Attach to the right delete icon
         };
 
         // Append elements to the container

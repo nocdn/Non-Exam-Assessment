@@ -19,7 +19,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  width: 12rem;
+  width: fit-content;
 }
 
 .upload-btn {
@@ -211,98 +211,66 @@ main {
   border-radius: 8px;
 }
 
-.ispinner {
-  position: relative;
-  width: 20px;
-  height: 20px;
-}
-.ispinner .ispinner-blade {
+$spinner-color: #69717d !default;
+$overlay-color: black !default;
+
+@mixin absolute-center {
   position: absolute;
-  top: 6.5px;
-  left: 8.5px;
-  width: 2.5px;
-  height: 6.5px;
-  background-color: #8e8e93;
-  border-radius: 1.25px;
-  animation: iSpinnerBlade 1s linear infinite;
-  will-change: opacity;
-}
-.ispinner .ispinner-blade:nth-child(1) {
-  transform: rotate(45deg) translateY(-6.5px);
-  animation-delay: -1.625s;
-}
-.ispinner .ispinner-blade:nth-child(2) {
-  transform: rotate(90deg) translateY(-6.5px);
-  animation-delay: -1.5s;
-}
-.ispinner .ispinner-blade:nth-child(3) {
-  transform: rotate(135deg) translateY(-6.5px);
-  animation-delay: -1.375s;
-}
-.ispinner .ispinner-blade:nth-child(4) {
-  transform: rotate(180deg) translateY(-6.5px);
-  animation-delay: -1.25s;
-}
-.ispinner .ispinner-blade:nth-child(5) {
-  transform: rotate(225deg) translateY(-6.5px);
-  animation-delay: -1.125s;
-}
-.ispinner .ispinner-blade:nth-child(6) {
-  transform: rotate(270deg) translateY(-6.5px);
-  animation-delay: -1s;
-}
-.ispinner .ispinner-blade:nth-child(7) {
-  transform: rotate(315deg) translateY(-6.5px);
-  animation-delay: -0.875s;
-}
-.ispinner .ispinner-blade:nth-child(8) {
-  transform: rotate(360deg) translateY(-6.5px);
-  animation-delay: -0.75s;
-}
-.ispinner.ispinner-large {
-  width: 35px;
-  height: 35px;
-}
-.ispinner.ispinner-large .ispinner-blade {
-  top: 11.5px;
-  left: 15px;
-  width: 5px;
-  height: 12px;
-  border-radius: 2.5px;
-}
-.ispinner.ispinner-large .ispinner-blade:nth-child(1) {
-  transform: rotate(45deg) translateY(-11.5px);
-}
-.ispinner.ispinner-large .ispinner-blade:nth-child(2) {
-  transform: rotate(90deg) translateY(-11.5px);
-}
-.ispinner.ispinner-large .ispinner-blade:nth-child(3) {
-  transform: rotate(135deg) translateY(-11.5px);
-}
-.ispinner.ispinner-large .ispinner-blade:nth-child(4) {
-  transform: rotate(180deg) translateY(-11.5px);
-}
-.ispinner.ispinner-large .ispinner-blade:nth-child(5) {
-  transform: rotate(225deg) translateY(-11.5px);
-}
-.ispinner.ispinner-large .ispinner-blade:nth-child(6) {
-  transform: rotate(270deg) translateY(-11.5px);
-}
-.ispinner.ispinner-large .ispinner-blade:nth-child(7) {
-  transform: rotate(315deg) translateY(-11.5px);
-}
-.ispinner.ispinner-large .ispinner-blade:nth-child(8) {
-  transform: rotate(360deg) translateY(-11.5px);
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }
 
-@keyframes iSpinnerBlade {
+.overlay {
+  background: rgba($overlay-color, 0.9);
+  @include absolute-center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  font-size: var(--spinner-size, 12px); // Use CSS variable for spinner size
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+}
+
+.spinner-blade {
+  position: absolute;
+  left: 0.4629em;
+  bottom: 0;
+  width: 0.074em;
+  height: 0.2777em;
+  border-radius: 0.5em;
+  background-color: transparent;
+  transform-origin: center -0.2222em;
+  animation: spinner-fade 1s infinite linear;
+
+  $animation-delay: 0s;
+  $blade-rotation: 0deg;
+
+  @for $i from 1 through 12 {
+    &:nth-child(#{$i}) {
+      animation-delay: $animation-delay;
+      transform: rotate($blade-rotation);
+      $blade-rotation: $blade-rotation + 30deg;
+      $animation-delay: $animation-delay + 0.083s;
+    }
+  }
+}
+
+@keyframes spinner-fade {
   0% {
-    opacity: 0.85;
+    background-color: $spinner-color;
   }
-  50% {
-    opacity: 0.25;
-  }
+
   100% {
-    opacity: 0.25;
+    background-color: transparent;
   }
 }
