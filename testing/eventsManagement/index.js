@@ -148,6 +148,18 @@ async function fetchOpenAIKey() {
 
 fetchOpenAIKey();
 
+const clearEventsScreen = function () {
+  const events = document.querySelectorAll(".event");
+  events.forEach((event) => {
+    eventContainer.removeChild(event);
+  });
+
+  const noEventsElement = document.querySelector(".no-events");
+  if (noEventsElement) {
+    eventContainer.removeChild(noEventsElement);
+  }
+};
+
 async function fetchEvents(year, month) {
   const formattedMonth = getFormattedMonth(month);
   try {
@@ -277,18 +289,6 @@ previousMonthArrow.addEventListener("click", function () {
 const updateDatePicker = function (year, month) {
   const dateElement = document.querySelector(".date");
   dateElement.textContent = `${day}/${month}/${year}`;
-};
-
-const clearEventsScreen = function () {
-  const events = document.querySelectorAll(".event");
-  events.forEach((event) => {
-    eventContainer.removeChild(event);
-  });
-
-  const noEventsElement = document.querySelector(".no-events");
-  if (noEventsElement) {
-    eventContainer.removeChild(noEventsElement);
-  }
 };
 
 async function postEvent(eventData, year, month) {
