@@ -112,7 +112,6 @@ const setSpinnerSize = (spinner, size) => {
 };
 
 eventsList = [];
-createSpinner(".heading", 30, "right");
 function getFormattedMonth(month) {
   // Convert month to a string and add a leading zero to single-digit months
   const monthString = month.toString();
@@ -252,11 +251,11 @@ const joinedDate = `${day}/${month}/${year}`;
 fetchEvents(year, getFormattedMonth(month));
 
 const dateElement = document.querySelector(".date");
-dateElement.textContent = `${day}/${month}/${year}`;
+dateElement.textContent = `${getFormattedMonth(month)}/${year}`;
 
 nextMonthArrow = document.querySelector(".next-month");
 previousMonthArrow = document.querySelector(".previous-month");
-let selectedDay = day;
+
 let selectedMonth = getFormattedMonth(month);
 let selectedYear = year;
 
@@ -288,7 +287,7 @@ previousMonthArrow.addEventListener("click", function () {
 
 const updateDatePicker = function (year, month) {
   const dateElement = document.querySelector(".date");
-  dateElement.textContent = `${day}/${month}/${year}`;
+  dateElement.textContent = `${month}/${year}`;
 };
 
 async function postEvent(eventData, year, month) {

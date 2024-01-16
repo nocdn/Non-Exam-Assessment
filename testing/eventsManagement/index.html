@@ -3,57 +3,74 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Backend test</title>
+    <title>Event management test</title>
     <link rel="stylesheet" href="index.css" />
+    <script
+      src="https://kit.fontawesome.com/7d2900409e.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
-    <p class="heading">All events:</p>
+    <!-- <p class="heading">All events:</p> -->
     <div class="date-picker">
-      <p class="previous-month">←</p>
+      <p class="previous-month"><i class="fa-solid fa-arrow-left"></i></p>
       <p class="date"></p>
-      <p class="next-month">→</p>
+      <p class="next-month"><i class="fa-solid fa-arrow-right"></i></p>
     </div>
     <div class="events-container"></div>
     <div class="add-event" style="display: flex">
-      <input type="text" class="input-title" placeholder="Event title" />
+      <input
+        type="text"
+        class="event-adding input-title"
+        placeholder="Event title"
+      />
       <input
         type="date"
-        class="input-start-date"
+        class="event-adding input-start-date"
         name="date"
         placeholder="Start date"
       />
       <input
         type="date"
-        class="input-end-date"
+        class="event-adding input-end-date"
         name="date"
         placeholder="End date"
       />
       <input
         type="time"
-        class="input-start"
+        class="event-adding input-start"
         name="start_time"
         placeholder="Start time"
       />
       <input
         type="time"
-        class="input-end"
+        class="event-adding input-end"
         name="end_time"
         placeholder="End time"
       />
       <input
         type="text"
-        class="input-location"
+        class="event-adding input-location"
         name="location"
         placeholder="Location"
       />
       <input
         type="text"
-        class="input-user"
+        class="event-adding input-user"
         name="user"
         placeholder="Enter user's name"
       />
       <button class="add-event-btn">Add event</button>
     </div>
+    <div class="natural-language">
+      <textarea
+        class="input-natural"
+        name="natural"
+        placeholder="Enter natural language"
+      ></textarea>
+      <button class="natural-language-btn">Add event</button>
+    </div>
+
     <div
       class="delete-event"
       style="
@@ -71,14 +88,7 @@
       />
       <button class="delete-event-btn">Delete event</button>
     </div>
-    <div class="natural-language">
-      <textarea
-        class="input-natural"
-        name="natural"
-        placeholder="Enter natural language"
-      ></textarea>
-      <button class="natural-language-btn">Add event</button>
-    </div>
+
     <p class="output-container"></p>
     <script src="index.js"></script>
   </body>
