@@ -68,6 +68,13 @@
         name="natural"
         placeholder="Enter natural language"
       ></textarea>
+      <!-- make a checkbox with label "OpenAI?" with class "use-OpenAI"-->
+      <select class="nlu-model-choice" name="model">
+        <option value="use-OpenAI">OpenAI</option>
+        <option value="Mistral-Small">Mistral-Small</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="text" class="custom-model-name" />
       <button class="natural-language-btn">Add event</button>
     </div>
 

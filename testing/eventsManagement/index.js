@@ -220,14 +220,14 @@ const createEventDivs = function (eventsFound = true) {
     eventElement.innerHTML = `
             <div class="individual_event event__title">${eventName}</div>
             <div class="individual_event_dates">
-              <div class="individual_event event__date">${eventsList.events[i]["start_date"]}</div>
+              <div class="individual_event event__date">${eventsList.events[i]["startDate"]}</div>
               <div class="individual_event date_divider">---</div>
-              <div class="individual_event event__date">${eventsList.events[i]["end_date"]}</div>
+              <div class="individual_event event__date">${eventsList.events[i]["endDate"]}</div>
             </div>
             <div class="individual_event_times">
-              <div class="individual_event style_small event__start">${eventsList.events[i]["start_time"]}</div>
+              <div class="individual_event style_small event__start">${eventsList.events[i]["startTime"]}</div>
               <div class="individual_event time_divider">---</div>
-              <div class="individual_event style_small event__end">${eventsList.events[i]["end_time"]}</div>
+              <div class="individual_event style_small event__end">${eventsList.events[i]["endTime"]}</div>
             </div>
             <div class="individual_event event__location">${eventsList.events[i]["location"]}</div>
             <div class="individual_event event__id">${eventsList.events[i]["eventID"]}</div>
@@ -358,10 +358,10 @@ addEventButton.addEventListener("click", function () {
 
   const eventToPost = {
     name: nameToPost,
-    start_date: formatDate(startDateToPost), // Format the start date to DD/MM/YYYY
-    end_date: formatDate(endDateToPost), // Format the end date to DD/MM/YYYY
-    start_time: startTimeToPost,
-    end_time: endTimeToPost,
+    startDate: formatDate(startDateToPost), // Format the start date to DD/MM/YYYY
+    endDate: formatDate(endDateToPost), // Format the end date to DD/MM/YYYY
+    startTime: startTimeToPost,
+    endTime: endTimeToPost,
     location: locationToPost,
     user: userToPost,
     color: generateRandomColors(),
@@ -409,20 +409,25 @@ deleteEventButton.addEventListener("click", function () {
 });
 
 const OPENAI_API_KEY = "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";
+const openRouterAPIkey =
+  "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";
 const dateForOpenAI = `${day}/${getFormattedMonth(month)}/${year}`;
 console.log(dateForOpenAI);
 const sendToOpenAI = function (textToParse) {
-  const prompt = `Today is ${joinedDate}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “start_date”, “end_date”, “start_time”, “end_time”, “location”.
+  const startTime = performance.now();
+  const prompt = `Today is ${joinedDate}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “startDate”, “endDate”, “startTime”, “endTime”, “location”.
 
+  YOU MUST OUTPUT NOTHING BUT THE RAW JSON, NO CODEBLOCKS, NO COMMENTS OR ANYTHING ELSE.
   Instructions:
   - Extract relevant info (morning: 7:00, afternoon: 15:00, evening: 19:00, night: 23:00)
   - Use 24-hour clock
   - Assume current day if no date given
   - Date in format DD/MM/YYYY
-  - Assume all-day event if no time given (start_time: "allDay", end_time: "allDay")
+  - Assume all-day event if no time given (startTime: "allDay", endTime: "allDay")
   - Assume 1-hour duration if no end time
   - You may repeat info in multiple keys, eg. in "location" and "name"
-  - Capitalize first letters in "name" and "location"`;
+  - Capitalize first letters in "name" and "location"
+  - For the "location", use comedic slang if not provided, like "gaff"`;
 
   const data = {
     model: "gpt-3.5-turbo-1106",
@@ -449,6 +454,11 @@ const sendToOpenAI = function (textToParse) {
   })
     .then((response) => response.json())
     .then((data) => {
+      const endTime = performance.now();
+      const timeTaken = endTime - startTime;
+      console.warn(
+        `Response received in ${timeTaken.toFixed(2)} milliseconds.`
+      );
       console.log("Success:", data);
       const responseMessage = data.choices[0].message.content; // The JSON string from OpenAI
       // Convert JSON string to an object
@@ -456,15 +466,87 @@ const sendToOpenAI = function (textToParse) {
 
       const eventData = {
         name: eventDetails.name,
-        start_date: eventDetails.start_date,
-        end_date: eventDetails.end_date,
-        start_time: eventDetails.start_time,
-        end_time: eventDetails.end_time,
+        startDate: eventDetails.startDate,
+        endDate: eventDetails.endDate,
+        startTime: eventDetails.startTime,
+        endTime: eventDetails.endTime,
         location: eventDetails.location,
-        user: "Default User", // Modify as needed or extract from somewhere
-        color: "YourColor", // Modify as needed or generate a color
+        user: "Default User",
+        color: "YourColor",
       };
-      const [day, month, year] = eventDetails.start_date.split("/");
+      const [day, month, year] = eventDetails.startDate.split("/");
+      postEvent(eventData, year, month);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+};
+
+const sendToOpenRouter = function (
+  textToParse,
+  model = "mistralai/mistral-small"
+) {
+  const startTime = performance.now();
+  const systemPrompt = `Today is ${joinedDate}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “startDate”, “endDate”, “startTime”, “endTime”, “location”.
+
+  Instructions:
+
+  - Extract relevant info (morning: 7:00, afternoon: 15:00, evening: 19:00, night: 23:00)
+  - Use 24-hour clock
+  - Assume current day if no date given
+  - Date in format DD/MM/YYYY
+  - Assume all-day event if no time given (startTime: "allDay", endTime: "allDay")
+  - Assume 1-hour duration if no end time
+  - You may repeat info in multiple keys, eg. in "location" and "name"
+  - Capitalize first letters in "name" and "location"
+  - For the "location", if not provided, extrapolate, with comedic modern slang`;
+
+  const data = {
+    model: model,
+    messages: [
+      {
+        role: "system",
+        content: systemPrompt,
+      },
+      {
+        role: "user",
+        content: textToParse,
+      },
+    ],
+  };
+
+  fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${openRouterAPIkey}`, // Ensure this is securely handled
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const endTime = performance.now();
+      const timeTaken = endTime - startTime;
+      console.warn(
+        `Response received in ${timeTaken.toFixed(2)} milliseconds.`
+      );
+
+      console.log("Success:", data);
+      const responseMessage = data.choices[0].message.content; // The JSON string from OpenRouter
+      // Convert JSON string to an object
+      const eventDetails = JSON.parse(responseMessage);
+
+      const eventData = {
+        name: eventDetails.name,
+        startDate: eventDetails.startDate,
+        endDate: eventDetails.endDate,
+        startTime: eventDetails.startTime,
+        endTime: eventDetails.endTime,
+        location: eventDetails.location,
+        user: "Default User",
+        color: "YourColor",
+      };
+      const [day, month, year] = eventDetails.startDate.split("/");
       postEvent(eventData, year, month);
     })
     .catch((error) => {
@@ -477,6 +559,15 @@ const outputContainer = document.querySelector(".output-container");
 naturalLanguageButton.addEventListener("click", function () {
   createSpinner(".natural-language-btn", 18, "right");
   const textToParse = document.querySelector(".input-natural").value;
-  sendToOpenAI(textToParse);
+  const modelChoice = document.querySelector(".nlu-model-choice").value;
+  if (modelChoice === "use-OpenAI") {
+    sendToOpenAI(textToParse);
+  } else if (modelChoice === "Mistral-Small") {
+    sendToOpenRouter(textToParse, "mistralai/mistral-small");
+  } else {
+    // create an element to input custom model name then send that to openrouter
+    const customModelName = document.querySelector(".custom-model-name").value;
+    sendToOpenRouter(textToParse, customModelName);
+  }
   document.querySelector(".input-natural").value = "";
 });
