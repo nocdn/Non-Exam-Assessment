@@ -191,7 +191,7 @@ async function fetchEvents(year, month) {
 
 const eventContainer = document.querySelector(".events-container");
 
-const createEventDivs = function (eventsFound = true) {
+const createEventDivs = function (eventsList, eventsFound = true) {
   if (!eventsFound) {
     const noEventsFound = document.createElement("div");
     noEventsFound.classList.add("no-events");
@@ -238,6 +238,44 @@ const createEventDivs = function (eventsFound = true) {
     eventContainer.appendChild(eventElement);
     count++;
   }
+};
+
+const newEventWithoutRefresh = function (eventData) {
+  const eventName = eventData["name"];
+  const eventElement = document.createElement("div");
+  eventElement.classList.add("event");
+
+  // Add delete icon element
+  const deleteIcon = document.createElement("span");
+  deleteIcon.classList.add("delete-icon");
+  // add a class of "delete-eventID" to the icon
+  // deleteIcon.classList.add(`delete-${eventData.eventID}`);
+  deleteIcon.innerHTML = "🗑️"; // Unicode for trash can
+  deleteIcon.onclick = function () {
+    // createSpinner(`.delete-${eventData["eventID"]}`, 18, "right");
+    deleteEvent(eventData["eventID"]); // Call the delete function when icon is clicked
+    fetchEvents(selectedYear, selectedMonth);
+  };
+
+  eventElement.innerHTML = `
+            <div class="individual_event event__title">${eventName}</div>
+            <div class="individual_event_dates">
+              <div class="individual_event event__date">${eventData.startDate}</div>
+              <div class="individual_event date_divider">---</div>
+              <div class="individual_event event__date">${eventData.endDate}</div>
+            </div>
+            <div class="individual_event_times">
+              <div class="individual_event style_small event__start">${eventData.startTime}</div>
+              <div class="individual_event time_divider">---</div>
+              <div class="individual_event style_small event__end">${eventData.endTime}</div>
+            </div>
+            <div class="individual_event event__location">${eventData.location}</div>
+            <div class="individual_event event__id">EventID not generated</div>
+            <div class="individual_event event__user">User: ${eventData.user}</div>
+
+        `;
+  eventElement.appendChild(deleteIcon);
+  eventContainer.appendChild(eventElement);
 };
 
 // get current date
@@ -475,6 +513,9 @@ const sendToOpenAI = function (textToParse) {
         color: "YourColor",
       };
       const [day, month, year] = eventDetails.startDate.split("/");
+      console.log("Event Data:");
+      console.log(eventData);
+      newEventWithoutRefresh(eventData);
       postEvent(eventData, year, month);
     })
     .catch((error) => {
