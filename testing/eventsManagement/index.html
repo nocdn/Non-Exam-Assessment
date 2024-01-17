@@ -19,62 +19,63 @@
     </div>
     <div class="events-container"></div>
     <div class="add-event" style="display: flex">
-      <input
-        type="text"
-        class="event-adding input-title"
-        placeholder="Event title"
-      />
-      <input
-        type="date"
-        class="event-adding input-start-date"
-        name="date"
-        placeholder="Start date"
-      />
-      <input
-        type="date"
-        class="event-adding input-end-date"
-        name="date"
-        placeholder="End date"
-      />
-      <input
-        type="time"
-        class="event-adding input-start"
-        name="start_time"
-        placeholder="Start time"
-      />
-      <input
-        type="time"
-        class="event-adding input-end"
-        name="end_time"
-        placeholder="End time"
-      />
-      <input
-        type="text"
-        class="event-adding input-location"
-        name="location"
-        placeholder="Location"
-      />
-      <input
-        type="text"
-        class="event-adding input-user"
-        name="user"
-        placeholder="Enter user's name"
-      />
+      <div class="input-fields" style="display: flex">
+        <input
+          type="text"
+          class="event-adding input-title"
+          placeholder="Event title"
+        />
+        <input
+          type="date"
+          class="event-adding input-start-date"
+          name="date"
+          placeholder="Start date"
+        />
+        <input
+          type="date"
+          class="event-adding input-end-date"
+          name="date"
+          placeholder="End date"
+        />
+        <input
+          type="time"
+          class="event-adding input-start"
+          name="start_time"
+          placeholder="Start time"
+        />
+        <input
+          type="time"
+          class="event-adding input-end"
+          name="end_time"
+          placeholder="End time"
+        />
+        <input
+          type="text"
+          class="event-adding input-location"
+          name="location"
+          placeholder="Location"
+        />
+        <input
+          type="text"
+          class="event-adding input-user"
+          name="user"
+          placeholder="Enter user's name"
+        />
+      </div>
       <button class="add-event-btn">Add event</button>
     </div>
     <div class="natural-language">
       <textarea
         class="input-natural"
         name="natural"
-        placeholder="Enter natural language"
+        placeholder="Add event in natural language"
       ></textarea>
-      <!-- make a checkbox with label "OpenAI?" with class "use-OpenAI"-->
-      <select class="nlu-model-choice" name="model">
+      <!-- <select class="nlu-model-choice" name="model">
         <option value="use-OpenAI">OpenAI</option>
         <option value="Mistral-Small">Mistral-Small</option>
         <option value="Other">Other</option>
       </select>
-      <input type="text" class="custom-model-name" />
+      <input type="text" class="custom-model-name" /> -->
       <button class="natural-language-btn">Add event</button>
     </div>
 

@@ -24,7 +24,8 @@ body {
 .date-picker {
   display: flex;
   justify-content: space-between;
-  width: 16rem;
+  align-items: center;
+  width: 14rem;
   gap: 2rem;
   margin-bottom: 4rem;
   margin-top: 2rem;
@@ -35,9 +36,16 @@ body {
   }
 }
 
+.fa-arrow-right,
+.fa-arrow-left {
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
 .event-adding {
   border: none;
-  outline: #e9ebf3 solid 1px;
+
   // background-color: rgba(220, 220, 220, 0.227);
   border-radius: 5px;
   padding: 0.25rem;
@@ -57,14 +65,21 @@ body {
 
   .input-delete {
     padding: 0.5rem 0 0.5rem 0.5rem;
+    outline: none;
+    border: none;
+    outline: #e9ebf3 solid 1px;
+
+    border-radius: 5px 5px 0 0;
   }
 
   .delete-event-btn {
     padding: 0.25rem;
     outline: none;
     border: none;
-    border-radius: 5px;
+    border-radius: 0 0 5px 5px;
     background-color: #fdebeb;
+    outline: 1px solid #fdebeb;
+
     color: #b91c1c;
     height: 2.5rem;
     margin-top: 0.25rem;
@@ -83,17 +98,23 @@ body {
 
   .input-natural {
     padding-top: 0.5rem;
+    font-family: sans-serif;
+    border: none;
+    outline: none;
+    outline: #e9ebf3 solid 1px;
+    border-radius: 5px 5px 0 0;
   }
 
   .natural-language-btn {
     padding: 0.25rem;
     border: none;
     outline: none;
-    border-radius: 5px;
+    border-radius: 0 0 5px 5px;
     background-color: #d9e9fd;
     color: #405d7d;
     height: 2.5rem;
     margin-top: 0.25rem;
+    outline: 1px solid #d9e9fd;
   }
 }
 
@@ -116,6 +137,25 @@ body {
   width: 16rem;
 }
 
+.input-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 16rem;
+  outline: #e9ebf3 solid 1px;
+  border-radius: 5px;
+  padding: 0 0.5rem;
+
+  .input-user {
+    margin-bottom: 0.35rem;
+  }
+}
+
+.input-fields * {
+  &:focus {
+    outline: none;
+  }
+}
 .add-event-btn {
   color: #6b21a8;
   background-color: #f1e8fd;
