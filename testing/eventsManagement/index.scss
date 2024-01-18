@@ -143,7 +143,7 @@ body {
   gap: 0.35rem;
   width: 16rem;
   outline: #e9ebf3 solid 1px;
-  border-radius: 5px;
+  border-radius: 5px 5px 0 0;
   padding: 0 0.5rem;
 
   .input-user {
@@ -162,7 +162,10 @@ body {
   height: 2.5rem;
   border: none;
   outline: none;
-  border-radius: 5px;
+  border-radius: 0 0 5px 5px;
+  border: 1px solid #f1e8fd;
+  cursor: pointer;
+  outline: 1px solid #f1e8fd;
 }
 
 .individual_event_times {

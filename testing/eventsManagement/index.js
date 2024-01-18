@@ -495,15 +495,6 @@ const outputContainer = document.querySelector(".output-container");
 naturalLanguageButton.addEventListener("click", function () {
   createSpinner(".natural-language-btn", 18, "right");
   const textToParse = document.querySelector(".input-natural").value;
-  const modelChoice = document.querySelector(".nlu-model-choice").value;
-  if (modelChoice === "use-OpenAI") {
-    sendToOpenAI(textToParse);
-  } else if (modelChoice === "Mistral-Small") {
-    sendToOpenRouter(textToParse, "mistralai/mistral-small");
-  } else {
-    // create an element to input custom model name then send that to openrouter
-    const customModelName = document.querySelector(".custom-model-name").value;
-    sendToOpenRouter(textToParse, customModelName);
-  }
+  sendToOpenAI(textToParse);
   document.querySelector(".input-natural").value = "";
 });
