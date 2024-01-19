@@ -1,0 +1,54 @@
+{
+  "lightBlue": {
+    "text": "#8FA2BB",
+    "background": "#D9E9FD"
+  },
+  "blue": {
+    "text": "#181C44",
+    "background": "#DEE2F4"
+  },
+  "lightYellow": {
+    "text": "#BDA474",
+    "background": "#FDF9C9"
+  },
+  "lightGreen": {
+    "text": "#264724",
+    "background": "#E2EFE5"
+  },
+  "green": {
+    "text": "#424843",
+    "background": "#E2FBE8"
+  },
+  "purple": {
+    "text": "#6326A2",
+    "background": "#F1E8FD"
+  },
+  "Magenta": {
+    "text": "#3F1A4B",
+    "background": "#EBDFEF"
+  },
+  "lightOrange": {
+    "text": "#8E3B1F",
+    "background": "#FCEED8"
+  },
+  "orange": {
+    "text": "#442F1E",
+    "background": "#F3E4D6"
+  },
+  "lightRed": {
+    "text": "#8C2822",
+    "background": "#F9E3E2"
+  },
+  "red": {
+    "text": "#401B2B",
+    "background": "#EAD8E1"
+  },
+  "lightPink": {
+    "text": "#D38AA7",
+    "background": "#F8E8F2"
+  },
+  "grey": {
+    "text": "#212936",
+    "background": "#F3F4F6"
+  }
+}

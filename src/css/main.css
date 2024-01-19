@@ -39,6 +39,12 @@ body {
 .month-switcher {
   display: flex;
   align-items: center;
+}
+
+.calendar-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   grid-column: span 3;
 }
 
@@ -88,6 +94,62 @@ body {
   width: 120%;
   border-bottom: 2px solid rgba(0, 0, 0, 0.373);
   margin-top: 5px;
+}
+
+.add-event-icon {
+  cursor: pointer;
+  background-color: #dee2f4;
+  color: #181c44;
+  border-radius: 50%;
+  padding: 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-content: center;
+}
+
+.close-modal-icon {
+  cursor: pointer;
+  background-color: #ffd6d6;
+  border-radius: 50%;
+  padding: 0.5rem;
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-content: center;
+}
+
+.fa-plus {
+  color: #a84848;
+  height: 15px;
+  width: 15px;
+}
+
+.fa-plus::before {
+  display: block;
+  height: 15px;
+  width: 15px;
+}
+
+dialog:modal {
+  font-family: sans-serif;
+  background-color: white;
+  outline: 1px solid rgba(216, 215, 223, 0.244);
+  border: 1px solid rgba(216, 215, 223, 0.244);
+  padding: 1rem;
+  transition: overlay 0.7s ease-out allow-discrete;
+  border-radius: 8px;
+}
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0);
+  transition: display 0.7s allow-discrete, overlay 0.7s allow-discrete, background-color 0.7s;
+  /* Equivalent to
+  transition: all 0.7s allow-discrete; */
+}
+
+dialog[open]::backdrop {
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 .calendarAndDays {
@@ -178,28 +240,119 @@ body {
   cursor: pointer;
 }
 
-.floating {
-  position: absolute;
-  padding: 18px;
-  background-color: #ffd6d6;
-  color: #a84848;
-  font-family: "Noto Sans Mono", monospace;
-  filter: blur(50px);
-  opacity: 0;
-  transition: filter 0.5s ease-in-out, opacity 0.5s ease-in-out;
-  border-radius: 15px;
+.modal-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
 }
-.floating.show {
-  filter: blur(0);
-  opacity: 1;
+.modal-heading p {
+  font-size: 1.25rem;
+  font-family: sans-serif;
 }
-.floating button {
-  display: block;
-  margin-top: 10px;
-  padding: 10px;
-  background-color: none;
-  color: #8f4d4d;
-  border: red 1px solid;
+
+.modal-adding-event-container {
+  padding: 0 0.5rem;
+}
+
+.event-adding {
+  border: none;
   border-radius: 5px;
+  padding: 0.25rem;
+  height: 2rem;
+  padding-left: 1rem;
+}
+
+.input-title {
+  height: 3rem;
+}
+
+.delete-event {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+.delete-event .input-delete {
+  padding: 0.5rem 0 0.5rem 0.5rem;
+  outline: none;
+  border: none;
+  outline: #e9ebf3 solid 1px;
+  border-radius: 5px 5px 0 0;
+}
+.delete-event .delete-event-btn {
+  padding: 0.25rem;
+  outline: none;
+  border: none;
+  width: 100%;
+  border-radius: 0 0 5px 5px;
+  background-color: #fdebeb;
+  outline: 1px solid #fdebeb;
+  color: #b91c1c;
+  height: 2.5rem;
+  margin-top: 0.25rem;
+}
+
+.natural-language {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+}
+.natural-language * {
+  padding: 0 0 0 0.5rem;
+}
+.natural-language .input-natural {
+  padding-top: 0.5rem;
+  font-family: sans-serif;
+  border: none;
+  outline: none;
+  outline: #e9ebf3 solid 1px;
+  border-radius: 5px 5px 0 0;
+}
+.natural-language .natural-language-btn {
+  padding: 0.25rem;
+  border: none;
+  outline: none;
+  border-radius: 0 0 5px 5px;
+  background-color: #d9e9fd;
+  color: #405d7d;
+  height: 2.5rem;
+  margin-top: 0.25rem;
+  outline: 1px solid #d9e9fd;
+}
+
+.add-event {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.input-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  outline: #e9ebf3 solid 1px;
+  border-radius: 5px 5px 0 0;
+  padding: 0 0.5rem;
+}
+.input-fields .input-user {
+  margin-bottom: 0.35rem;
+}
+
+.input-fields *:focus {
+  outline: none;
+}
+
+.add-event-btn {
+  color: #6b21a8;
+  background-color: #f1e8fd;
+  height: 2.5rem;
+  border: none;
+  outline: none;
+  border-radius: 0 0 5px 5px;
+  border: 1px solid #f1e8fd;
   cursor: pointer;
+  outline: 1px solid #f1e8fd;
 }/*# sourceMappingURL=main.css.map */

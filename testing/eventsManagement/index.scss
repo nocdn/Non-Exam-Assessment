@@ -278,3 +278,117 @@ $overlay-color: black !default;
     background-color: transparent;
   }
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  /* grid-gap: 3cm; */
+  /* border: #000 1px solid; */
+  font-family: $mono-font;
+
+  > div {
+    padding: 10px;
+  }
+}
+
+.month-switcher {
+  // place-items: initial;
+  display: flex;
+  align-items: center;
+  // width: 65%;
+  grid-column: span 3;
+}
+
+#monthAndYear {
+  font-family: $mono-font;
+  margin-left: 2rem;
+}
+
+#monthAndYear::after {
+  content: "";
+  display: block;
+  width: 100%;
+  border-bottom: 2px solid rgba(196, 196, 196, 0.373);
+  margin-top: 3px;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-gap: 10px;
+  font-family: $mono-font;
+  margin-bottom: 3rem;
+
+  .day {
+    display: block;
+    width: fit-content;
+
+    p::after {
+      /* so that the underline under each day can just slightly extend past each day, without having to hardcode the width of the underline */
+      content: "";
+      display: block;
+      width: 120%;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.373);
+      margin-top: 5px;
+    }
+  }
+}
+
+.calendarAndDays {
+  max-width: 64rem;
+  grid-column: span 3;
+  width: 85%;
+  background-color: rgba(216, 215, 223, 0.244);
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  /* background-color: rgb(238, 238, 228); */
+}
+
+/* Highlighting current day */
+
+/* select the current day span element - an element which is inside the current day cell */
+.current-day-span {
+  position: relative;
+}
+
+/* add a pseudo element to the current day span element */
+@keyframes pulse {
+  0% {
+    width: 45px;
+    height: 45px;
+  }
+  50% {
+    width: 55px;
+    height: 55px;
+  }
+  100% {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+.current-day-span::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 45px;
+  height: 45px;
+  background-color: lightblue;
+  border-radius: 50%;
+  z-index: -1;
+  transform: translate(-50%, -50%);
+  animation: pulse 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.cell {
+  .event {
+    background-color: rgb(199, 201, 203);
+    margin-top: 5px;
+    border-radius: 5px;
+    padding: 5px 8px 5px 5px;
+    font-size: 14px;
+    transition: opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+}

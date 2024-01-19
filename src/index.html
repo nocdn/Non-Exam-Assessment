@@ -2,17 +2,104 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <link
+      href="https://unpkg.com/css.gg@2.0.0/icons/css/add.css"
+      rel="stylesheet"
+    />
     <script
       src="https://kit.fontawesome.com/7d2900409e.js"
       crossorigin="anonymous"
     ></script>
   </head>
   <body>
-    <div class="month-switcher">
-      <i id="prevMonth" class="fa-solid fa-arrow-left"></i>
-      <i id="nextMonth" class="fa-solid fa-arrow-right"></i>
-      <div id="monthAndYear"></div>
-    </div>
+    <dialog data-modal>
+      <div class="modal-heading" style="display: flex; gap: 10rem">
+        <p>Add an event</p>
+        <!-- <i class="fa-solid fa-plus"></i> -->
+        <div class="close-modal-icon">
+          <i class="gg-add"></i>
+        </div>
+      </div>
+      <div class="modal-adding-event-container">
+        <div class="add-event" style="display: flex">
+          <div class="input-fields" style="display: flex">
+            <input
+              type="text"
+              class="event-adding input-title"
+              placeholder="Event title"
+            />
+            <input
+              type="date"
+              class="event-adding input-start-date"
+              name="date"
+              placeholder="Start date"
+            />
+            <input
+              type="date"
+              class="event-adding input-end-date"
+              name="date"
+              placeholder="End date"
+            />
+            <input
+              type="time"
+              class="event-adding input-start"
+              name="start_time"
+              placeholder="Start time"
+            />
+            <input
+              type="time"
+              class="event-adding input-end"
+              name="end_time"
+              placeholder="End time"
+            />
+            <input
+              type="text"
+              class="event-adding input-location"
+              name="location"
+              placeholder="Location"
+            />
+            <input
+              type="text"
+              class="event-adding input-user"
+              name="user"
+              placeholder="Enter user's name"
+            />
+          </div>
+          <button class="add-event-btn">Add event</button>
+        </div>
+        <div class="natural-language">
+          <textarea
+            class="input-natural"
+            name="natural"
+            placeholder="Add event in natural language"
+          ></textarea>
+          <button class="natural-language-btn">Add event</button>
+        </div>
+
+        <div class="delete-event">
+          <input
+            type="text"
+            class="input-delete"
+            name="delete"
+            placeholder="Enter event's id"
+          />
+          <button class="delete-event-btn">Delete event</button>
+        </div>
+      </div>
+    </dialog>
+
+    <nav class="calendar-navigation">
+      <div class="month-switcher">
+        <i id="prevMonth" class="fa-solid fa-arrow-left"></i>
+        <i id="nextMonth" class="fa-solid fa-arrow-right"></i>
+        <div id="monthAndYear"></div>
+      </div>
+
+      <div class="add-event-icon" data-open-modal>
+        <!-- <i class="fa-solid fa-plus"></i> -->
+        <i class="gg-add"></i>
+      </div>
+    </nav>
     <div class="calendarAndDays">
       <div class="days">
         <div class="day"><p>Mon</p></div>

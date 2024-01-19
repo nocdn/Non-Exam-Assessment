@@ -1,5 +1,15 @@
+function getFormattedMonth(month) {
+  // Convert month to a string and add a leading zero to single-digit months
+  const monthString = month.toString();
+  if (monthString.length === 1) {
+    return `0${month}`;
+  } else {
+    return month;
+  }
+}
+
 let today = new Date();
-let currentMonth = today.getMonth();
+let currentMonth = getFormattedMonth(today.getMonth() + 1);
 let currentYear = today.getFullYear();
 let todayDay = today.getDate();
 
@@ -9,19 +19,6 @@ console.log(currentYear);
 let calendarEventsList = Array(31).fill("");
 
 let eventsList;
-
-// Call fetchEvents and then log fetchedEvents after it's done (the .then() makes sure it's done)
-
-const inputName = document.getElementById("event-name");
-const inputDate = document.getElementById("event-date");
-const inputButton = document.getElementById("add-event");
-
-inputButton.addEventListener("click", () => {
-  let date = inputDate.value - 1;
-  let name = inputName.value;
-  calendarEventsList[date] = name;
-  updateCalendar(currentMonth, currentYear);
-});
 
 function updateCalendar(month, year) {
   let firstDay = new Date(year, month).getDay();
@@ -67,27 +64,50 @@ function updateCalendar(month, year) {
 
   // Update month and year header
   let monthAndYear = document.getElementById("monthAndYear");
-  monthAndYear.innerText = `${month + 1}/${year}`;
+  monthAndYear.innerText = `${getFormattedMonth(month)}/${year}`;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   async function fetchEvents(year, month) {
     try {
       const response = await fetch(
-        // `http://localhost:8000/api/events/${year}/${month}`
-        `https://p6kbzyq4s7.execute-api.eu-west-2.amazonaws.com/dev/fetchEvents?year=${year}&month=${month}`
+        `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${getFormattedMonth(
+          month
+        )}`
       );
       const events = await response.json();
+      console.log(events);
       eventsList = events;
 
       // Reset and populate the calendarEventsList array with new events
-      calendarEventsList = Array(31).fill("");
-      for (let i = 0; i < eventsList.events.length; i++) {
-        let eventDate = eventsList.events[i].date;
-        eventDate = eventDate.split("-");
-        eventDate = parseInt(eventDate[2]);
-        eventDate = eventDate - 1;
-        calendarEventsList[eventDate] = eventsList.events[i].name;
+      calendarEventsList = Array(31).fill(null); // Initialize with null indicating no events
+
+      for (let event of eventsList.events) {
+        let startDateComponents = event.startDate
+          .split("/")
+          .map((num) => parseInt(num));
+        let endDateComponents = event.endDate
+          .split("/")
+          .map((num) => parseInt(num));
+        let startDay = startDateComponents[0];
+        let endDay = endDateComponents[0];
+
+        for (let day = startDay; day <= endDay; day++) {
+          // Adjust index for 0-based array
+          let index = day - 1;
+          if (!calendarEventsList[index]) {
+            calendarEventsList[index] = [];
+          }
+
+          calendarEventsList[index].push({
+            name: event.name,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            location: event.location,
+            user: event.user,
+            color: event.color,
+          });
+        }
       }
 
       // Update the calendar after fetching new events
@@ -101,143 +121,62 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  fetchEvents(currentYear, currentMonth + 1).then(() => {
-    // reset the calendarEventsList
-    calendarEventsList = Array(31).fill("");
-    console.log(eventsList);
-    for (let i = 0; i < eventsList.events.length; i++) {
-      eventDate = eventsList.events[i].date;
-      eventDate = eventDate.split("-");
-      eventDate = eventDate[2];
-      eventDate = parseInt(eventDate);
-      eventDate = eventDate - 1;
-      calendarEventsList[eventDate] = eventsList.events[i].name;
-    }
-  });
+  fetchEvents(currentYear, currentMonth).then(() => {});
 
   function populateCalendar() {
-    // Adding the event to the box
     for (let i = 0; i < calendarEventsList.length; i++) {
-      if (calendarEventsList[i] !== "") {
-        let cell = document.querySelector(`.day-${i + 1}`);
-        let eventSpan = document.createElement("p");
-        eventSpan.innerText = calendarEventsList[i];
-        eventSpan.classList.add("event");
-        cell.appendChild(eventSpan);
+      if (calendarEventsList[i] !== null) {
+        let dayCell = document.querySelector(`.day-${i + 1}`);
+        calendarEventsList[i].forEach((event) => {
+          let eventElement = document.createElement("div");
+          eventElement.classList.add("event");
+          eventElement.innerText = `${event.name} - ${event.startTime}-${event.endTime}`;
+
+          // Apply background and text color
+          if (event.color && event.color.background && event.color.text) {
+            eventElement.style.backgroundColor = event.color.background;
+            eventElement.style.color = event.color.text;
+          }
+
+          dayCell.appendChild(eventElement);
+        });
       }
     }
-
-    assigningColors();
   }
 
   document.getElementById("prevMonth").addEventListener("click", () => {
-    if (currentMonth === 0) {
-      currentMonth = 11;
+    // convert the currentMonth to a number
+    currentMonth = parseInt(currentMonth);
+    // if it's 1, make it 12 and subtract 1 from the year
+    if (currentMonth === 1) {
+      currentMonth = 12;
       currentYear -= 1;
     } else {
       currentMonth -= 1;
     }
 
-    fetchEvents(currentYear, currentMonth + 1);
+    fetchEvents(currentYear, currentMonth);
   });
 
   document.getElementById("nextMonth").addEventListener("click", () => {
-    if (currentMonth === 11) {
-      currentMonth = 0;
+    // convert the currentMonth to a number
+    currentMonth = parseInt(currentMonth);
+    // if it's 12, make it 1 and add 1 to the year
+    if (currentMonth === 12) {
+      currentMonth = 1;
       currentYear += 1;
     } else {
       currentMonth += 1;
     }
 
-    fetchEvents(currentYear, currentMonth + 1);
+    fetchEvents(currentYear, currentMonth);
   });
-
-  const createFloatingElement = () => {
-    const element = document.createElement("div");
-    element.classList.add("floating");
-    element.innerHTML = "Delete Event?";
-    const button = document.createElement("button");
-    button.innerText = "Yes";
-    element.appendChild(button);
-    return { element, button };
-  };
-
-  const attachEventListeners = (floatingElement, deleteButton) => {
-    let isFloatingVisible = false;
-    let clickedEvent;
-
-    // Helper function to show the floating element
-    const showFloatingElement = (e, eventElement) => {
-      clickedEvent = eventElement;
-      floatingElement.style.left = `${e.clientX}px`;
-      floatingElement.style.top = `${e.clientY}px`;
-      floatingElement.style.filter = "blur(20px)";
-      floatingElement.style.opacity = "0";
-      floatingElement.style.display = "block";
-
-      setTimeout(() => {
-        floatingElement.classList.add("show");
-        floatingElement.style.filter = "blur(0px)";
-        floatingElement.style.opacity = "1";
-      }, 0);
-
-      isFloatingVisible = true;
-    };
-
-    // Helper function to hide the floating element
-    const hideFloatingElement = () => {
-      floatingElement.classList.remove("show");
-      floatingElement.style.opacity = "0";
-
-      setTimeout(() => {
-        floatingElement.style.display = "none";
-        floatingElement.style.filter = "blur(20px)";
-      }, 500);
-
-      isFloatingVisible = false;
-    };
-
-    document.querySelectorAll(".event").forEach((eventElement) => {
-      eventElement.addEventListener("click", (e) => {
-        e.stopPropagation();
-        showFloatingElement(e, eventElement);
-      });
-    });
-
-    deleteButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (clickedEvent) {
-        clickedEvent.remove();
-        hideFloatingElement();
-      }
-    });
-
-    document.addEventListener("click", () => {
-      if (isFloatingVisible) {
-        hideFloatingElement();
-      }
-    });
-  };
-
-  const { element: floatingElement, button: deleteButton } =
-    createFloatingElement();
-  document.body.appendChild(floatingElement);
-
-  attachEventListeners(floatingElement, deleteButton);
 });
 
 // Initialize calendar with current month and year
 updateCalendar(currentMonth, currentYear);
 
 // Natural language input and OpenAI request
-
-const naturalLanguageInputField = document.querySelector(".natural-language");
-let naturalLanguageInput = "";
-
-inputButton.addEventListener("click", () => {
-  console.log(naturalLanguageInputField.value);
-  naturalLanguageInput = naturalLanguageInputField.value;
-});
 
 // picking a random colour for the background of the event
 const randomColor = () => {
@@ -270,14 +209,65 @@ const assigningColors = () => {
 assigningColors();
 
 // makes the month switcher the same width as the calendar (to "anchor" the forward and back buttons)
-const resizeMonthSwitcher = () => {
+const resizeCalendarNav = () => {
   const calendarWidth = document.querySelector(".calendarAndDays").offsetWidth;
-  const monthSwitcher = document.querySelector(".month-switcher");
-  monthSwitcher.style.width = `${calendarWidth}px`;
+  const calendarNav = document.querySelector(".calendar-navigation");
+  calendarNav.style.width = `${calendarWidth}px`;
 };
 
-resizeMonthSwitcher();
-// makes it actively listen for a resize event to trigger the resizing function
+resizeCalendarNav();
+
+// Select the necessary elements
+const openEventIcon = document.querySelector(".add-event-icon");
+const modalPlusIcon = document.querySelector("[data-modal] .close-modal-icon");
+const modalElement = document.querySelector("[data-modal]");
+
+// add a transition of 0.5s to rotate to the modalPlusIcon with ease out
+modalPlusIcon.style.transition = "0.5s ease-out";
+openEventIcon.style.transition = "0.5s ease-out";
+
+// Function to calculate the center position of an element
+function getCenterPosition(element) {
+  const rect = element.getBoundingClientRect();
+  return {
+    x: rect.left + rect.width / 2,
+    y: rect.top + rect.height / 2,
+  };
+}
+
+// Function to adjust the entire modal position
+function adjustModalPosition() {
+  // Reset the transform property to ensure a clean state
+  modalElement.style.transform = "";
+
+  const outsideIconCenter = getCenterPosition(openEventIcon);
+  const modalIconCenter = getCenterPosition(modalPlusIcon);
+
+  const translateX = outsideIconCenter.x - modalIconCenter.x;
+  let translateY = outsideIconCenter.y - modalIconCenter.y;
+
+  // Apply translation to the entire modal to match the position of the outside icon
+  modalElement.style.transform = `translate(${translateX}px, ${translateY}px)`;
+}
+
+// Attach event listener to openEventIcon for opening the modal
+openEventIcon.addEventListener("click", () => {
+  modalElement.showModal();
+  adjustModalPosition();
+  modalPlusIcon.style.transform = "rotate(45deg)";
+  openEventIcon.style.transform = "rotate(45deg)";
+});
+
+// Event listener for closing the modal
+modalPlusIcon.addEventListener("click", () => {
+  modalElement.close();
+  modalPlusIcon.style.transform = "rotate(0deg)";
+  openEventIcon.style.transform = "rotate(0deg)";
+});
+
+// You might want to adjust the position on window resize as the position could change
+
 window.addEventListener("resize", () => {
-  resizeMonthSwitcher();
+  resizeCalendarNav();
+  adjustModalPosition();
 });

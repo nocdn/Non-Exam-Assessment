@@ -17,6 +17,31 @@ function getFormattedMonth(month) {
 
 let openAIKey = "";
 
+const fetchColors = async () => {
+  try {
+    const response = await fetch(
+      "https://ti4hjowhkzaotsph53dyyv6luq0rqsvb.lambda-url.eu-west-2.on.aws/"
+    );
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching the color data:", error);
+  }
+};
+
+let calendarColors = fetchColors();
+
+const generateRandomColors = () => {
+  if (!calendarColors) {
+    console.warn("Colors not loaded yet");
+    // Return a default color pair or handle this case as appropriate
+    return { text: "#000000", background: "#FFFFFF" };
+  }
+  const colorNames = Object.keys(calendarColors);
+  const randomColorName =
+    colorNames[Math.floor(Math.random() * colorNames.length)];
+  return calendarColors[randomColorName];
+};
+
 async function fetchOpenAIKey() {
   try {
     const response = await fetch(
@@ -250,13 +275,6 @@ async function postEvent(eventData, year, month) {
   fetchEvents(selectedYear, selectedMonth);
 }
 
-const generateRandomColors = function () {
-  const backgroundColor =
-    "#" + Math.floor(Math.random() * 16777215).toString(16);
-  const textColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-  return { background: backgroundColor, text: textColor };
-};
-
 // Global array to store events
 const newEvents = [];
 
@@ -405,7 +423,7 @@ const sendToOpenAI = function (textToParse) {
         endTime: eventDetails.endTime,
         location: eventDetails.location,
         user: "Default User",
-        color: "YourColor",
+        color: generateRandomColors(),
       };
       const [day, month, year] = eventDetails.startDate.split("/");
       console.log("Event Data:");
@@ -480,7 +498,7 @@ const sendToOpenRouter = function (
         endTime: eventDetails.endTime,
         location: eventDetails.location,
         user: "Default User",
-        color: "YourColor",
+        color: generateRandomColors(),
       };
       const [day, month, year] = eventDetails.startDate.split("/");
       postEvent(eventData, year, month);
