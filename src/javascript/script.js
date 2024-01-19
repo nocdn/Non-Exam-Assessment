@@ -1,3 +1,10 @@
+import {
+  createSpinner,
+  createSpinnerAsElement,
+  removeSpinner,
+  setSpinnerSize,
+} from "../assets/functions/spinner.js";
+
 function getFormattedMonth(month) {
   // Convert month to a string and add a leading zero to single-digit months
   const monthString = month.toString();
