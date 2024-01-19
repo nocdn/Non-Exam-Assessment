@@ -67,146 +67,112 @@ function updateCalendar(month, year) {
   monthAndYear.innerText = `${getFormattedMonth(month)}/${year}`;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  async function fetchEvents(year, month) {
-    try {
-      const response = await fetch(
-        `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${getFormattedMonth(
-          month
-        )}`
-      );
-      const events = await response.json();
-      console.log(events);
-      eventsList = events;
+async function fetchEvents(year, month) {
+  try {
+    const response = await fetch(
+      `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${getFormattedMonth(
+        month
+      )}`
+    );
+    const events = await response.json();
+    console.log(events);
+    eventsList = events;
 
-      // Reset and populate the calendarEventsList array with new events
-      calendarEventsList = Array(31).fill(null); // Initialize with null indicating no events
+    // Reset and populate the calendarEventsList array with new events
+    calendarEventsList = Array(31).fill(null); // Initialize with null indicating no events
+    console.log(calendarEventsList);
+    for (let event of eventsList.events) {
+      let startDateComponents = event.startDate
+        .split("/")
+        .map((num) => parseInt(num));
+      let endDateComponents = event.endDate
+        .split("/")
+        .map((num) => parseInt(num));
+      let startDay = startDateComponents[0];
+      let endDay = endDateComponents[0];
 
-      for (let event of eventsList.events) {
-        let startDateComponents = event.startDate
-          .split("/")
-          .map((num) => parseInt(num));
-        let endDateComponents = event.endDate
-          .split("/")
-          .map((num) => parseInt(num));
-        let startDay = startDateComponents[0];
-        let endDay = endDateComponents[0];
-
-        for (let day = startDay; day <= endDay; day++) {
-          // Adjust index for 0-based array
-          let index = day - 1;
-          if (!calendarEventsList[index]) {
-            calendarEventsList[index] = [];
-          }
-
-          calendarEventsList[index].push({
-            name: event.name,
-            startTime: event.startTime,
-            endTime: event.endTime,
-            location: event.location,
-            user: event.user,
-            color: event.color,
-          });
+      for (let day = startDay; day <= endDay; day++) {
+        // Adjust index for 0-based array
+        let index = day - 1;
+        if (!calendarEventsList[index]) {
+          calendarEventsList[index] = [];
         }
-      }
 
-      // Update the calendar after fetching new events
-      updateCalendar(currentMonth, currentYear);
-      populateCalendar();
-    } catch (error) {
-      console.error("Error:", error);
-      setTimeout(() => {
-        fetchEvents(year, month);
-      }, 10000);
-    }
-  }
-
-  fetchEvents(currentYear, currentMonth).then(() => {});
-
-  function populateCalendar() {
-    for (let i = 0; i < calendarEventsList.length; i++) {
-      if (calendarEventsList[i] !== null) {
-        let dayCell = document.querySelector(`.day-${i + 1}`);
-        calendarEventsList[i].forEach((event) => {
-          let eventElement = document.createElement("div");
-          eventElement.classList.add("event");
-          eventElement.innerText = `${event.name} - ${event.startTime}-${event.endTime}`;
-
-          // Apply background and text color
-          if (event.color && event.color.background && event.color.text) {
-            eventElement.style.backgroundColor = event.color.background;
-            eventElement.style.color = event.color.text;
-          }
-
-          dayCell.appendChild(eventElement);
+        calendarEventsList[index].push({
+          name: event.name,
+          startTime: event.startTime,
+          endTime: event.endTime,
+          location: event.location,
+          user: event.user,
+          color: event.color,
         });
       }
     }
+
+    // Update the calendar after fetching new events
+    updateCalendar(currentMonth, currentYear);
+    populateCalendar();
+  } catch (error) {
+    console.error("Error:", error);
+    setTimeout(() => {
+      fetchEvents(year, month);
+    }, 10000);
+  }
+}
+
+fetchEvents(currentYear, currentMonth).then(() => {});
+
+function populateCalendar() {
+  for (let i = 0; i < calendarEventsList.length; i++) {
+    if (calendarEventsList[i] !== null) {
+      let dayCell = document.querySelector(`.day-${i + 1}`);
+      calendarEventsList[i].forEach((event) => {
+        let eventElement = document.createElement("div");
+        eventElement.classList.add("event");
+        eventElement.innerText = `${event.name} - ${event.startTime}-${event.endTime}`;
+
+        // Apply background and text color
+        if (event.color && event.color.background && event.color.text) {
+          eventElement.style.backgroundColor = event.color.background;
+          eventElement.style.color = event.color.text;
+        }
+
+        dayCell.appendChild(eventElement);
+      });
+    }
+  }
+}
+
+document.getElementById("prevMonth").addEventListener("click", () => {
+  // convert the currentMonth to a number
+  currentMonth = parseInt(currentMonth);
+  // if it's 1, make it 12 and subtract 1 from the year
+  if (currentMonth === 1) {
+    currentMonth = 12;
+    currentYear -= 1;
+  } else {
+    currentMonth -= 1;
   }
 
-  document.getElementById("prevMonth").addEventListener("click", () => {
-    // convert the currentMonth to a number
-    currentMonth = parseInt(currentMonth);
-    // if it's 1, make it 12 and subtract 1 from the year
-    if (currentMonth === 1) {
-      currentMonth = 12;
-      currentYear -= 1;
-    } else {
-      currentMonth -= 1;
-    }
+  fetchEvents(currentYear, currentMonth);
+});
 
-    fetchEvents(currentYear, currentMonth);
-  });
+document.getElementById("nextMonth").addEventListener("click", () => {
+  // convert the currentMonth to a number
+  currentMonth = parseInt(currentMonth);
+  // if it's 12, make it 1 and add 1 to the year
+  if (currentMonth === 12) {
+    currentMonth = 1;
+    currentYear += 1;
+  } else {
+    currentMonth += 1;
+  }
 
-  document.getElementById("nextMonth").addEventListener("click", () => {
-    // convert the currentMonth to a number
-    currentMonth = parseInt(currentMonth);
-    // if it's 12, make it 1 and add 1 to the year
-    if (currentMonth === 12) {
-      currentMonth = 1;
-      currentYear += 1;
-    } else {
-      currentMonth += 1;
-    }
-
-    fetchEvents(currentYear, currentMonth);
-  });
+  fetchEvents(currentYear, currentMonth);
 });
 
 // Initialize calendar with current month and year
 updateCalendar(currentMonth, currentYear);
-
-// Natural language input and OpenAI request
-
-// picking a random colour for the background of the event
-const randomColor = () => {
-  // [background, text]
-  const colors = [
-    ["#E1F5E7", "#475C4C"],
-    ["#D1F2EB", "#5D737E"],
-    ["#DCEAFC", "#4A596C"],
-    ["#E5D7F9", "#56446F"],
-    ["#FFEEFF", "#B085B5"],
-    ["#FFEDD9", "#bd8463"],
-    ["#F2F4C3", "#798B5F"],
-  ];
-
-  const randomIndex = Math.floor(Math.random() * colors.length);
-  return colors[randomIndex];
-};
-
-// iterate over every event and add a background color and a text color
-
-const assigningColors = () => {
-  const events = document.querySelectorAll(".event");
-  events.forEach((event) => {
-    let [eventBackgroundColor, eventTextColor] = randomColor();
-    event.style.backgroundColor = eventBackgroundColor;
-    event.style.color = eventTextColor;
-  });
-};
-
-assigningColors();
 
 // makes the month switcher the same width as the calendar (to "anchor" the forward and back buttons)
 const resizeCalendarNav = () => {
@@ -270,4 +236,136 @@ modalPlusIcon.addEventListener("click", () => {
 window.addEventListener("resize", () => {
   resizeCalendarNav();
   adjustModalPosition();
+});
+
+/////////////////////////// Event Management ///////////////////////////
+
+let openAIKey = "";
+
+const fetchColors = async () => {
+  try {
+    const response = await fetch(
+      "https://ti4hjowhkzaotsph53dyyv6luq0rqsvb.lambda-url.eu-west-2.on.aws/"
+    );
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching the color data:", error);
+  }
+};
+
+let calendarColors = fetchColors();
+
+const generateRandomColors = () => {
+  if (!calendarColors) {
+    console.warn("Colors not loaded yet");
+    // Return a default color pair or handle this case as appropriate
+    return { text: "#000000", background: "#FFFFFF" };
+  }
+  const colorNames = Object.keys(calendarColors);
+  const randomColorName =
+    colorNames[Math.floor(Math.random() * colorNames.length)];
+  return calendarColors[randomColorName];
+};
+
+async function fetchOpenAIKey() {
+  try {
+    const response = await fetch(
+      `https://oh3uau67qoyk7juqhwo75ivyta0hhhcy.lambda-url.eu-west-2.on.aws/`,
+      {
+        method: "GET",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    } else {
+      const responseData = await response.json();
+      console.log("Received OpenAI API key:", responseData);
+      openAIKey = responseData.key;
+    }
+  } catch (error) {
+    console.error("Error fetching key:", error);
+  }
+}
+
+fetchOpenAIKey();
+
+async function postEvent(eventData, year, month) {
+  try {
+    const response = await fetch(
+      `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${month}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(eventData),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    } else {
+      const responseData = await response.json();
+      console.log("Event added successfully", responseData);
+      fetchEvents(currentYear, currentMonth);
+
+      updateCalendar(currentMonth, currentYear);
+      // Use responseData here to get details like the new event ID or confirmation message
+    }
+  } catch (error) {
+    console.error("Error posting event:", error);
+  }
+}
+
+// Global array to store events
+const newEvents = [];
+
+const addEventButton = document.querySelector(".add-event-btn");
+addEventButton.addEventListener("click", function () {
+  const formatDate = function (date) {
+    const day = date.slice(8, 10);
+    const month = date.slice(5, 7);
+    const year = date.slice(0, 4);
+    return `${day}/${month}/${year}`;
+  };
+
+  const nameToPost = document.querySelector(".input-title").value;
+  let startDateToPost = document.querySelector(".input-start-date").value;
+  console.log(startDateToPost);
+  if (startDateToPost === "") {
+    startDateToPost = joinedDate;
+  }
+  const endDateToPost = document.querySelector(".input-end-date").value;
+  const extractedMonth = startDateToPost.slice(5, 7);
+  const extractedYear = startDateToPost.slice(0, 4);
+  let userToPost = document.querySelector(".input-user").value;
+
+  if (userToPost === "") {
+    userToPost = "Bartek";
+  }
+
+  const startTimeToPost = document.querySelector(".input-start").value;
+  const endTimeToPost = document.querySelector(".input-end").value;
+  const locationToPost = document.querySelector(".input-location").value;
+
+  const eventToPost = {
+    name: nameToPost,
+    startDate: formatDate(startDateToPost), // Format the start date to DD/MM/YYYY
+    endDate: formatDate(endDateToPost), // Format the end date to DD/MM/YYYY
+    startTime: startTimeToPost,
+    endTime: endTimeToPost,
+    location: locationToPost,
+    user: userToPost,
+    color: generateRandomColors(),
+  };
+
+  newEvents.push(eventToPost);
+  console.log(eventToPost);
+
+  // console.log(extractedMonth, extractedYear);
+  postEvent(eventToPost, extractedYear, extractedMonth);
+
+  console.log(newEvents);
+  // updateCalendar(currentMonth, currentYear);
 });
