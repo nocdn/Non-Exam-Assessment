@@ -130,7 +130,7 @@ function populateCalendar() {
       calendarEventsList[i].forEach((event) => {
         let eventElement = document.createElement("div");
         eventElement.classList.add("event");
-        eventElement.innerText = `${event.name} - ${event.startTime}-${event.endTime}`;
+        eventElement.innerText = `${event.name}`;
 
         // Apply background and text color
         if (event.color && event.color.background && event.color.text) {

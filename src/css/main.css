@@ -199,6 +199,8 @@ dialog[open]::backdrop {
 }
 
 .cell .event {
+  font-family: sans-serif;
+  min-height: 4.2rem;
   background-color: rgb(199, 201, 203);
   margin-top: 5px;
   border-radius: 5px;
