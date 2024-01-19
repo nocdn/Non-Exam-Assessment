@@ -509,7 +509,6 @@ const sendToOpenRouter = function (
 };
 
 const naturalLanguageButton = document.querySelector(".natural-language-btn");
-const outputContainer = document.querySelector(".output-container");
 naturalLanguageButton.addEventListener("click", function () {
   createSpinner(".natural-language-btn", 18, "right");
   const textToParse = document.querySelector(".input-natural").value;

@@ -16,6 +16,8 @@ let todayDay = today.getDate();
 console.log(currentMonth);
 console.log(currentYear);
 
+const joinedDate = `${todayDay}/${currentMonth}/${currentYear}`;
+
 let calendarEventsList = Array(31).fill("");
 
 let eventsList;
@@ -80,7 +82,6 @@ async function fetchEvents(year, month) {
 
     // Reset and populate the calendarEventsList array with new events
     calendarEventsList = Array(31).fill(null); // Initialize with null indicating no events
-    console.log(calendarEventsList);
     for (let event of eventsList.events) {
       let startDateComponents = event.startDate
         .split("/")
@@ -253,7 +254,20 @@ const fetchColors = async () => {
   }
 };
 
-let calendarColors = fetchColors();
+let calendarColors = {
+  blue: { text: "#181C44", background: "#D9E9FD" },
+  lightYellow: { text: "#BDA474", background: "#FDF9C9" },
+  lightGreen: { text: "#264724", background: "#E2EFE5" },
+  green: { text: "#424843", background: "#E2FBE8" },
+  purple: { text: "#6326A2", background: "#F1E8FD" },
+  Magenta: { text: "#3F1A4B", background: "#EBDFEF" },
+  lightOrange: { text: "#8E3B1F", background: "#FCEED8" },
+  orange: { text: "#442F1E", background: "#F3E4D6" },
+  lightRed: { text: "#8C2822", background: "#F9E3E2" },
+  red: { text: "#401B2B", background: "#EAD8E1" },
+  lightPink: { text: "#D38AA7", background: "#F8E8F2" },
+  grey: { text: "#212936", background: "#F3F4F6" },
+};
 
 const generateRandomColors = () => {
   if (!calendarColors) {
@@ -368,4 +382,113 @@ addEventButton.addEventListener("click", function () {
 
   console.log(newEvents);
   // updateCalendar(currentMonth, currentYear);
+});
+
+async function deleteEvent(eventID) {
+  try {
+    const response = await fetch(
+      `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?eventID=${eventID}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    } else {
+      const responseData = await response.json();
+      console.log("Event deleted successfully", responseData);
+      // Additional logic to update UI or state as needed
+      // clear the events screen
+      clearEventsScreen();
+      fetchEvents(currentYear, currentMonth);
+    }
+  } catch (error) {
+    console.error("Error deleting event:", error);
+  }
+}
+
+const deleteEventButton = document.querySelector(".delete-event-btn");
+deleteEventButton.addEventListener("click", function () {
+  const eventIDToDelete = document.querySelector(".input-delete").value;
+  deleteEvent(eventIDToDelete);
+  fetchEvents(currentYear, currentMonth);
+});
+
+const sendToOpenAI = function (textToParse) {
+  const startTime = performance.now();
+  const prompt = `Today is ${joinedDate}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “startDate”, “endDate”, “startTime”, “endTime”, “location”.
+
+  YOU MUST OUTPUT NOTHING BUT THE RAW JSON, NO CODEBLOCKS, NO COMMENTS OR ANYTHING ELSE.
+  Instructions:
+  - Extract relevant info (morning: 7:00, afternoon: 15:00, evening: 19:00, night: 23:00)
+  - Use 24-hour clock
+  - Assume current day if no date given
+  - Date in format DD/MM/YYYY
+  - Assume all-day event if no time given (startTime: "allDay", endTime: "allDay")
+  - Assume 1-hour duration if no end time
+  - You may repeat info in multiple keys, eg. in "location" and "name"
+  - Capitalize first letters in "name" and "location"
+  - For the "location", use comedic slang if not provided, like "gaff"`;
+
+  const data = {
+    model: "gpt-3.5-turbo-1106",
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content: prompt,
+      },
+      {
+        role: "user",
+        content: textToParse,
+      },
+    ],
+  };
+
+  fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${openAIKey}`, // Ensure this is securely handled
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const endTime = performance.now();
+      const timeTaken = endTime - startTime;
+      console.warn(
+        `Response received in ${timeTaken.toFixed(2)} milliseconds.`
+      );
+      console.log("Success:", data);
+      const responseMessage = data.choices[0].message.content; // The JSON string from OpenAI
+      // Convert JSON string to an object
+      const eventDetails = JSON.parse(responseMessage);
+
+      const eventData = {
+        name: eventDetails.name,
+        startDate: eventDetails.startDate,
+        endDate: eventDetails.endDate,
+        startTime: eventDetails.startTime,
+        endTime: eventDetails.endTime,
+        location: eventDetails.location,
+        user: "Default User",
+        color: generateRandomColors(),
+      };
+      const [day, month, year] = eventDetails.startDate.split("/");
+      console.log("Event Data:");
+      console.log(eventData);
+      postEvent(eventData, year, month);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+};
+
+const naturalLanguageButton = document.querySelector(".natural-language-btn");
+naturalLanguageButton.addEventListener("click", function () {
+  const textToParse = document.querySelector(".input-natural").value;
+  sendToOpenAI(textToParse);
+  document.querySelector(".input-natural").value = "";
 });
