@@ -323,6 +323,7 @@ async function postEvent(eventData, year, month) {
       const responseData = await response.json();
       console.log("Event added successfully", responseData);
       fetchEvents(currentYear, currentMonth);
+      modalElement.close();
 
       updateCalendar(currentMonth, currentYear);
       // Use responseData here to get details like the new event ID or confirmation message
