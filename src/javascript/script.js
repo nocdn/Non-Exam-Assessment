@@ -139,7 +139,6 @@ function populateCalendar() {
         eventRemoveIcon.classList.add(`remove-event-${event.eventID}`);
         eventRemoveIcon.style.position = "absolute";
         eventElement.style.position = "relative";
-        eventElement.style.transition = "0.1";
 
         eventRemoveIcon.style.right = "3px";
         eventRemoveIcon.style.bottom = "3px";
@@ -158,7 +157,6 @@ function populateCalendar() {
 
         eventRemoveIcon.addEventListener("click", () => {
           eventElement.style.opacity = "0";
-          eventElement.style.filter = "blur(5px)";
           deleteEvent(event.eventID);
         });
 
