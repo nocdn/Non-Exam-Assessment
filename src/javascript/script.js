@@ -15,8 +15,16 @@ function getFormattedMonth(month) {
   }
 }
 
+function unformatMonth(month) {
+  // Remove leading zero from month
+  return parseInt(month);
+}
+
 let today = new Date();
 let currentMonth = getFormattedMonth(today.getMonth() + 1);
+console.log(today.getMonth());
+console.log(getFormattedMonth(today.getMonth()));
+
 let currentYear = today.getFullYear();
 let todayDay = today.getDate();
 
@@ -30,15 +38,17 @@ let calendarEventsList = Array(31).fill("");
 let eventsList;
 
 function updateCalendar(month, year) {
-  let firstDay = new Date(year, month).getDay();
+  let firstDay = new Date(year, unformatMonth(month) - 1).getDay();
   if (firstDay === 0) {
     // if Sunday
     firstDay = 6; // make it the last day of the week
   } else {
     firstDay--; // shift other days one place towards the start of the week
   }
-
-  let daysInMonth = 32 - new Date(year, month, 32).getDate();
+  console.log(`Creating calendar with ${month} and ${year}`);
+  let daysInMonth = 32 - new Date(year, unformatMonth(month) - 1, 32).getDate();
+  console.log(`Calculating days in month with ${month} and ${year}`);
+  console.log(daysInMonth);
 
   let calendar = document.getElementById("calendar");
   calendar.innerHTML = ""; // Clear previous calendar
@@ -48,6 +58,7 @@ function updateCalendar(month, year) {
 
     if (i >= firstDay && i < firstDay + daysInMonth) {
       let date = i - firstDay + 1;
+      console.log(`Date in loop: ${date}`);
       let dateSpan = document.createElement("span");
       dateSpan.innerText = date;
       dateSpan.classList.add("date"); // Add the class to the span
@@ -458,6 +469,8 @@ async function deleteEvent(eventID) {
     } else {
       const responseData = await response.json();
       console.log("Event deleted successfully", responseData);
+      modalPlusIcon.style.transform = "rotate(0deg)";
+      openEventIcon.style.transform = "rotate(0deg)";
       modalElement.close();
       fetchEvents(currentYear, currentMonth);
     }
