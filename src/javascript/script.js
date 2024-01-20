@@ -350,6 +350,8 @@ async function postEvent(eventData, year, month) {
       const responseData = await response.json();
       console.log("Event added successfully", responseData);
       fetchEvents(currentYear, currentMonth);
+      modalPlusIcon.style.transform = "rotate(0deg)";
+      openEventIcon.style.transform = "rotate(0deg)";
       modalElement.close();
 
       updateCalendar(currentMonth, currentYear);
