@@ -453,6 +453,7 @@ const sendToOpenAI = function (textToParse) {
   - Assume current day if no date given
   - Date in format DD/MM/YYYY
   - Assume all-day event if no time given (startTime: "allDay", endTime: "allDay")
+  - Never ommit any JSON keys
   - Assume 1-hour duration if no end time
   - You may repeat info in multiple keys, eg. in "location" and "name"
   - Capitalize first letters in "name" and "location"
@@ -496,7 +497,7 @@ const sendToOpenAI = function (textToParse) {
       const eventData = {
         name: eventDetails.name,
         startDate: eventDetails.startDate,
-        endDate: eventDetails.endDate,
+        endDate: eventDetails.endDate || eventDetails.startDate,
         startTime: eventDetails.startTime,
         endTime: eventDetails.endTime,
         location: eventDetails.location,
