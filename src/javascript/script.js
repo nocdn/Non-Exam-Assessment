@@ -124,7 +124,6 @@ async function fetchEvents(year, month) {
 fetchEvents(currentYear, currentMonth).then(() => {});
 
 function populateCalendar() {
-  console.log(calendarEventsList);
   for (let i = 0; i < calendarEventsList.length; i++) {
     if (calendarEventsList[i] !== null) {
       let dayCell = document.querySelector(`.day-${i + 1}`);
@@ -266,6 +265,37 @@ window.addEventListener("resize", () => {
   adjustModalPosition();
 });
 
+const enterHandlingInputs = document.querySelectorAll(
+  ".modal-adding-event-container .input-fields input"
+);
+const enterHandlingAddUserInput = document.querySelector(
+  ".modal-adding-event-container .input-user"
+);
+const enterHandlingAddEventButton = document.querySelector(
+  ".modal-adding-event-container .add-event-btn"
+);
+
+enterHandlingInputs.forEach((input, index) => {
+  input.addEventListener("keydown", (e) => {
+    // Check if the key pressed is 'Enter'
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent the default Enter key behavior (like form submission)
+
+      // Special case for the input-user field
+      if (input === enterHandlingAddUserInput) {
+        // Simulate a click on the 'Add event' button
+        enterHandlingAddEventButton.click();
+      } else {
+        // Focus on the next input field if it exists
+        if (index < enterHandlingInputs.length - 1) {
+          // Corrected this line
+          enterHandlingInputs[index + 1].focus();
+        }
+      }
+    }
+  });
+});
+
 /////////////////////////// Event Management ///////////////////////////
 
 let openAIKey = "";
@@ -283,7 +313,7 @@ const fetchColors = async () => {
 
 let calendarColors = {
   blue: { text: "#181C44", background: "#D9E9FD" },
-  lightYellow: { text: "#BDA474", background: "#FDF9C9" },
+  lightYellow: { text: "#7f693f", background: "#FDF9C9" },
   lightGreen: { text: "#264724", background: "#E2EFE5" },
   green: { text: "#424843", background: "#E2FBE8" },
   purple: { text: "#6326A2", background: "#F1E8FD" },
@@ -428,6 +458,7 @@ async function deleteEvent(eventID) {
     } else {
       const responseData = await response.json();
       console.log("Event deleted successfully", responseData);
+      modalElement.close();
       fetchEvents(currentYear, currentMonth);
     }
   } catch (error) {
@@ -436,6 +467,19 @@ async function deleteEvent(eventID) {
 }
 
 const deleteEventButton = document.querySelector(".delete-event-btn");
+const deleteEventInputField = document.querySelector(".input-delete");
+
+deleteEventInputField.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" || event.keyCode === 13) {
+    event.preventDefault();
+
+    const eventIDToDelete = document.querySelector(".input-delete").value;
+    deleteEvent(eventIDToDelete);
+    deleteEventInputField.value = "";
+    fetchEvents(currentYear, currentMonth);
+  }
+});
+
 deleteEventButton.addEventListener("click", function () {
   const eventIDToDelete = document.querySelector(".input-delete").value;
   deleteEvent(eventIDToDelete);
@@ -515,6 +559,18 @@ const sendToOpenAI = function (textToParse) {
 };
 
 const naturalLanguageButton = document.querySelector(".natural-language-btn");
+const naturalLanguageInputField = document.querySelector(".input-natural");
+
+naturalLanguageInputField.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" || event.keyCode === 13) {
+    event.preventDefault();
+
+    const textToParse = document.querySelector(".input-natural").value;
+    sendToOpenAI(textToParse);
+    document.querySelector(".input-natural").value = "";
+  }
+});
+
 naturalLanguageButton.addEventListener("click", function () {
   const textToParse = document.querySelector(".input-natural").value;
   sendToOpenAI(textToParse);
