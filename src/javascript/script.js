@@ -100,9 +100,12 @@ async function fetchEvents(year, month) {
           name: event.name,
           startTime: event.startTime,
           endTime: event.endTime,
+          startDate: event.startDate,
+          endDate: event.endDate,
           location: event.location,
           user: event.user,
           color: event.color,
+          eventID: event.eventID,
         });
       }
     }
@@ -121,20 +124,50 @@ async function fetchEvents(year, month) {
 fetchEvents(currentYear, currentMonth).then(() => {});
 
 function populateCalendar() {
+  console.log(calendarEventsList);
   for (let i = 0; i < calendarEventsList.length; i++) {
     if (calendarEventsList[i] !== null) {
       let dayCell = document.querySelector(`.day-${i + 1}`);
       calendarEventsList[i].forEach((event) => {
         let eventElement = document.createElement("div");
         eventElement.classList.add("event");
+        eventElement.classList.add(`event-${event.eventID}`);
         eventElement.innerText = `${event.name}`;
+        let eventRemoveIcon = document.createElement("div");
+        eventRemoveIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
+        eventRemoveIcon.classList.add("event-remove-icon-container");
+        eventRemoveIcon.classList.add(`remove-event-${event.eventID}`);
+        eventRemoveIcon.style.position = "absolute";
+        eventElement.style.position = "relative";
+        eventElement.style.transition = "0.1";
+
+        eventRemoveIcon.style.right = "3px";
+        eventRemoveIcon.style.bottom = "3px";
+        eventRemoveIcon.style.cursor = "pointer";
+        eventRemoveIcon.style.transform = "scale(0)";
+
+        // only show the remove icon when hovered over the cell
+        eventElement.addEventListener("mouseenter", () => {
+          eventRemoveIcon.style.transition = "0.2s ease-out";
+          eventRemoveIcon.style.transform = "scale(1)";
+        });
+
+        eventElement.addEventListener("mouseleave", () => {
+          eventRemoveIcon.style.transform = "scale(0)";
+        });
+
+        eventRemoveIcon.addEventListener("click", () => {
+          eventElement.style.opacity = "0";
+          eventElement.style.filter = "blur(5px)";
+          deleteEvent(event.eventID);
+        });
 
         // Apply background and text color
         if (event.color && event.color.background && event.color.text) {
           eventElement.style.backgroundColor = event.color.background;
           eventElement.style.color = event.color.text;
         }
-
+        eventElement.appendChild(eventRemoveIcon);
         dayCell.appendChild(eventElement);
       });
     }
@@ -261,7 +294,7 @@ let calendarColors = {
   orange: { text: "#442F1E", background: "#F3E4D6" },
   lightRed: { text: "#8C2822", background: "#F9E3E2" },
   red: { text: "#401B2B", background: "#EAD8E1" },
-  lightPink: { text: "#D38AA7", background: "#F8E8F2" },
+  lightPink: { text: "#821d40", background: "#F8E8F2" },
   grey: { text: "#212936", background: "#F3F4F6" },
 };
 
@@ -395,9 +428,6 @@ async function deleteEvent(eventID) {
     } else {
       const responseData = await response.json();
       console.log("Event deleted successfully", responseData);
-      // Additional logic to update UI or state as needed
-      // clear the events screen
-      clearEventsScreen();
       fetchEvents(currentYear, currentMonth);
     }
   } catch (error) {

@@ -154,6 +154,11 @@ dialog[open]::backdrop {
 //   }
 // }
 
+.fa-circle-xmark {
+  opacity: 0.5;
+  color: #c07891;
+}
+
 .calendarAndDays {
   max-width: 64rem;
   grid-column: span 3;
