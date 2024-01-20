@@ -111,6 +111,7 @@ body {
 .close-modal-icon {
   cursor: pointer;
   background-color: #ffd6d6;
+  color: #a84848;
   border-radius: 50%;
   padding: 0.5rem;
   width: 3rem;

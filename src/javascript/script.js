@@ -61,16 +61,6 @@ function updateCalendar(month, year) {
     calendar.appendChild(cell);
   }
 
-  // Highlight current day
-  if (month === today.getMonth() && year === today.getFullYear()) {
-    let currentDayCell = document.querySelector(`.day-${todayDay}`);
-    currentDayCell.classList.add("current-day");
-    if (currentDayCell) {
-      let dateSpan = currentDayCell.querySelector(".date"); // Select the date span within the cell
-      dateSpan.classList.add("current-day-span"); // Add the class to the span
-    }
-  }
-
   // Update month and year header
   let monthAndYear = document.getElementById("monthAndYear");
   monthAndYear.innerText = `${getFormattedMonth(month)}/${year}`;
@@ -196,7 +186,6 @@ const openEventIcon = document.querySelector(".add-event-icon");
 const modalPlusIcon = document.querySelector("[data-modal] .close-modal-icon");
 const modalElement = document.querySelector("[data-modal]");
 
-// add a transition of 0.5s to rotate to the modalPlusIcon with ease out
 modalPlusIcon.style.transition = "0.5s ease-out";
 openEventIcon.style.transition = "0.5s ease-out";
 
