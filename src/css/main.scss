@@ -158,6 +158,16 @@ dialog[open]::backdrop {
   opacity: 0.4;
 }
 
+.event-confirm-delete-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.3rem;
+
+  * {
+    opacity: 0.4;
+  }
+}
+
 .calendarAndDays {
   max-width: 64rem;
   grid-column: span 3;

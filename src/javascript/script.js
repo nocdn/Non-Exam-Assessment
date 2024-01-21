@@ -157,21 +157,29 @@ function populateCalendar() {
 
         eventElement.addEventListener("mouseleave", () => {
           eventRemoveIcon.style.transform = "scale(0)";
+          setTimeout(() => {
+            eventRemoveIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
+          }, 200);
         });
 
         eventRemoveIcon.addEventListener("click", () => {
-          eventRemoveIcon.innerHTML = `<i class="fa-solid fa-xmark confirm-delete"></i><i class="fa-solid fa-check discard-delete"></i>`;
-          confirmDelete = document.querySelector(".confirm-delete");
-          discardDelete = document.querySelector(".discard-delete");
+          eventRemoveIcon.innerHTML = `<div class="event-confirm-delete-buttons"><i class="fa-solid fa-xmark discard-delete"></i><i class="fa-solid fa-check confirm-delete"></i></div>`;
+          const confirmDelete = document.querySelector(".confirm-delete");
+          const discardDelete = document.querySelector(".discard-delete");
           confirmDelete.style.cursor = "pointer";
           discardDelete.style.cursor = "pointer";
+          confirmDelete.title = "Confirm Delete";
+          discardDelete.title = "Discard Delete";
 
           confirmDelete.addEventListener("click", () => {
+            console.log("Deleting event:", event.eventID);
             eventElement.style.opacity = "0";
             deleteEvent(event.eventID);
           });
 
-          discardDelete.addEventListener("click", () => {
+          discardDelete.addEventListener("click", (e) => {
+            // Stop the event from bubbling up, so when I press the confirm discard button, it doesn't also trigger the original delete button, and override the effects of this function
+            e.stopPropagation();
             eventRemoveIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
           });
         });
