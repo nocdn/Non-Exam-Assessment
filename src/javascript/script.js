@@ -79,7 +79,8 @@ async function fetchEvents(year, month) {
       )}`
     );
     const events = await response.json();
-    console.log(`Fetched events: ${events}`);
+    console.log(`Fetched events:`);
+    console.log(events);
     eventsList = events;
 
     // Reset and populate the calendarEventsList array with new events
@@ -194,6 +195,34 @@ function populateCalendar() {
       });
     }
   }
+}
+
+////// For multi-day events //////
+
+function calculateEventDuration(startDate, endDate) {
+  let start = new Date(startDate.split("/").reverse().join("/"));
+  let end = new Date(endDate.split("/").reverse().join("/"));
+  return (end - start) / (1000 * 60 * 60 * 24) + 1; // +1 to include the start day
+}
+
+function createMultiDayEventElement(event, duration) {
+  let multiDayElement = document.createElement("div");
+  multiDayElement.classList.add("multi-day-event");
+  multiDayElement.innerText = event.name;
+
+  // Calculate the grid column start and end
+  let startDate = event.startDate.split("/");
+  let startDay = parseInt(startDate[0], 10);
+  multiDayElement.style.gridColumnStart = startDay;
+  multiDayElement.style.gridColumnEnd = `span ${duration}`;
+
+  // Apply event color
+  if (event.color && event.color.background && event.color.text) {
+    multiDayElement.style.backgroundColor = event.color.background;
+    multiDayElement.style.color = event.color.text;
+  }
+
+  return multiDayElement;
 }
 
 document.getElementById("prevMonth").addEventListener("click", () => {
