@@ -22,14 +22,12 @@ function unformatMonth(month) {
 
 let today = new Date();
 let currentMonth = getFormattedMonth(today.getMonth() + 1);
-console.log(today.getMonth());
-console.log(getFormattedMonth(today.getMonth()));
 
 let currentYear = today.getFullYear();
 let todayDay = today.getDate();
 
-console.log(currentMonth);
-console.log(currentYear);
+console.log(`Current month: ${currentMonth}`);
+console.log(`Current year: ${currentYear}`);
 
 const joinedDate = `${todayDay}/${currentMonth}/${currentYear}`;
 
@@ -40,15 +38,12 @@ let eventsList;
 function updateCalendar(month, year) {
   let firstDay = new Date(year, unformatMonth(month) - 1).getDay();
   if (firstDay === 0) {
-    // if Sunday
-    firstDay = 6; // make it the last day of the week
+    // If Sunday
+    firstDay = 6; // Make it the last day of the week
   } else {
-    firstDay--; // shift other days one place towards the start of the week
+    firstDay--; // Shift other days one place towards the start of the week
   }
-  console.log(`Creating calendar with ${month} and ${year}`);
   let daysInMonth = 32 - new Date(year, unformatMonth(month) - 1, 32).getDate();
-  console.log(`Calculating days in month with ${month} and ${year}`);
-  console.log(daysInMonth);
 
   let calendar = document.getElementById("calendar");
   calendar.innerHTML = ""; // Clear previous calendar
@@ -58,7 +53,6 @@ function updateCalendar(month, year) {
 
     if (i >= firstDay && i < firstDay + daysInMonth) {
       let date = i - firstDay + 1;
-      console.log(`Date in loop: ${date}`);
       let dateSpan = document.createElement("span");
       dateSpan.innerText = date;
       dateSpan.classList.add("date"); // Add the class to the span
@@ -85,7 +79,7 @@ async function fetchEvents(year, month) {
       )}`
     );
     const events = await response.json();
-    console.log(events);
+    console.log(`Fetched events: ${events}`);
     eventsList = events;
 
     // Reset and populate the calendarEventsList array with new events
@@ -125,7 +119,7 @@ async function fetchEvents(year, month) {
     updateCalendar(currentMonth, currentYear);
     populateCalendar();
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error fetching events:", error);
     setTimeout(() => {
       fetchEvents(year, month);
     }, 10000);
@@ -155,7 +149,7 @@ function populateCalendar() {
         eventRemoveIcon.style.cursor = "pointer";
         eventRemoveIcon.style.transform = "scale(0)";
 
-        // only show the remove icon when hovered over the cell
+        // Only show the remove icon when hovered over the cell
         eventElement.addEventListener("mouseenter", () => {
           eventRemoveIcon.style.transition = "0.2s ease-out";
           eventRemoveIcon.style.transform = "scale(1)";
@@ -166,8 +160,20 @@ function populateCalendar() {
         });
 
         eventRemoveIcon.addEventListener("click", () => {
-          eventElement.style.opacity = "0";
-          deleteEvent(event.eventID);
+          eventRemoveIcon.innerHTML = `<i class="fa-solid fa-xmark confirm-delete"></i><i class="fa-solid fa-check discard-delete"></i>`;
+          confirmDelete = document.querySelector(".confirm-delete");
+          discardDelete = document.querySelector(".discard-delete");
+          confirmDelete.style.cursor = "pointer";
+          discardDelete.style.cursor = "pointer";
+
+          confirmDelete.addEventListener("click", () => {
+            eventElement.style.opacity = "0";
+            deleteEvent(event.eventID);
+          });
+
+          discardDelete.addEventListener("click", () => {
+            eventRemoveIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
+          });
         });
 
         // Apply background and text color
@@ -183,9 +189,9 @@ function populateCalendar() {
 }
 
 document.getElementById("prevMonth").addEventListener("click", () => {
-  // convert the currentMonth to a number
+  // Convert the currentMonth to a number so we can decrement it
   currentMonth = parseInt(currentMonth);
-  // if it's 1, make it 12 and subtract 1 from the year
+  // If it's 1, make it 12 and subtract 1 from the year
   if (currentMonth === 1) {
     currentMonth = 12;
     currentYear -= 1;
@@ -197,9 +203,9 @@ document.getElementById("prevMonth").addEventListener("click", () => {
 });
 
 document.getElementById("nextMonth").addEventListener("click", () => {
-  // convert the currentMonth to a number
+  // Convert the currentMonth to a number so we can increment it
   currentMonth = parseInt(currentMonth);
-  // if it's 12, make it 1 and add 1 to the year
+  // If it's 12, make it 1 and add 1 to the year
   if (currentMonth === 12) {
     currentMonth = 1;
     currentYear += 1;
@@ -213,7 +219,7 @@ document.getElementById("nextMonth").addEventListener("click", () => {
 // Initialize calendar with current month and year
 updateCalendar(currentMonth, currentYear);
 
-// makes the month switcher the same width as the calendar (to "anchor" the forward and back buttons)
+// Makes the month switcher the same width as the calendar (to "anchor" the forward and back buttons)
 const resizeCalendarNav = () => {
   const calendarWidth = document.querySelector(".calendarAndDays").offsetWidth;
   const calendarNav = document.querySelector(".calendar-navigation");
@@ -221,6 +227,8 @@ const resizeCalendarNav = () => {
 };
 
 resizeCalendarNav();
+
+/////////////////////////// Modal Management ///////////////////////////
 
 // Select the necessary elements
 const openEventIcon = document.querySelector(".add-event-icon");
@@ -254,7 +262,7 @@ function adjustModalPosition() {
   modalElement.style.transform = `translate(${translateX}px, ${translateY}px)`;
 }
 
-// Attach event listener to openEventIcon for opening the modal
+// Event listener for opening the modal when clicking the plus icon
 openEventIcon.addEventListener("click", () => {
   modalElement.showModal();
   adjustModalPosition();
@@ -262,14 +270,21 @@ openEventIcon.addEventListener("click", () => {
   openEventIcon.style.transform = "rotate(45deg)";
 });
 
-// Event listener for closing the modal
+// Event listener for closing the modal when clicking the close icon
 modalPlusIcon.addEventListener("click", () => {
   modalElement.close();
   modalPlusIcon.style.transform = "rotate(0deg)";
   openEventIcon.style.transform = "rotate(0deg)";
 });
 
-// You might want to adjust the position on window resize as the position could change
+// Event listener for closing the modal when clicking outside of it
+modalElement.addEventListener("click", (e) => {
+  if (e.target === modalElement) {
+    modalElement.close();
+    modalPlusIcon.style.transform = "rotate(0deg)";
+    openEventIcon.style.transform = "rotate(0deg)";
+  }
+});
 
 window.addEventListener("resize", () => {
   resizeCalendarNav();
@@ -340,8 +355,8 @@ let calendarColors = {
 const generateRandomColors = () => {
   if (!calendarColors) {
     console.warn("Colors not loaded yet");
-    // Return a default color pair or handle this case as appropriate
-    return { text: "#000000", background: "#FFFFFF" };
+    // Returns default colours
+    return { text: "#3F1A4B", background: "#EBDFEF" };
   }
   const colorNames = Object.keys(calendarColors);
   const randomColorName =
@@ -366,7 +381,7 @@ async function fetchOpenAIKey() {
       openAIKey = responseData.key;
     }
   } catch (error) {
-    console.error("Error fetching key:", error);
+    console.error("Error fetching OpenAI key:", error);
   }
 }
 
@@ -396,14 +411,13 @@ async function postEvent(eventData, year, month) {
       modalElement.close();
 
       updateCalendar(currentMonth, currentYear);
-      // Use responseData here to get details like the new event ID or confirmation message
     }
   } catch (error) {
     console.error("Error posting event:", error);
   }
 }
 
-// Global array to store events
+// Global array to store events to be posted
 const newEvents = [];
 
 const addEventButton = document.querySelector(".add-event-btn");
@@ -417,7 +431,6 @@ addEventButton.addEventListener("click", function () {
 
   const nameToPost = document.querySelector(".input-title").value;
   let startDateToPost = document.querySelector(".input-start-date").value;
-  console.log(startDateToPost);
   if (startDateToPost === "") {
     startDateToPost = joinedDate;
   }
@@ -446,13 +459,9 @@ addEventButton.addEventListener("click", function () {
   };
 
   newEvents.push(eventToPost);
-  console.log(eventToPost);
+  console.log(`Posting event with this data: ${eventToPost}`);
 
-  // console.log(extractedMonth, extractedYear);
   postEvent(eventToPost, extractedYear, extractedMonth);
-
-  console.log(newEvents);
-  // updateCalendar(currentMonth, currentYear);
 });
 
 async function deleteEvent(eventID) {
@@ -535,7 +544,7 @@ const sendToOpenAI = function (textToParse) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${openAIKey}`, // Ensure this is securely handled
+      Authorization: `Bearer ${openAIKey}`,
     },
     body: JSON.stringify(data),
   })
@@ -546,9 +555,10 @@ const sendToOpenAI = function (textToParse) {
       console.warn(
         `Response received in ${timeTaken.toFixed(2)} milliseconds.`
       );
-      console.log("Success:", data);
+      console.log("Successfully fetched OpenAI response:", data);
       const responseMessage = data.choices[0].message.content; // The JSON string from OpenAI
-      // Convert JSON string to an object
+
+      // Convert JSON string to an object for easier usage
       const eventDetails = JSON.parse(responseMessage);
 
       const eventData = {
@@ -562,12 +572,10 @@ const sendToOpenAI = function (textToParse) {
         color: generateRandomColors(),
       };
       const [day, month, year] = eventDetails.startDate.split("/");
-      console.log("Event Data:");
-      console.log(eventData);
       postEvent(eventData, year, month);
     })
     .catch((error) => {
-      console.error("Error:", error);
+      console.error("OpenAI Error:", error);
     });
 };
 
