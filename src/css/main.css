@@ -1,13 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap");
 @font-face {
   font-family: "Basier Circle";
-  src: url("../../assets/fonts/basiercircle-regular-webfont.woff2") format("woff2");
+  src: url("../../assets/fonts/basiercircle-regular-webfont.woff2")
+    format("woff2");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: "Basier Square";
-  src: url("../../assets/fonts/basiersquare-regular-webfont.woff2") format("woff2");
+  src: url("../../assets/fonts/basiersquare-regular-webfont.woff2")
+    format("woff2");
   font-weight: normal;
   font-style: normal;
 }
@@ -144,7 +146,8 @@ dialog:modal {
 
 dialog::backdrop {
   background-color: rgba(0, 0, 0, 0);
-  transition: display 0.7s allow-discrete, overlay 0.7s allow-discrete, background-color 0.7s;
+  transition: display 0.7s allow-discrete, overlay 0.7s allow-discrete,
+    background-color 0.7s;
   /* Equivalent to
   transition: all 0.7s allow-discrete; */
 }
@@ -371,4 +374,4 @@ dialog[open]::backdrop {
   border: 1px solid #f1e8fd;
   cursor: pointer;
   outline: 1px solid #f1e8fd;
-}/*# sourceMappingURL=main.css.map */
+} /*# sourceMappingURL=main.css.map */
