@@ -164,7 +164,7 @@ function populateCalendar() {
         });
 
         eventRemoveIcon.addEventListener("click", () => {
-          eventRemoveIcon.innerHTML = `<div class="event-confirm-delete-buttons"><i class="fa-solid fa-xmark discard-delete"></i><i class="fa-solid fa-check confirm-delete"></i></div>`;
+          eventRemoveIcon.innerHTML = `<div class="event-confirm-delete-buttons"><i class="fa-solid fa-check confirm-delete"></i><i class="fa-solid fa-xmark discard-delete"></i></div>`;
           const confirmDelete = document.querySelector(".confirm-delete");
           const discardDelete = document.querySelector(".discard-delete");
           confirmDelete.style.cursor = "pointer";
@@ -380,7 +380,7 @@ let calendarColors = {
   lightGreen: { text: "#264724", background: "#E2EFE5" },
   green: { text: "#424843", background: "#E2FBE8" },
   purple: { text: "#6326A2", background: "#F1E8FD" },
-  Magenta: { text: "#3F1A4B", background: "#EBDFEF" },
+  magenta: { text: "#3F1A4B", background: "#EBDFEF" },
   lightOrange: { text: "#8E3B1F", background: "#FCEED8" },
   orange: { text: "#442F1E", background: "#F3E4D6" },
   lightRed: { text: "#8C2822", background: "#F9E3E2" },
