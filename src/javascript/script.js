@@ -545,9 +545,22 @@ deleteEventButton.addEventListener("click", function () {
   fetchEvents(currentYear, currentMonth);
 });
 
+const todayForPrompt = new Date();
+const dayIndex = todayForPrompt.getDay();
+const daysOfWeek = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+const currentDayForPrompt = daysOfWeek[dayIndex];
+
 const sendToOpenAI = function (textToParse) {
   const startTime = performance.now();
-  const prompt = `Today is ${joinedDate}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “startDate”, “endDate”, “startTime”, “endTime”, “location”.
+  const prompt = `Today is ${joinedDate} and it is a ${currentDayForPrompt}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “startDate”, “endDate”, “startTime”, “endTime”, “location”.
 
   YOU MUST OUTPUT NOTHING BUT THE RAW JSON, NO CODEBLOCKS, NO COMMENTS OR ANYTHING ELSE.
   Instructions:
@@ -561,9 +574,9 @@ const sendToOpenAI = function (textToParse) {
   - You may repeat info in multiple keys, eg. in "location" and "name"
   - Capitalize first letters in "name" and "location"
   - For the "location", use comedic slang if not provided, like "gaff"`;
-
+  console.log(prompt);
   const data = {
-    model: "gpt-3.5-turbo-1106",
+    model: "gpt-3.5-turbo-0125",
     response_format: { type: "json_object" },
     messages: [
       {
