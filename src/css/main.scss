@@ -415,4 +415,23 @@ dialog[open]::backdrop {
       cursor: pointer;
     }
   }
+
+  input {
+    padding: 0.5rem;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    background-color: #ececec;
+  }
+
+  button {
+    padding: 0.5rem;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    background-color: #594672;
+    cursor: pointer;
+    color: white;
+    margin-bottom: 4rem;
+  }
 }

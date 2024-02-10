@@ -386,4 +386,21 @@ dialog[open]::backdrop {
   width: 40%;
   text-align: center;
   cursor: pointer;
+}
+.addingGroups input {
+  padding: 0.5rem;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  background-color: #ececec;
+}
+.addingGroups button {
+  padding: 0.5rem;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  background-color: #594672;
+  cursor: pointer;
+  color: white;
+  margin-bottom: 4rem;
 }/*# sourceMappingURL=main.css.map */
