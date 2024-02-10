@@ -91,6 +91,33 @@ document.querySelector(".signout").addEventListener("click", async function () {
   location.href = "./authentication.html";
 });
 
+// adding group id to user's list
+
+document
+  .querySelector(".join-group-btn")
+  .addEventListener("click", async function () {
+    var group_id = await getgroup_id();
+    group_id.push(document.querySelector(".input-group-id").value);
+
+    var { addingUserData, addingUserError } = await supabaseClient
+      .from("groups")
+      .update({
+        group_id: group_id,
+      })
+      .eq(
+        "user_id",
+        JSON.parse(localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token"))[
+          "user"
+        ]["id"]
+      );
+
+    if (addingUserError) {
+      console.log(addingUserError);
+    } else {
+      location.reload();
+    }
+  });
+
 let calendarEventsList = Array(31).fill("");
 
 let eventsList;
