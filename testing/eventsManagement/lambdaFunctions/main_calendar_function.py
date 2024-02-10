@@ -64,7 +64,8 @@ def handle_get_request(event):
         # Extract year and month from the query parameters
         year = event['queryStringParameters']['year']
         month = event['queryStringParameters']['month']
-        prefix = f'{year}/{month}/'
+        group_id = event['queryStringParameters']['group_id']
+        prefix = f'{group_id}/{year}/{month}/'
         logger.info(f'Searching for events in {prefix}')
 
         # List objects in the S3 bucket for the given year and month
@@ -99,15 +100,16 @@ def handle_get_request(event):
 
 def handle_post_request(event):
     try:
+        group_id = event['queryStringParameters']['group_id']
         logger.info("Received POST request")
-        
+        year = event['queryStringParameters']['year']
         # Load and log the event body
         event_body = json.loads(event['body'])
         logger.info(f"Event Body: {event_body}")
 
-        start_date = event_body['start_date']
-        end_date = event_body['end_date']
-        logger.info(f"Start Date: {start_date}, End Date: {end_date}")
+        startDate = event_body['startDate']
+        endDate = event_body['endDate']
+        logger.info(f"Start Date: {startDate}, End Date: {endDate}")
 
         # Generate eventID and update event body
         event_id = str(uuid.uuid4())
@@ -115,12 +117,12 @@ def handle_post_request(event):
         logger.info(f"Generated eventID: {event_id}")
 
         # Determine months the event spans and log them
-        months = get_month_range(start_date, end_date)
+        months = get_month_range(startDate, endDate)
         logger.info(f"Event spans months: {months}")
 
         # Store event in each month's folder in S3 and log the operation
         for month in months:
-            object_key = f'{month}/{event_id}.json'
+            object_key = f'{group_id}/{month}/{event_id}.json'
             s3_client.put_object(Bucket=bucket_name, Key=object_key, Body=json.dumps(event_body))
             logger.info(f"Stored event in S3: {object_key}")
 
@@ -129,8 +131,8 @@ def handle_post_request(event):
         table.put_item(Item={
             'eventID': event_id,
             'months': months, # List of months like ['2023/10', '2023/11']
-            'start_date': start_date,
-            'end_date': end_date,
+            'startDate': startDate,
+            'endDate': endDate,
             # Include other event details as needed
         })
         logger.info(f"Stored event in DynamoDB with eventID: {event_id}")
@@ -150,6 +152,9 @@ def handle_post_request(event):
 def handle_delete_request(event):
     try:
         event_id = event['queryStringParameters']['eventID']
+        group_id = event['queryStringParameters']['group_id']
+        
+        # year = event['queryStringParameters']['year']
         
         table = dynamodb.Table('eventsIndex')
         response = table.get_item(Key={'eventID': event_id})
@@ -160,7 +165,7 @@ def handle_delete_request(event):
         
         # Delete the object from S3 for each month it spans
         for month in item['months']:
-            object_key = f'{month}/{event_id}.json'
+            object_key = f'{group_id}/{month}/{event_id}.json'
             s3_client.delete_object(Bucket=bucket_name, Key=object_key)
         
         # Delete the item from DynamoDB
@@ -170,5 +175,3 @@ def handle_delete_request(event):
     except Exception as e:
         logger.error("Error deleting event", exc_info=True)
         return {'statusCode': 500, 'body': json.dumps({'message': 'Error deleting event', 'error': str(e)})}
-
-

@@ -10,10 +10,19 @@ async function signUp() {
     password: passwordInput,
   });
 
+  var { addingUserData, addingUserError } = await supabaseClient
+    .from("groups")
+    .insert({
+      user_id: JSON.parse(
+        localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token")
+      )["user"]["id"],
+      group_id: document.getElementById("group_id").value,
+    });
+
   if (error) {
     console.log(error);
   } else {
-    location.href = "./index.html";
+    // location.href = "./index.html";
   }
 }
 

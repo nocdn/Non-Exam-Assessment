@@ -5,24 +5,6 @@ import {
   setSpinnerSize,
 } from "../assets/functions/spinner.js";
 
-const supabaseUrl = "https://zbudweocjxngitnjautt.supabase.co";
-const supabaseKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpidWR3ZW9janhuZ2l0bmphdXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDc1ODQxNjUsImV4cCI6MjAyMzE2MDE2NX0.1Wp-nSLyZQ_cXLPJC0uWa4sQpPvxWlTvQNNRMXYacP4";
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-
-window.onload = function () {
-  if (localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token")) {
-    return;
-  } else {
-    location.href = "./authentication.html";
-  }
-};
-
-document.querySelector(".signout").addEventListener("click", async function () {
-  await supabaseClient.auth.signOut();
-  location.href = "./authentication.html";
-});
-
 function getFormattedMonth(month) {
   // Convert month to a string and add a leading zero to single-digit months
   const monthString = month.toString();
@@ -48,6 +30,50 @@ console.log(`Current month: ${currentMonth}`);
 console.log(`Current year: ${currentYear}`);
 
 const joinedDate = `${todayDay}/${currentMonth}/${currentYear}`;
+
+const supabaseUrl = "https://zbudweocjxngitnjautt.supabase.co";
+const supabaseKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpidWR3ZW9janhuZ2l0bmphdXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDc1ODQxNjUsImV4cCI6MjAyMzE2MDE2NX0.1Wp-nSLyZQ_cXLPJC0uWa4sQpPvxWlTvQNNRMXYacP4";
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+window.onload = async function () {
+  if (localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token")) {
+  } else {
+    location.href = "./authentication.html";
+  }
+
+  fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
+};
+
+async function getgroup_id() {
+  var { data, error } = await supabaseClient
+    .from("groups")
+    .select()
+    .eq(
+      "user_id",
+      JSON.parse(localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token"))[
+        "user"
+      ]["id"]
+    );
+
+  const group_id = data[0]["group_id"];
+  return group_id;
+}
+
+try {
+  var group_id = await getgroup_id();
+  localStorage.setItem("group_id", group_id);
+  console.log(group_id);
+} catch (error) {
+  console.error(`Failed loading events or groupid ${error}`);
+}
+
+console.log(localStorage.getItem("group_id"));
+
+document.querySelector(".signout").addEventListener("click", async function () {
+  await supabaseClient.auth.signOut();
+  location.href = "./authentication.html";
+});
 
 let calendarEventsList = Array(31).fill("");
 
@@ -89,17 +115,17 @@ function updateCalendar(month, year) {
   monthAndYear.innerText = `${getFormattedMonth(month)}/${year}`;
 }
 
-async function fetchEvents(year, month) {
+async function fetchEvents(year, month, group_id) {
   try {
-    const response = await fetch(
-      `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${getFormattedMonth(
-        month
-      )}`
-    );
+    let fetchURL = `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${getFormattedMonth(
+      month
+    )}&group_id=${group_id}`;
+    const response = await fetch(fetchURL);
+    console.log(fetchURL);
     const events = await response.json();
-    console.log(`Fetched events:`);
     console.log(events);
     eventsList = events;
+    console.log(eventsList);
 
     // Reset and populate the calendarEventsList array with new events
     calendarEventsList = Array(31).fill(null); // Initialize with null indicating no events
@@ -140,12 +166,12 @@ async function fetchEvents(year, month) {
   } catch (error) {
     console.error("Error fetching events:", error);
     setTimeout(() => {
-      fetchEvents(year, month);
+      fetchEvents(year, month, localStorage.getItem("group_id"));
     }, 10000);
   }
 }
 
-fetchEvents(currentYear, currentMonth).then(() => {});
+// fetchEvents(currentYear, currentMonth, group_id).then(() => {});
 
 function populateCalendar() {
   for (let i = 0; i < calendarEventsList.length; i++) {
@@ -254,7 +280,7 @@ document.getElementById("prevMonth").addEventListener("click", () => {
     currentMonth -= 1;
   }
 
-  fetchEvents(currentYear, currentMonth);
+  fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
 });
 
 document.getElementById("nextMonth").addEventListener("click", () => {
@@ -268,7 +294,7 @@ document.getElementById("nextMonth").addEventListener("click", () => {
     currentMonth += 1;
   }
 
-  fetchEvents(currentYear, currentMonth);
+  fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
 });
 
 // Initialize calendar with current month and year
@@ -442,10 +468,10 @@ async function fetchOpenAIKey() {
 
 fetchOpenAIKey();
 
-async function postEvent(eventData, year, month) {
+async function postEvent(eventData, year, month, group_id) {
   try {
     const response = await fetch(
-      `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${month}`,
+      `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${month}&group_id=${group_id}`,
       {
         method: "POST",
         headers: {
@@ -460,7 +486,8 @@ async function postEvent(eventData, year, month) {
     } else {
       const responseData = await response.json();
       console.log("Event added successfully", responseData);
-      fetchEvents(currentYear, currentMonth);
+
+      fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
       modalPlusIcon.style.transform = "rotate(0deg)";
       openEventIcon.style.transform = "rotate(0deg)";
       modalElement.close();
@@ -516,13 +543,18 @@ addEventButton.addEventListener("click", function () {
   newEvents.push(eventToPost);
   console.log(`Posting event with this data: ${eventToPost}`);
 
-  postEvent(eventToPost, extractedYear, extractedMonth);
+  postEvent(
+    eventToPost,
+    extractedYear,
+    extractedMonth,
+    localStorage.getItem("group_id")
+  );
 });
 
 async function deleteEvent(eventID) {
   try {
     const response = await fetch(
-      `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?eventID=${eventID}`,
+      `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?eventID=${eventID}&group_id=${group_id}`,
       {
         method: "DELETE",
       }
@@ -536,7 +568,7 @@ async function deleteEvent(eventID) {
       modalPlusIcon.style.transform = "rotate(0deg)";
       openEventIcon.style.transform = "rotate(0deg)";
       modalElement.close();
-      fetchEvents(currentYear, currentMonth);
+      fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
     }
   } catch (error) {
     console.error("Error deleting event:", error);
@@ -553,14 +585,14 @@ deleteEventInputField.addEventListener("keydown", function (event) {
     const eventIDToDelete = document.querySelector(".input-delete").value;
     deleteEvent(eventIDToDelete);
     deleteEventInputField.value = "";
-    fetchEvents(currentYear, currentMonth);
+    fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
   }
 });
 
 deleteEventButton.addEventListener("click", function () {
   const eventIDToDelete = document.querySelector(".input-delete").value;
   deleteEvent(eventIDToDelete);
-  fetchEvents(currentYear, currentMonth);
+  fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
 });
 
 const todayForPrompt = new Date();
@@ -640,7 +672,8 @@ const sendToOpenAI = function (textToParse) {
         color: generateRandomColors(),
       };
       const [day, month, year] = eventDetails.startDate.split("/");
-      postEvent(eventData, year, month);
+
+      postEvent(eventData, year, month, localStorage.getItem("group_id"));
     })
     .catch((error) => {
       console.error("OpenAI Error:", error);
@@ -768,5 +801,6 @@ const addFakeEventButton = document.querySelector(".add-fake-event-btn");
 addFakeEventButton.addEventListener("click", function () {
   const fakeEvent = createFakeEvent();
   const [day, month, year] = fakeEvent.startDate.split("/");
-  postEvent(fakeEvent, year, month);
+
+  postEvent(fakeEvent, year, month, localStorage.getItem("group_id"));
 });
