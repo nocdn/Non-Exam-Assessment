@@ -5,6 +5,24 @@ import {
   setSpinnerSize,
 } from "../assets/functions/spinner.js";
 
+const supabaseUrl = "https://zbudweocjxngitnjautt.supabase.co";
+const supabaseKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpidWR3ZW9janhuZ2l0bmphdXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDc1ODQxNjUsImV4cCI6MjAyMzE2MDE2NX0.1Wp-nSLyZQ_cXLPJC0uWa4sQpPvxWlTvQNNRMXYacP4";
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+window.onload = function () {
+  if (localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token")) {
+    return;
+  } else {
+    location.href = "./authentication.html";
+  }
+};
+
+document.querySelector(".signout").addEventListener("click", async function () {
+  await supabaseClient.auth.signOut();
+  location.href = "./authentication.html";
+});
+
 function getFormattedMonth(month) {
   // Convert month to a string and add a leading zero to single-digit months
   const monthString = month.toString();
@@ -386,7 +404,7 @@ let calendarColors = {
   lightRed: { text: "#8C2822", background: "#F9E3E2" },
   red: { text: "#401B2B", background: "#EAD8E1" },
   lightPink: { text: "#821d40", background: "#F8E8F2" },
-  grey: { text: "#212936", background: "#F3F4F6" },
+  // grey: { text: "#212936", background: "#F3F4F6" },
 };
 
 const generateRandomColors = () => {
@@ -646,4 +664,109 @@ naturalLanguageButton.addEventListener("click", function () {
   const textToParse = document.querySelector(".input-natural").value;
   sendToOpenAI(textToParse);
   document.querySelector(".input-natural").value = "";
+});
+
+/////////// button to add a fake event ///////////
+
+const eventTitles = [
+  "Cinema Trip",
+  "Road Trip",
+  "Dinner Date with Alice",
+  "Aquarium Visit",
+  "School Performance",
+  "Family Reunion",
+  "Beach Day Out",
+  "Mountain Hiking Adventure",
+  "Book Club Meeting",
+  "Yoga Class",
+  "Cooking Workshop",
+  "Garden Party",
+  "Art Exhibition Opening",
+  "Music Festival",
+  "Charity Fundraiser",
+  "Science Fair",
+  "Technology Conference",
+  "Poetry Reading",
+  "Ice Skating",
+  "Birthday Celebration",
+  "Wedding Anniversary",
+  "Graduation Ceremony",
+  "Job Interview",
+  "Business Meeting",
+  "Weekend Getaway",
+];
+
+// choose a random date between the start of the month and the end of the month
+function randomFakeDate() {
+  const date = Math.floor(Math.random() * 31) + 1;
+  return date;
+}
+
+// choose a random event title from the array
+function randomFakeTitle() {
+  const title = eventTitles[Math.floor(Math.random() * eventTitles.length)];
+  return title;
+}
+
+// choose a random start time
+
+function randomFakeTime() {
+  const hours = Math.floor(Math.random() * 24);
+  const minutes = Math.floor(Math.random() * 60);
+  return `${hours}:${minutes}`;
+}
+
+// choose a random location
+
+function randomFakeLocation() {
+  const locations = [
+    "London",
+    "Paris",
+    "New York",
+    "Tokyo",
+    "Sydney",
+    "Cape Town",
+    "Rio de Janeiro",
+    "Moscow",
+    "Berlin",
+    "Rome",
+    "Athens",
+    "Cairo",
+    "Mumbai",
+    "Beijing",
+    "Seoul",
+    "Bangkok",
+    "Dubai",
+    "Los Angeles",
+    "Toronto",
+    "Vancouver",
+  ];
+  const location = locations[Math.floor(Math.random() * locations.length)];
+  return location;
+}
+
+// create a fake event object
+
+function createFakeEvent() {
+  const randomFakeDateToUse = randomFakeDate();
+  const event = {
+    name: randomFakeTitle(),
+    startDate: `${randomFakeDateToUse}/${currentMonth}/${currentYear}`,
+    endDate: `${randomFakeDateToUse}/${currentMonth}/${currentYear}`,
+    startTime: randomFakeTime(),
+    endTime: randomFakeTime(),
+    location: randomFakeLocation(),
+    user: "Bartek",
+    color: generateRandomColors(),
+  };
+  return event;
+}
+
+// post the fake event to the calendar
+
+const addFakeEventButton = document.querySelector(".add-fake-event-btn");
+addFakeEventButton.addEventListener("click", function () {
+  const fakeEvent = createFakeEvent();
+  const [day, month, year] = fakeEvent.startDate.split("/");
+  postEvent(fakeEvent, year, month);
 });
