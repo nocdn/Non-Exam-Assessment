@@ -56,13 +56,29 @@ async function getgroup_id() {
       ]["id"]
     );
 
-  const group_id = data[0]["group_id"];
+  const group_id = JSON.parse(data[0]["group_id"]);
   return group_id;
 }
 
 try {
   var group_id = await getgroup_id();
-  localStorage.setItem("group_id", group_id);
+  const group_id_list = document.querySelector(".group_ids");
+  group_id.forEach((element) => {
+    const option = document.createElement("option");
+    option.value = element;
+    option.text = element;
+    option.classList.add("group_id_option");
+
+    group_id_list.appendChild(option);
+  });
+
+  document.querySelectorAll(".group_id_option").forEach((element) => {
+    element.addEventListener("click", async function () {
+      localStorage.setItem("group_id", element.value);
+      fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
+    });
+  });
+  // localStorage.setItem("group_id", group_id);
   console.log(group_id);
 } catch (error) {
   console.error(`Failed loading events or groupid ${error}`);
