@@ -5,20 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="../src/css/login.css" />
+    <link rel="stylesheet" href="./css/authentication.css" />
   </head>
   <body>
-    <h1>Sign In</h1>
-    <input id="emailSignIn" type="email" />
-    <input id="passwordSignIn" type="password" />
+    <div class="grain"></div>
+    <div id="blob"></div>
+    <div id="blur"></div>
 
-    <button onclick="login()" class="sign-up-btn">Sign In</button>
+    <div class="signInContainer">
+      <h1>Sign In</h1>
+      <input id="emailSignIn" type="email" placeholder="Email..." />
+      <input id="passwordSignIn" type="password" placeholder="Password..." />
+      <button onclick="login()" class="sign-up-btn">Sign In</button>
+    </div>
 
-    <h1>Sign Up</h1>
-    <input id="emailSignUp" type="email" />
-    <input id="passwordSignUp" type="password" />
-    <input id="group_id" type="text" />
-    <button onclick="signUp()" class="sign-up-btn">Sign Up</button>
+    <div class="signUpContainer">
+      <h1>Sign Up</h1>
+      <input id="emailSignUp" type="email" placeholder="Email..." />
+      <input id="passwordSignUp" type="password" placeholder="Password..." />
+      <input id="group_id" type="text" placeholder="Join Group..." />
+      <button onclick="signUp()" class="sign-up-btn">Sign Up</button>
+    </div>
+
     <script src="./javascript/authentication.js"></script>
   </body>
 </html>

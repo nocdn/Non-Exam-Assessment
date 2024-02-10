@@ -88,6 +88,7 @@ console.log(localStorage.getItem("group_id"));
 
 document.querySelector(".signout").addEventListener("click", async function () {
   await supabaseClient.auth.signOut();
+  localStorage.clear();
   location.href = "./authentication.html";
 });
 

@@ -16,7 +16,16 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "Geomanist";
+  src: url(../../assets/fonts/geomanist-regular-webfont.woff2) format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
 $mono-font: "Noto Sans Mono", monospace;
 
 $basier-circle: "Basier Circle", sans-serif;
 $basier-square: "Basier Square", sans-serif;
+
+$geomanist: "Geomanist", sans-serif;

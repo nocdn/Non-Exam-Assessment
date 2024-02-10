@@ -5,24 +5,41 @@ const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 async function signUp() {
   let emailInput = document.getElementById("emailSignUp").value;
   let passwordInput = document.getElementById("passwordSignUp").value;
-  let { data, error } = await supabaseClient.auth.signUp({
+
+  // Attempt to sign up the user
+  let { error } = await supabaseClient.auth.signUp({
     email: emailInput,
     password: passwordInput,
   });
 
-  var { addingUserData, addingUserError } = await supabaseClient
-    .from("groups")
-    .insert({
-      user_id: JSON.parse(
-        localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token")
-      )["user"]["id"],
-      group_id: document.getElementById("group_id").value,
-    });
-
   if (error) {
     console.log(error);
+    return; // Stop execution if there's an error
   } else {
-    // location.href = "./index.html";
+    // Assuming signup was successful, now attempt to insert the user into the "groups" table
+    // First, safely attempt to extract the user ID from localStorage
+    const authData = JSON.parse(
+      localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token")
+    );
+    if (authData && authData.user && authData.user.id) {
+      const userId = authData.user.id;
+      let groupIdInput = document.getElementById("group_id").value;
+
+      let { error: addingUserError } = await supabaseClient
+        .from("groups")
+        .insert({
+          user_id: userId,
+          group_id: [groupIdInput],
+        });
+
+      if (addingUserError) {
+        console.log(addingUserError);
+      } else {
+        location.href = "./index.html";
+      }
+    } else {
+      console.log("User ID not found in localStorage.");
+    }
   }
 }
 
@@ -40,3 +57,24 @@ async function login() {
     location.href = "./index.html";
   }
 }
+
+/// background animation
+
+const blob = document.getElementById("blob");
+
+document.body.onmousemove = (event) => {
+  const { clientX, clientY } = event;
+
+  // follow mouse instantly
+  // blob.style.left = `${clientX}px`
+  // blob.style.top = `${clientY}px`
+
+  // follow mouse with delay
+  blob.animate(
+    {
+      left: `${clientX}px`,
+      top: `${clientY}px`,
+    },
+    { duration: 15000, fill: "forwards" }
+  );
+};

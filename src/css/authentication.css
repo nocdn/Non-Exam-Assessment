@@ -1,0 +1,168 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap");
+@font-face {
+  font-family: "Basier Circle";
+  src: url("../../assets/fonts/basiercircle-regular-webfont.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Basier Square";
+  src: url("../../assets/fonts/basiersquare-regular-webfont.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Geomanist";
+  src: url(../../assets/fonts/geomanist-regular-webfont.woff2) format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: monospace;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  overflow: hidden;
+  grid-template-columns: 1fr 1fr;
+}
+
+#blob {
+  background-color: white;
+  z-index: -1;
+  height: 34vmax;
+  aspect-ratio: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: linear-gradient(to right, aquamarine, mediumpurple);
+  animation: rotate 20s infinite;
+  pointer-events: none;
+}
+
+#blur {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 2;
+  -webkit-backdrop-filter: blur(12vmax);
+          backdrop-filter: blur(12vmax);
+  pointer-events: none;
+}
+
+@keyframes rotate {
+  0% {
+    rotate: 0deg;
+  }
+  50% {
+    scale: 1 1.5;
+  }
+  100% {
+    rotate: 360deg;
+  }
+}
+.grain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  pointer-event: none;
+  z-index: 32;
+  transform: translateZ(0);
+}
+.grain:before {
+  content: "";
+  top: -10rem;
+  left: -10rem;
+  width: calc(100% + 20rem);
+  height: calc(100% + 20rem);
+  z-index: 9999;
+  position: fixed;
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/5/5c/Image_gaussian_noise_example.png);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.signUpContainer {
+  height: 27rem;
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background-color: rgba(245, 245, 245, 0.2);
+  -webkit-backdrop-filter: blur(1rem);
+          backdrop-filter: blur(1rem);
+  border-radius: 1rem;
+  outline: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 0px 109px -19px rgb(136, 134, 186);
+}
+.signUpContainer h1 {
+  margin-bottom: 1rem;
+  color: rgb(83, 82, 82);
+  font-family: sans-serif;
+}
+.signUpContainer input {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.signUpContainer button {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  cursor: pointer;
+}
+
+.signInContainer {
+  height: 27rem;
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background-color: rgba(245, 245, 245, 0.2);
+  -webkit-backdrop-filter: blur(1rem);
+          backdrop-filter: blur(1rem);
+  border-radius: 1rem;
+  outline: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 0px 109px -19px rgba(29, 101, 72, 0.687);
+}
+.signInContainer h1 {
+  margin-bottom: 1rem;
+  color: rgb(83, 82, 82);
+  font-family: sans-serif;
+}
+.signInContainer input {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.signInContainer button {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  cursor: pointer;
+}/*# sourceMappingURL=authentication.css.map */
