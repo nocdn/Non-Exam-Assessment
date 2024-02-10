@@ -262,7 +262,7 @@ function populateCalendar() {
           confirmDelete.addEventListener("click", () => {
             console.log("Deleting event:", event.eventID);
             eventElement.style.opacity = "0";
-            deleteEvent(event.eventID);
+            deleteEvent(event.eventID, localStorage.getItem("group_id"));
           });
 
           discardDelete.addEventListener("click", (e) => {
@@ -594,7 +594,7 @@ addEventButton.addEventListener("click", function () {
   );
 });
 
-async function deleteEvent(eventID) {
+async function deleteEvent(eventID, group_id) {
   try {
     const response = await fetch(
       `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?eventID=${eventID}&group_id=${group_id}`,
@@ -626,7 +626,7 @@ deleteEventInputField.addEventListener("keydown", function (event) {
     event.preventDefault();
 
     const eventIDToDelete = document.querySelector(".input-delete").value;
-    deleteEvent(eventIDToDelete);
+    deleteEvent(eventIDToDelete, localStorage.getItem("group_id"));
     deleteEventInputField.value = "";
     fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
   }
@@ -634,7 +634,7 @@ deleteEventInputField.addEventListener("keydown", function (event) {
 
 deleteEventButton.addEventListener("click", function () {
   const eventIDToDelete = document.querySelector(".input-delete").value;
-  deleteEvent(eventIDToDelete);
+  deleteEvent(eventIDToDelete, localStorage.getItem("group_id"));
   fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
 });
 
