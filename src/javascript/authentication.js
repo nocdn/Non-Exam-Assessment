@@ -105,7 +105,6 @@ function updatePasswordProgress() {
   const passwordLength = password.length;
   const passwordFillBar = document.querySelector(".passwordFillBar");
   passwordFillBar.style.transition = "opacity 0.25s, width 0.25s";
-  console.log(passwordLength);
   if (passwordLength < 6) {
     passwordFillBar.style.opacity = "0.6";
 
