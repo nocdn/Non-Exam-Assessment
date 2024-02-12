@@ -98,3 +98,26 @@ document.querySelectorAll(".input").forEach(function (element) {
   // Activate animation on focus (e.g., when selected with Tab key)
   element.addEventListener("focus", triggerAnimation);
 });
+
+function updatePasswordProgress() {
+  const passwordInput = document.getElementById("passwordSignUp");
+  const password = passwordInput.value;
+  const passwordLength = password.length;
+  const passwordFillBar = document.querySelector(".passwordFillBar");
+  passwordFillBar.style.transition = "opacity 0.25s, width 0.25s";
+  console.log(passwordLength);
+  if (passwordLength < 6) {
+    passwordFillBar.style.opacity = "0.6";
+
+    let percentage = Math.min((passwordLength / 6) * 100, 100);
+
+    passwordFillBar.style.width = `${percentage}%`;
+  } else if (passwordLength === 6) {
+    passwordFillBar.style.width = `100%`;
+    setTimeout(function () {
+      passwordFillBar.style.opacity = "0";
+    }, 200);
+  } else {
+    passwordFillBar.style.opacity = "0";
+  }
+}

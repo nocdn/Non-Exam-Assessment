@@ -37,12 +37,18 @@
         type="email"
         placeholder="Email..."
       />
-      <input
-        id="passwordSignUp"
-        class="input"
-        type="password"
-        placeholder="Password..."
-      />
+      <div class="passwordBox">
+        <input
+          id="passwordSignUp"
+          class="input signUpPassword"
+          type="password"
+          placeholder="Password..."
+          onkeyup="updatePasswordProgress()"
+        />
+
+        <div class="passwordFillBar"></div>
+      </div>
+
       <input
         id="group_id"
         class="input"
