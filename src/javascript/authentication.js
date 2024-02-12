@@ -78,3 +78,23 @@ document.body.onmousemove = (event) => {
     { duration: 15000, fill: "forwards" }
   );
 };
+
+// add scaling animation
+
+document.querySelectorAll(".input").forEach(function (element) {
+  // Function to add and remove 'animate' class
+  function triggerAnimation() {
+    element.classList.add("animate");
+
+    // Remove the class after the animation completes to reset the animation
+    setTimeout(() => {
+      element.classList.remove("animate");
+    }, 1000); // Match the animation duration
+  }
+
+  // Activate animation on click
+  element.addEventListener("click", triggerAnimation);
+
+  // Activate animation on focus (e.g., when selected with Tab key)
+  element.addEventListener("focus", triggerAnimation);
+});

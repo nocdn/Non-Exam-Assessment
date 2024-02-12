@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Authentication</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="./css/authentication.css" />
   </head>
@@ -14,17 +14,42 @@
 
     <div class="signInContainer">
       <h1>Sign In</h1>
-      <input id="emailSignIn" type="email" placeholder="Email..." />
-      <input id="passwordSignIn" type="password" placeholder="Password..." />
-      <button onclick="login()" class="sign-up-btn">Sign In</button>
+      <input
+        id="emailSignIn"
+        class="input"
+        type="email"
+        placeholder="Email..."
+      />
+      <input
+        id="passwordSignIn"
+        class="input"
+        type="password"
+        placeholder="Password..."
+      />
+      <button onclick="login()" class="sign-up-btn input">Sign In</button>
     </div>
 
     <div class="signUpContainer">
       <h1>Sign Up</h1>
-      <input id="emailSignUp" type="email" placeholder="Email..." />
-      <input id="passwordSignUp" type="password" placeholder="Password..." />
-      <input id="group_id" type="text" placeholder="Join Group..." />
-      <button onclick="signUp()" class="sign-up-btn">Sign Up</button>
+      <input
+        id="emailSignUp"
+        class="input"
+        type="email"
+        placeholder="Email..."
+      />
+      <input
+        id="passwordSignUp"
+        class="input"
+        type="password"
+        placeholder="Password..."
+      />
+      <input
+        id="group_id"
+        class="input"
+        type="text"
+        placeholder="Join Group..."
+      />
+      <button onclick="signUp()" class="sign-up-btn input">Sign Up</button>
     </div>
 
     <script src="./javascript/authentication.js"></script>
