@@ -4,7 +4,8 @@ const inputField = document.querySelector(".group-input");
 
 let xmlString = null;
 const fetchKeys = async function (group_id) {
-  const url = "https://shared-calendar-bucket.s3.amazonaws.com/?prefix=1234/";
+  xmlString = null;
+  const url = `https://shared-calendar-bucket.s3.amazonaws.com/?prefix=${group_id}/`;
   // fetch that then wait for the response, and then set the respons to the variable xml string
   const response = await fetch(url);
   xmlString = await response.text();

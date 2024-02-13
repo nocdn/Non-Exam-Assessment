@@ -133,13 +133,17 @@ document.querySelector(".signout").addEventListener("click", async function () {
 document
   .querySelector(".join-group-btn")
   .addEventListener("click", async function () {
-    var group_id = await getgroup_id();
-    group_id.push(document.querySelector(".input-group-id").value);
+    let currentGroup_id_list = JSON.parse(
+      localStorage.getItem("all_group_ids")
+    );
+    let newGroup_ids_array = currentGroup_id_list;
+    newGroup_ids_array.push(document.querySelector(".input-group-id").value);
+    localStorage.setItem("all_group_ids", JSON.stringify(newGroup_ids_array));
 
     var { addingUserData, addingUserError } = await supabaseClient
       .from("groups")
       .update({
-        group_id: group_id,
+        group_id: localStorage.getItem("all_group_ids"),
       })
       .eq(
         "user_id",
