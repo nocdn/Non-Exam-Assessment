@@ -238,6 +238,8 @@ async function fetchEvents(year, month, group_id) {
           endDate: event.endDate,
           location: event.location,
           user: event.user,
+          user_id: event.user_id,
+          group_id: event.group_id,
           color: event.color,
           eventID: event.eventID,
         });
@@ -266,52 +268,55 @@ function populateCalendar() {
         eventElement.classList.add("event");
         eventElement.classList.add(`event-${event.eventID}`);
         eventElement.innerText = `${event.name}`;
-        let eventRemoveIcon = document.createElement("div");
-        eventRemoveIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
-        eventRemoveIcon.classList.add("event-remove-icon-container");
-        eventRemoveIcon.classList.add(`remove-event-${event.eventID}`);
-        eventRemoveIcon.style.position = "absolute";
-        eventElement.style.position = "relative";
+        if (currentUser_id === event.user_id) {
+          let eventRemoveIcon = document.createElement("div");
+          eventRemoveIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
+          eventRemoveIcon.classList.add("event-remove-icon-container");
+          eventRemoveIcon.classList.add(`remove-event-${event.eventID}`);
+          eventRemoveIcon.style.position = "absolute";
+          eventElement.style.position = "relative";
 
-        eventRemoveIcon.style.right = "3px";
-        eventRemoveIcon.style.bottom = "3px";
-        eventRemoveIcon.style.cursor = "pointer";
-        eventRemoveIcon.style.transform = "scale(0)";
-
-        // Only show the remove icon when hovered over the cell
-        eventElement.addEventListener("mouseenter", () => {
-          eventRemoveIcon.style.transition = "0.2s ease-out";
-          eventRemoveIcon.style.transform = "scale(1)";
-        });
-
-        eventElement.addEventListener("mouseleave", () => {
+          eventRemoveIcon.style.right = "3px";
+          eventRemoveIcon.style.bottom = "3px";
+          eventRemoveIcon.style.cursor = "pointer";
           eventRemoveIcon.style.transform = "scale(0)";
-          setTimeout(() => {
-            eventRemoveIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
-          }, 200);
-        });
 
-        eventRemoveIcon.addEventListener("click", () => {
-          eventRemoveIcon.innerHTML = `<div class="event-confirm-delete-buttons"><i class="fa-solid fa-check confirm-delete"></i><i class="fa-solid fa-xmark discard-delete"></i></div>`;
-          const confirmDelete = document.querySelector(".confirm-delete");
-          const discardDelete = document.querySelector(".discard-delete");
-          confirmDelete.style.cursor = "pointer";
-          discardDelete.style.cursor = "pointer";
-          confirmDelete.title = "Confirm Delete";
-          discardDelete.title = "Discard Delete";
-
-          confirmDelete.addEventListener("click", () => {
-            console.log("Deleting event:", event.eventID);
-            eventElement.style.opacity = "0";
-            deleteEvent(event.eventID, localStorage.getItem("group_id"));
+          // Only show the remove icon when hovered over the cell
+          eventElement.addEventListener("mouseenter", () => {
+            eventRemoveIcon.style.transition = "0.2s ease-out";
+            eventRemoveIcon.style.transform = "scale(1)";
           });
 
-          discardDelete.addEventListener("click", (e) => {
-            // Stop the event from bubbling up, so when I press the confirm discard button, it doesn't also trigger the original delete button, and override the effects of this function
-            e.stopPropagation();
-            eventRemoveIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
+          eventElement.addEventListener("mouseleave", () => {
+            eventRemoveIcon.style.transform = "scale(0)";
+            setTimeout(() => {
+              eventRemoveIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
+            }, 200);
           });
-        });
+
+          eventRemoveIcon.addEventListener("click", () => {
+            eventRemoveIcon.innerHTML = `<div class="event-confirm-delete-buttons"><i class="fa-solid fa-check confirm-delete"></i><i class="fa-solid fa-xmark discard-delete"></i></div>`;
+            const confirmDelete = document.querySelector(".confirm-delete");
+            const discardDelete = document.querySelector(".discard-delete");
+            confirmDelete.style.cursor = "pointer";
+            discardDelete.style.cursor = "pointer";
+            confirmDelete.title = "Confirm Delete";
+            discardDelete.title = "Discard Delete";
+
+            confirmDelete.addEventListener("click", () => {
+              console.log("Deleting event:", event.eventID);
+              eventElement.style.opacity = "0";
+              deleteEvent(event.eventID, localStorage.getItem("group_id"));
+            });
+
+            discardDelete.addEventListener("click", (e) => {
+              // Stop the event from bubbling up, so when I press the confirm discard button, it doesn't also trigger the original delete button, and override the effects of this function
+              e.stopPropagation();
+              eventRemoveIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
+            });
+          });
+          eventElement.appendChild(eventRemoveIcon);
+        }
 
         // Apply background and text color
         if (event.color && event.color.background && event.color.text) {
@@ -321,7 +326,7 @@ function populateCalendar() {
 
         // adding a hover tooltip with event details
         eventElement.title = `Start: ${event.startTime}, End: ${event.endTime}, Location: ${event.location}, User: ${event.user}, Event ID: ${event.eventID}, User ID: ${event.user_id}`;
-        eventElement.appendChild(eventRemoveIcon);
+
         dayCell.appendChild(eventElement);
       });
     }
