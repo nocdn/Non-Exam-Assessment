@@ -37,16 +37,29 @@ const supabaseKey =
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
 window.onload = async function () {
-  if (localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token")) {
-  } else {
+  if (!localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token")) {
     location.href = "./authentication.html";
+    return; // Exit if there's no auth token.
   }
 
-  fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
+  try {
+    const group_id = await getgroup_id(); // Await the fetching of group_id.
+    if (group_id) {
+      localStorage.setItem("group_id", parseInt(JSON.parse(group_id)[0]));
+      localStorage.setItem("all_group_ids", group_id);
+      fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
+    } else {
+      console.log("No group_id found for the current user.");
+    }
+  } catch (error) {
+    console.error(`Failed loading events or group_id: ${error}`);
+  }
+
+  console.log(localStorage.getItem("group_id")); // This will still log the initial value on page load.
 };
 
 async function getgroup_id() {
-  var { data, error } = await supabaseClient
+  const { data, error } = await supabaseClient
     .from("groups")
     .select()
     .eq(
@@ -56,12 +69,23 @@ async function getgroup_id() {
       ]["id"]
     );
 
-  const group_id = JSON.parse(data[0]["group_id"]);
+  if (error) {
+    console.error("Error fetching group_id:", error);
+    return null; // Return null or appropriate error handling.
+  }
+
+  if (data.length === 0) {
+    console.log("No groups found for the user.");
+    return null; // Handle case where no data is found.
+  }
+
+  const group_id = data[0]["group_id"]; // Assuming it's directly usable without JSON.parse.
   return group_id;
 }
 
 try {
   var group_id = await getgroup_id();
+  group_id = JSON.parse(group_id);
   const group_id_list = document.querySelector(".group_ids");
   group_id.forEach((element) => {
     const option = document.createElement("option");
@@ -74,17 +98,13 @@ try {
 
   document.querySelectorAll(".group_id_option").forEach((element) => {
     element.addEventListener("click", async function () {
-      localStorage.setItem("group_id", element.value);
+      localStorage.setItem("group_id", parseInt(element.value));
       fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
     });
   });
-  // localStorage.setItem("group_id", group_id);
-  console.log(group_id);
 } catch (error) {
   console.error(`Failed loading events or groupid ${error}`);
 }
-
-console.log(localStorage.getItem("group_id"));
 
 document.querySelector(".signout").addEventListener("click", async function () {
   await supabaseClient.auth.signOut();
