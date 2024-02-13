@@ -184,6 +184,10 @@ function updateCalendar(month, year) {
       let dateSpan = document.createElement("span");
       dateSpan.innerText = date;
       dateSpan.classList.add("date"); // Add the class to the span
+      dateSpan.classList.add(`date-${date}`);
+      if (date === todayDay) {
+        dateSpan.classList.add("today");
+      }
 
       cell.appendChild(dateSpan); // Add the span to the cell
       cell.style.height = "100px";
@@ -205,7 +209,7 @@ async function fetchEvents(year, month, group_id) {
       month
     )}&group_id=${group_id}`;
     const response = await fetch(fetchURL);
-    console.log(fetchURL);
+
     const events = await response.json();
     console.log(events);
     eventsList = events;
@@ -331,6 +335,10 @@ function populateCalendar() {
       });
     }
   }
+
+  highlightToday();
+  const todaySpan = document.querySelector(`.date-${todayDay}`);
+  todaySpan.style.animation = "pulse 0.5s";
 }
 
 ////// For multi-day events //////
@@ -904,3 +912,12 @@ addFakeEventButton.addEventListener("click", function () {
 
   postEvent(fakeEvent, year, month, localStorage.getItem("group_id"));
 });
+
+const highlightToday = () => {
+  const todayCellSpan = document.querySelector(`.date-${todayDay}`);
+  const boundingBox = todayCellSpan.getBoundingClientRect();
+  const xCenter = (boundingBox.left + boundingBox.right) / 2;
+  const yCenter = (boundingBox.top + boundingBox.bottom) / 2;
+};
+
+// highlightToday();

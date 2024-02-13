@@ -1,4 +1,4 @@
-@import "./abstracts/fonts";
+@import "_fonts.scss";
 
 * {
   margin: 0;
@@ -433,5 +433,44 @@ dialog[open]::backdrop {
     cursor: pointer;
     color: white;
     margin-bottom: 4rem;
+  }
+}
+
+.today {
+  position: relative;
+  animation: pulse 0.5s;
+}
+
+.today::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 45px;
+  height: 45px;
+  z-index: -1;
+
+  border-radius: 50px;
+  background-color: #fceed8;
+  opacity: 0.5;
+
+  animation: inherit;
+  animation-delay: 0.8s;
+}
+
+@keyframes pulse {
+  0% {
+    width: 45px;
+    height: 45px;
+  }
+  50% {
+    width: 55px;
+    height: 55px;
+  }
+  100% {
+    width: 45px;
+    height: 45px;
   }
 }
