@@ -29,12 +29,11 @@ body {
   place-items: center;
   height: 100vh;
   overflow: hidden;
-  grid-template-columns: 1fr 1fr;
 }
 
 #blob {
   background-color: white;
-  z-index: -1;
+  z-index: -2;
   height: 34vmax;
   aspect-ratio: 1;
   position: absolute;
@@ -51,7 +50,7 @@ body {
   height: 100%;
   width: 100%;
   position: absolute;
-  z-index: 2;
+  z-index: -1;
   -webkit-backdrop-filter: blur(12vmax);
           backdrop-filter: blur(12vmax);
   pointer-events: none;
@@ -74,7 +73,7 @@ body {
   left: 0;
   height: 100%;
   width: 100%;
-  pointer-event: none;
+  pointer-events: none;
   z-index: 32;
   transform: translateZ(0);
 }
@@ -91,27 +90,38 @@ body {
   pointer-events: none;
 }
 
-.signUpContainer {
+.general-container {
+  display: flex;
+  overflow-x: hidden;
+  width: 32rem;
   height: 27rem;
-  z-index: 99;
+  background-color: rgba(245, 245, 245, 0.2);
+  -webkit-backdrop-filter: blur(2rem);
+          backdrop-filter: blur(2rem);
+  border-radius: 1rem;
+  position: relative; /* Needed for positioning inner elements */
+  box-shadow: 0px 0px 109px -19px rgb(136, 134, 186);
+}
+
+.signInContainer,
+.signUpContainer {
+  width: 32rem; /* Ensure each container has enough space */
+  flex-shrink: 0; /* Prevent flex items from shrinking */
   display: flex;
   flex-direction: column;
   gap: 1rem;
   align-items: center;
   justify-content: center;
-  padding: 3rem;
-  background-color: rgba(245, 245, 245, 0.2);
-  -webkit-backdrop-filter: blur(1rem);
-          backdrop-filter: blur(1rem);
-  border-radius: 1rem;
+  padding: 0 2rem;
   outline: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0px 0px 109px -19px rgb(136, 134, 186);
 }
+.signInContainer h1,
 .signUpContainer h1 {
   margin-bottom: 1rem;
   color: rgb(83, 82, 82);
   font-family: sans-serif;
 }
+.signInContainer input,
 .signUpContainer input {
   width: 100%;
   padding: 1rem;
@@ -120,6 +130,7 @@ body {
   border-radius: 0.5rem;
   background-color: rgba(255, 255, 255, 0.3);
 }
+.signInContainer button,
 .signUpContainer button {
   width: 100%;
   padding: 1rem;
@@ -129,44 +140,14 @@ body {
   color: white;
   cursor: pointer;
 }
+.signInContainer p,
+.signUpContainer p {
+  opacity: 0.5;
+}
 
-.signInContainer {
-  height: 27rem;
-  z-index: 99;
+.carousel-container {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  background-color: rgba(245, 245, 245, 0.2);
-  -webkit-backdrop-filter: blur(1rem);
-          backdrop-filter: blur(1rem);
-  border-radius: 1rem;
-  outline: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0px 0px 109px -19px rgba(29, 101, 72, 0.687);
-}
-.signInContainer h1 {
-  margin-bottom: 1rem;
-  color: rgb(83, 82, 82);
-  font-family: sans-serif;
-}
-.signInContainer input {
-  width: 100%;
-  padding: 1rem;
-  height: 3.2rem;
-  border: none;
-  border-radius: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.3);
-}
-.signInContainer button {
-  width: 100%;
-  padding: 1rem;
-  border: none;
-  border-radius: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  cursor: pointer;
+  transition: transform 0.5s ease-in-out;
 }
 
 /* Keyframes for scaling */
@@ -214,4 +195,28 @@ body {
   transition: width 0.25s;
   border-radius: 0.5rem;
   pointer-events: none;
+}
+
+.passwordBox {
+  position: relative;
+  width: 100%;
+  border-radius: 0.5rem;
+  display: flex;
+}
+
+.input.signUpPassword {
+  width: 100%;
+  border-radius: 0.5rem;
+}
+
+.passwordFillBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 0%; /* Starts with no width */
+  background-color: rgba(147, 112, 216, 0.2);
+  transition: width 0.25s, opacity 0.25s;
+  border-radius: 0.5rem;
+  z-index: -1;
 }/*# sourceMappingURL=authentication.css.map */

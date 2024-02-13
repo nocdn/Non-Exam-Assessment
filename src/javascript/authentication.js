@@ -120,3 +120,15 @@ function updatePasswordProgress() {
     passwordFillBar.style.opacity = "0";
   }
 }
+
+function showSignIn() {
+  document.querySelector(".carousel-container").style.transform =
+    "translateX(0)";
+}
+
+function showSignUp() {
+  document.querySelector(".carousel-container").style.transform =
+    "translateX(-50%)"; // Adjust this value based on your actual container width
+}
+
+// You can attach these functions to buttons or any other elements for user interaction
