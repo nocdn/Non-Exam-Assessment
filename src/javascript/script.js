@@ -36,11 +36,27 @@ const supabaseKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpidWR3ZW9janhuZ2l0bmphdXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDc1ODQxNjUsImV4cCI6MjAyMzE2MDE2NX0.1Wp-nSLyZQ_cXLPJC0uWa4sQpPvxWlTvQNNRMXYacP4";
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
+let currentUser_id = null;
+
+function initializeUserFromLocalStorage() {
+  const tokenString = localStorage.getItem(
+    "sb-zbudweocjxngitnjautt-auth-token"
+  );
+  if (tokenString) {
+    const tokenObj = JSON.parse(tokenString);
+    currentUser_id = tokenObj.user.id; // Set the global variable with user details
+  } else {
+    console.log("No authentication token found in localStorage.");
+  }
+}
+
 window.onload = async function () {
   if (!localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token")) {
     location.href = "./authentication.html";
     return; // Exit if there's no auth token.
   }
+
+  initializeUserFromLocalStorage();
 
   try {
     const group_id = await getgroup_id(); // Await the fetching of group_id.
@@ -71,15 +87,15 @@ async function getgroup_id() {
 
   if (error) {
     console.error("Error fetching group_id:", error);
-    return null; // Return null or appropriate error handling.
+    return null;
   }
 
   if (data.length === 0) {
     console.log("No groups found for the user.");
-    return null; // Handle case where no data is found.
+    return null;
   }
 
-  const group_id = data[0]["group_id"]; // Assuming it's directly usable without JSON.parse.
+  const group_id = data[0]["group_id"];
   return group_id;
 }
 
@@ -298,6 +314,9 @@ function populateCalendar() {
           eventElement.style.backgroundColor = event.color.background;
           eventElement.style.color = event.color.text;
         }
+
+        // adding a hover tooltip with event details
+        eventElement.title = `Start: ${event.startTime}, End: ${event.endTime}, Location: ${event.location}, User: ${event.user}, Event ID: ${event.eventID}, User ID: ${event.user_id}`;
         eventElement.appendChild(eventRemoveIcon);
         dayCell.appendChild(eventElement);
       });
@@ -584,6 +603,9 @@ addEventButton.addEventListener("click", function () {
   const extractedMonth = startDateToPost.slice(5, 7);
   const extractedYear = startDateToPost.slice(0, 4);
   let userToPost = document.querySelector(".input-user").value;
+  const user_id = JSON.parse(
+    localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token").user.id
+  );
 
   if (userToPost === "") {
     userToPost = "Bartek";
@@ -601,6 +623,8 @@ addEventButton.addEventListener("click", function () {
     endTime: endTimeToPost,
     location: locationToPost,
     user: userToPost,
+    user_id: user_id,
+    group_id: localStorage.getItem("group_id"),
     color: generateRandomColors(),
   };
 
@@ -732,7 +756,8 @@ const sendToOpenAI = function (textToParse) {
         startTime: eventDetails.startTime,
         endTime: eventDetails.endTime,
         location: eventDetails.location,
-        user: "Default User",
+        user_id: currentUser_id,
+        group_id: localStorage.getItem("group_id"),
         color: generateRandomColors(),
       };
       const [day, month, year] = eventDetails.startDate.split("/");
@@ -853,6 +878,8 @@ function createFakeEvent() {
     startTime: randomFakeTime(),
     endTime: randomFakeTime(),
     location: randomFakeLocation(),
+    user_id: currentUser_id,
+    group_id: localStorage.getItem("group_id"),
     user: "Bartek",
     color: generateRandomColors(),
   };
