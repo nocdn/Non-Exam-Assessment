@@ -33,7 +33,7 @@ body {
 
 #blob {
   background-color: white;
-  z-index: -2;
+  z-index: -3;
   height: 34vmax;
   aspect-ratio: 1;
   position: absolute;
@@ -50,7 +50,7 @@ body {
   height: 100%;
   width: 100%;
   position: absolute;
-  z-index: -1;
+  z-index: -2;
   -webkit-backdrop-filter: blur(12vmax);
           backdrop-filter: blur(12vmax);
   pointer-events: none;
@@ -74,7 +74,7 @@ body {
   height: 100%;
   width: 100%;
   pointer-events: none;
-  z-index: 32;
+  z-index: -1;
   transform: translateZ(0);
 }
 .grain:before {
@@ -95,7 +95,7 @@ body {
   overflow-x: hidden;
   width: 32rem;
   height: 27rem;
-  background-color: rgba(245, 245, 245, 0.2);
+  background-color: rgba(245, 245, 245, 0.5);
   -webkit-backdrop-filter: blur(2rem);
           backdrop-filter: blur(2rem);
   border-radius: 1rem;
@@ -147,7 +147,7 @@ body {
 
 .carousel-container {
   display: flex;
-  transition: transform 0.5s ease-in-out;
+  transition: transform 0.35s ease-in-out;
 }
 
 /* Keyframes for scaling */
