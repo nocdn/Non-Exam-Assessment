@@ -330,7 +330,12 @@ function populateCalendar() {
 
         // adding a hover tooltip with event details
         eventElement.title = `Start: ${event.startTime}, End: ${event.endTime}, Location: ${event.location}, User: ${event.user}, Event ID: ${event.eventID}, User ID: ${event.user_id}`;
-
+        eventElement.addEventListener("mouseenter", () => {
+          expandCell(eventElement);
+        });
+        eventElement.addEventListener("mouseleave", () => {
+          shrinkCell("cell-clone");
+        });
         dayCell.appendChild(eventElement);
       });
     }
@@ -339,6 +344,48 @@ function populateCalendar() {
   highlightToday();
   const todaySpan = document.querySelector(`.date-${todayDay}`);
   todaySpan.style.animation = "pulse 0.5s";
+}
+
+function expandCell(cell) {
+  let cellRect = cell.getBoundingClientRect();
+  let cellClone = document.createElement("div");
+  cellClone.classList.add("cell-clone");
+  cellClone.style.position = "fixed"; // Use fixed to keep it relative to the viewport
+  cellClone.style.width = `${cellRect.width}px`;
+  cellClone.style.height = `${cellRect.height}px`;
+  cellClone.innerHTML = cell.innerHTML;
+
+  // Adjust left and top to center the clone over the original element
+  cellClone.style.left = `${cellRect.left + window.scrollX}px`;
+  cellClone.style.top = `${cellRect.top + window.scrollY}px`;
+  cellClone.style.backgroundColor = cell.style.backgroundColor;
+  cellClone.style.color = cell.style.color;
+  cellClone.style.zIndex = "1000";
+  // cellClone.style.opacity = "0"; // Start with opacity 0 for animation
+  cellClone.style.borderRadius = "10px";
+  cellClone.style.transition = "opacity 0.2s ease-out, transform 0.2s ease-out";
+  cellClone.style.padding = "0.25rem";
+  cell.appendChild(cellClone);
+
+  // Delay changes to allow for animation
+  setTimeout(() => {
+    cellClone.style.opacity = "1";
+    cellClone.style.transform = "scale(3)";
+    cellClone.style.fontSize = "4.7px";
+  }, 10); // Small delay to ensure the transition is rendered
+}
+
+function shrinkCell(cell) {
+  // shrink the cloned element back to the original cell size and then remove it
+  const cellToDelete = document.querySelector(`.${cell}`);
+  console.log(`Removing: ${cellToDelete}`);
+  setTimeout(() => {
+    // cellToDelete.style.opacity = "0";
+    cellToDelete.style.transform = "scale(0)";
+    setTimeout(() => {
+      cellToDelete.remove();
+    }, 200);
+  }, 200);
 }
 
 ////// For multi-day events //////
