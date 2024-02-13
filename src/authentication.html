@@ -15,52 +15,48 @@
       <div class="carousel-container">
         <div class="signInContainer">
           <h1>Sign In</h1>
-          <div class="inputFieldsContainer">
-            <input
-              id="emailSignIn"
-              class="input"
-              type="email"
-              placeholder="Email..."
-            />
-            <input
-              id="passwordSignIn"
-              class="input"
-              type="password"
-              placeholder="Password..."
-            />
-          </div>
+          <input
+            id="emailSignIn"
+            class="input"
+            type="email"
+            placeholder="Email..."
+          />
+          <input
+            id="passwordSignIn"
+            class="input"
+            type="password"
+            placeholder="Password..."
+          />
           <button onclick="login()" class="sign-up-btn input">Sign In</button>
           <p onclick="showSignUp()">Sign Up instead</p>
         </div>
 
         <div class="signUpContainer">
           <h1>Sign Up</h1>
-          <div class="inputFieldsContainer">
+          <input
+            id="emailSignUp"
+            class="input"
+            type="email"
+            placeholder="Email..."
+          />
+          <div class="passwordBox">
             <input
-              id="emailSignUp"
-              class="input"
-              type="email"
-              placeholder="Email..."
+              id="passwordSignUp"
+              class="input signUpPassword"
+              type="password"
+              placeholder="Password..."
+              onkeyup="updatePasswordProgress()"
             />
-            <div class="passwordBox">
-              <input
-                id="passwordSignUp"
-                class="input signUpPassword"
-                type="password"
-                placeholder="Password..."
-                onkeyup="updatePasswordProgress()"
-              />
 
-              <div class="passwordFillBar"></div>
-            </div>
-
-            <input
-              id="group_id"
-              class="input"
-              type="text"
-              placeholder="Join Group..."
-            />
+            <div class="passwordFillBar"></div>
           </div>
+
+          <input
+            id="group_id"
+            class="input"
+            type="text"
+            placeholder="Join Group..."
+          />
           <button onclick="signUp()" class="sign-up-btn input">Sign Up</button>
           <p onclick="showSignIn()">Sign in instead</p>
         </div>
