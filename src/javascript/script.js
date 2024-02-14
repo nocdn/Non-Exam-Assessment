@@ -71,7 +71,9 @@ window.onload = async function () {
     console.error(`Failed loading events or group_id: ${error}`);
   }
 
-  console.log(localStorage.getItem("group_id")); // This will still log the initial value on page load.
+  console.log(
+    `Group ID from local storage: ${localStorage.getItem("group_id")}`
+  ); // This will still log the initial value on page load.
 };
 
 async function getgroup_id() {
@@ -203,20 +205,44 @@ function updateCalendar(month, year) {
   monthAndYear.innerText = `${getFormattedMonth(month)}/${year}`;
 }
 
+const startTime = performance.now();
+
+let xmlString = null;
 async function fetchEvents(year, month, group_id) {
   try {
-    let fetchURL = `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${getFormattedMonth(
-      month
-    )}&group_id=${group_id}`;
-    const response = await fetch(fetchURL);
+    let eventsList = []; // Initialize eventsList as an empty array
+    xmlString = null;
+    const url = `https://shared-calendar-bucket.s3.amazonaws.com/?prefix=${group_id}/`;
+    const response = await fetch(url);
+    xmlString = await response.text();
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlString, "text/xml");
 
-    const events = await response.json();
-    console.log(events);
-    eventsList = events;
+    const fetchFiles = async function (key) {
+      const url = `https://shared-calendar-bucket.s3.amazonaws.com/${key}`;
+      const response = await fetch(url);
+      let text = await response.text();
+      text = JSON.parse(text);
+      eventsList.push(text); // Make sure eventsList is already initialized as an array
+    };
+
+    // Extracting <Key> elements
+    const keys = xmlDoc.getElementsByTagName("Key");
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i].childNodes[0].nodeValue;
+      await fetchFiles(key); // Consider awaiting fetchFiles if the order matters or if you need all files fetched before proceeding
+    }
+    console.log(eventsList);
+    const endTime = performance.now();
+    const timeTaken = endTime - startTime;
+    console.log(
+      `Time taken to fetch and process events: ${timeTaken} milliseconds`
+    );
 
     // Reset and populate the calendarEventsList array with new events
     calendarEventsList = Array(31).fill(null); // Initialize with null indicating no events
-    for (let event of eventsList.events) {
+    for (let event of eventsList) {
+      // Directly iterate over eventsList
       let startDateComponents = event.startDate
         .split("/")
         .map((num) => parseInt(num));
@@ -227,8 +253,7 @@ async function fetchEvents(year, month, group_id) {
       let endDay = endDateComponents[0];
 
       for (let day = startDay; day <= endDay; day++) {
-        // Adjust index for 0-based array
-        let index = day - 1;
+        let index = day - 1; // Adjust index for 0-based array
         if (!calendarEventsList[index]) {
           calendarEventsList[index] = [];
         }
@@ -259,6 +284,62 @@ async function fetchEvents(year, month, group_id) {
     }, 10000);
   }
 }
+// async function fetchEvents(year, month, group_id) {
+//   try {
+//     let fetchURL = `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${getFormattedMonth(
+//       month
+//     )}&group_id=${group_id}`;
+//     const response = await fetch(fetchURL);
+
+//     const events = await response.json();
+//     console.log(events);
+//     eventsList = events;
+
+//     // Reset and populate the calendarEventsList array with new events
+//     calendarEventsList = Array(31).fill(null); // Initialize with null indicating no events
+//     for (let event of eventsList.events) {
+//       let startDateComponents = event.startDate
+//         .split("/")
+//         .map((num) => parseInt(num));
+//       let endDateComponents = event.endDate
+//         .split("/")
+//         .map((num) => parseInt(num));
+//       let startDay = startDateComponents[0];
+//       let endDay = endDateComponents[0];
+
+//       for (let day = startDay; day <= endDay; day++) {
+//         // Adjust index for 0-based array
+//         let index = day - 1;
+//         if (!calendarEventsList[index]) {
+//           calendarEventsList[index] = [];
+//         }
+
+//         calendarEventsList[index].push({
+//           name: event.name,
+//           startTime: event.startTime,
+//           endTime: event.endTime,
+//           startDate: event.startDate,
+//           endDate: event.endDate,
+//           location: event.location,
+//           user: event.user,
+//           user_id: event.user_id,
+//           group_id: event.group_id,
+//           color: event.color,
+//           eventID: event.eventID,
+//         });
+//       }
+//     }
+
+//     // Update the calendar after fetching new events
+//     updateCalendar(currentMonth, currentYear);
+//     populateCalendar();
+//   } catch (error) {
+//     console.error("Error fetching events:", error);
+//     setTimeout(() => {
+//       fetchEvents(year, month, localStorage.getItem("group_id"));
+//     }, 10000);
+//   }
+// }
 
 // fetchEvents(currentYear, currentMonth, group_id).then(() => {});
 
