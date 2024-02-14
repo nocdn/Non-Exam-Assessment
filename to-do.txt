@@ -1,0 +1,10 @@
+- Add icons
+- Migrate to faster fetching system with xml and s3
+- Fix cell expanding to show extra data
+- Add manually choosing colours
+  - If no colour chosen, random one
+- If no date chosen, assume tomorrow, at the same time but rounded up (eg. if it is 9:31 now, then event should be at 10am)
+- Fix multi-day event spans
+- Add current time to NLU prompt
+- Skip Lambda step when adding an event from NLU, add to calendar straight from model output, then send to lambda
+- Cache the downloaded events into local storage, and update them when fetched from s3/lambda.

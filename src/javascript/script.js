@@ -213,7 +213,6 @@ async function fetchEvents(year, month, group_id) {
     const events = await response.json();
     console.log(events);
     eventsList = events;
-    console.log(eventsList);
 
     // Reset and populate the calendarEventsList array with new events
     calendarEventsList = Array(31).fill(null); // Initialize with null indicating no events
@@ -331,10 +330,10 @@ function populateCalendar() {
         // adding a hover tooltip with event details
         eventElement.title = `Start: ${event.startTime}, End: ${event.endTime}, Location: ${event.location}, User: ${event.user}, Event ID: ${event.eventID}, User ID: ${event.user_id}`;
         eventElement.addEventListener("mouseenter", () => {
-          expandCell(eventElement);
+          // expandCell(eventElement);
         });
         eventElement.addEventListener("mouseleave", () => {
-          shrinkCell("cell-clone");
+          // shrinkCell("cell-clone");
         });
         dayCell.appendChild(eventElement);
       });
@@ -605,7 +604,6 @@ async function fetchOpenAIKey() {
       throw new Error(`HTTP error! status: ${response.status}`);
     } else {
       const responseData = await response.json();
-      console.log("Received OpenAI API key:", responseData);
       openAIKey = responseData.key;
     }
   } catch (error) {
@@ -776,7 +774,6 @@ const sendToOpenAI = function (textToParse) {
   - You may repeat info in multiple keys, eg. in "location" and "name"
   - Capitalize first letters in "name" and "location"
   - For the "location", use comedic slang if not provided, like "gaff"`;
-  console.log(prompt);
   const data = {
     model: "gpt-3.5-turbo-0125",
     response_format: { type: "json_object" },
@@ -833,6 +830,65 @@ const sendToOpenAI = function (textToParse) {
     });
 };
 
+const sendToMixtral = function (textToParse) {
+  const startTime = performance.now();
+  const prompt = `Today is ${joinedDate} and it is a ${currentDayForPrompt}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “startDate”, “endDate”, “startTime”, “endTime”, “location”.
+
+  YOU MUST OUTPUT NOTHING BUT THE RAW JSON, NO CODEBLOCKS, NO COMMENTS OR ANYTHING ELSE.
+  Instructions:
+  - Extract relevant info (morning: 7:00, afternoon: 15:00, evening: 19:00, night: 23:00)
+  - Use 24-hour clock
+  - Assume current day if no date given
+  - Date in format DD/MM/YYYY
+  - Assume all-day event if no time given (startTime: "allDay", endTime: "allDay")
+  - Never ommit any JSON keys
+  - Assume 1-hour duration if no end time
+  - You may repeat info in multiple keys, eg. in "location" and "name"
+  - Capitalize first letters in "name" and "location"
+  - For the "location", use comedic slang if not provided, like "gaff"`;
+  const data = {
+    model: "accounts/fireworks/models/mixtral-8x7b-instruct",
+    stream: false,
+    n: 1,
+    messages: [
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+    stop: ["<|im_start|>", "<|im_end|>", "<|endoftext|>"],
+    top_p: 1,
+    top_k: 50,
+    presence_penalty: 0,
+    frequency_penalty: 0,
+    context_length_exceeded_behavior: "truncate",
+    temperature: 0.2,
+    max_tokens: 256,
+  };
+
+  fetch("https://api.fireworks.ai/inference/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer 1kl9aNR9Qn98OGW9wEdLGDk5GawQqFdZwqXliGS4Hdqnfq72`,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const endTime = performance.now();
+      const timeTaken = endTime - startTime;
+      console.warn(
+        `Response received in ${timeTaken.toFixed(2)} milliseconds.`
+      );
+      console.log("Successfully fetched Mixtral response:", data);
+      const responseMessage = data.choices[0].message.content; // The JSON string from OpenAI
+    })
+    .catch((error) => {
+      console.error("Mixtral Error:", error);
+    });
+};
+
 const naturalLanguageButton = document.querySelector(".natural-language-btn");
 const naturalLanguageInputField = document.querySelector(".input-natural");
 
@@ -842,6 +898,7 @@ naturalLanguageInputField.addEventListener("keydown", function (event) {
 
     const textToParse = document.querySelector(".input-natural").value;
     sendToOpenAI(textToParse);
+    // sendToMixtral(textToParse);
     document.querySelector(".input-natural").value = "";
   }
 });
@@ -849,6 +906,7 @@ naturalLanguageInputField.addEventListener("keydown", function (event) {
 naturalLanguageButton.addEventListener("click", function () {
   const textToParse = document.querySelector(".input-natural").value;
   sendToOpenAI(textToParse);
+  // sendToMixtral(textToParse);
   document.querySelector(".input-natural").value = "";
 });
 
