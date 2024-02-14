@@ -1,6 +1,7 @@
 test.txt
 to-do.txt
 test.json
+.gitignore
 
 .zed/
 .vscode/
