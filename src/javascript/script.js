@@ -212,7 +212,9 @@ async function fetchEvents(year, month, group_id) {
   try {
     let eventsList = []; // Initialize eventsList as an empty array
     xmlString = null;
-    const url = `https://shared-calendar-bucket.s3.amazonaws.com/?prefix=${group_id}/`;
+    const url = `https://shared-calendar-bucket.s3.amazonaws.com/?prefix=${group_id}/${year}/${getFormattedMonth(
+      month
+    )}/`;
     const response = await fetch(url);
     xmlString = await response.text();
     const parser = new DOMParser();
