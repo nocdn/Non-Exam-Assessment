@@ -1,4 +1,9 @@
 test.txt
+to-do.txt
+test.json
+
+.zed/
+.vscode/
 
 node_modules/
 public/
@@ -28,3 +33,4 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
