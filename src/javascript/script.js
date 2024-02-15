@@ -808,6 +808,8 @@ async function deleteEvent(eventID, group_id) {
   }
 }
 
+document.addEventListener("DOMContentLoaded", (event) => {});
+
 const deleteEventButton = document.querySelector(".delete-event-btn");
 const deleteEventInputField = document.querySelector(".input-delete");
 
