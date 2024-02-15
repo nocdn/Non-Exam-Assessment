@@ -99,11 +99,47 @@
       </div>
     </dialog>
 
+    <dialog data-add-group class="modal-adding-group">
+      <div class="modal-adding-events-general-container">
+        <div class="modal-heading">
+          <p>Add a group</p>
+          <div class="close-group-modal-icon">
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+        </div>
+        <div class="modal-adding-group-container">
+          <div class="add-group">
+            <div class="add-group-input-fields">
+              <input
+                type="text"
+                class="group-adding input-group-name"
+                placeholder="Group name"
+              />
+              <input
+                type="text"
+                class="group-adding input-group-id"
+                placeholder="Group id"
+              />
+            </div>
+            <div class="add-group-btn">
+              <i class="fa-solid fa-users-viewfinder"></i>
+              <p>Add</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
     <nav class="calendar-navigation">
       <div class="month-switcher">
         <i id="prevMonth" class="fa-solid fa-arrow-left"></i>
         <i id="nextMonth" class="fa-solid fa-arrow-right"></i>
         <div id="monthAndYear"></div>
+      </div>
+
+      <div class="group-choice-container">
+        <p>Group:</p>
+        <select name="group-select" id="group-selector"></select>
       </div>
 
       <div class="add-event-icon" data-open-modal>
@@ -122,12 +158,6 @@
         <div class="day"><p>Sun</p></div>
       </div>
       <div id="calendar" class="grid"></div>
-    </div>
-    <div class="addingGroups">
-      <ul class="group_ids"></ul>
-      <h3>Join other group</h3>
-      <input type="text" class="input-group-id" placeholder="Enter group id" />
-      <button class="join-group-btn">Join group</button>
     </div>
 
     <script type="module" src="./javascript/script.js"></script>

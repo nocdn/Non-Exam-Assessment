@@ -1,5 +1,6 @@
 - Add icons
-- Migrate to faster deleting system with xml and s3
+- Add leaving groups
+- Add group names to group
 - Fix cell expanding to show extra data
 - Add manually choosing colours
   - If no colour chosen, random one

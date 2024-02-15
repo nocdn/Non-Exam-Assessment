@@ -474,3 +474,105 @@ dialog[open]::backdrop {
     height: 45px;
   }
 }
+
+.group-choice-container {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  * {
+    font-family: $mono-font;
+  }
+}
+
+.custom-select {
+  // min-width: 350px;
+  position: relative;
+}
+
+select {
+  appearance: none;
+  /*  safari  */
+  -webkit-appearance: none;
+  /*  other styles for aesthetics */
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.5rem 2rem 0.5rem 0.5rem;
+  background-color: #fff;
+  // border: 1px solid #caced1;
+  border: none;
+  border-radius: 1rem;
+  color: #000;
+  cursor: pointer;
+}
+
+.modal-adding-events-general-container {
+  padding-bottom: 0.75rem;
+}
+
+.add-group {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.modal-adding-group-container {
+  padding: 0 0.5rem;
+}
+
+.add-group-input-fields {
+  display: flex;
+  flex-direction: column;
+  outline: #e9ebf3 solid 1px;
+  border-radius: 5px;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+
+  input {
+    border: none;
+    outline: none;
+  }
+}
+
+.add-group-input-fields * {
+  &:focus {
+    outline: none;
+  }
+}
+
+.add-group-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+
+  color: #6b21a8;
+  background-color: #f1e8fd;
+  // height: 2.5rem;
+  min-height: 100%;
+  width: 6rem;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: 1px solid #f1e8fd;
+
+  i {
+    font-size: 1.25rem;
+  }
+}
+
+dialog {
+  box-shadow: 0px 0px 50px 15px grey;
+}
+
+.close-group-modal-icon {
+  cursor: pointer;
+  background-color: #ffd6d6;
+  color: #a84848;
+  border-radius: 50%;
+  padding: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-content: center;
+}

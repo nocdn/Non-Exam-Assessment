@@ -101,65 +101,103 @@ async function getgroup_id() {
   return group_id;
 }
 
+const group_id_list = document.getElementById("group-selector");
+
+const positionGroupModal = function () {
+  // Reset the modal's transform to ensure its position is calculated from its original state
+  document.querySelector(".modal-adding-group").style.transform = "none";
+
+  const selectRect = group_id_list.getBoundingClientRect();
+  const modalRect = document
+    .querySelector(".modal-adding-group")
+    .getBoundingClientRect();
+  const selectCenter = selectRect.left + selectRect.width / 2;
+  const modalCenter = modalRect.left + modalRect.width / 2;
+  const selectTop = selectRect.top;
+  const modalTop = modalRect.top;
+  const translateX = selectCenter - modalCenter;
+  const translateY = selectTop - modalTop;
+
+  // Apply the new transformation to position the modal correctly
+  document.querySelector(
+    ".modal-adding-group"
+  ).style.transform = `translate(${translateX}px, ${translateY}px)`;
+};
+
 try {
   var group_id = await getgroup_id();
   group_id = JSON.parse(group_id);
-  const group_id_list = document.querySelector(".group_ids");
+  // const group_id_list = document.querySelector(".group_ids");
   group_id.forEach((element) => {
     const option = document.createElement("option");
     option.value = element;
     option.text = element;
     option.classList.add("group_id_option");
 
-    group_id_list.appendChild(option);
+    group_id_list.add(option);
   });
+  const addNewGroupOption = document.createElement("option");
+  addNewGroupOption.value = "Add new group";
+  addNewGroupOption.text = "Add new group";
+  group_id_list.add(addNewGroupOption);
+  group_id_list.addEventListener("change", async function () {
+    if (group_id_list.value === "Add new group") {
+      document.querySelector(".modal-adding-group").showModal();
+      positionGroupModal();
+      const addGroupButton = document.querySelector(".add-group-btn");
+      addGroupButton.addEventListener("click", async function () {
+        let currentGroup_id_list = JSON.parse(
+          localStorage.getItem("all_group_ids")
+        );
+        let newGroup_ids_array = currentGroup_id_list;
+        // use the elementSelector to get the value of the input field
+        const elementToExtract = document.querySelector(".input-group-id");
+        newGroup_ids_array.push(elementToExtract.value);
+        console.log(document.querySelector(".input-group-id").value);
+        console.log(newGroup_ids_array);
+        localStorage.setItem(
+          "all_group_ids",
+          JSON.stringify(newGroup_ids_array)
+        );
 
-  document.querySelectorAll(".group_id_option").forEach((element) => {
-    element.addEventListener("click", async function () {
-      localStorage.setItem("group_id", parseInt(element.value));
+        let { addingUserData, addingUserError } = await supabaseClient
+          .from("groups")
+          .update({
+            group_id: localStorage.getItem("all_group_ids"),
+          })
+          .eq(
+            "user_id",
+            JSON.parse(
+              localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token")
+            )["user"]["id"]
+          );
+
+        if (addingUserError) {
+          console.log(addingUserError);
+        } else {
+          location.reload();
+        }
+      });
+    } else {
+      localStorage.setItem("group_id", parseInt(group_id_list.value));
       fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
-    });
+    }
   });
 } catch (error) {
   console.error(`Failed loading events or groupid ${error}`);
 }
+
+document
+  .querySelector(".close-group-modal-icon")
+  .addEventListener("click", () => {
+    document.querySelector(".modal-adding-group").close();
+  });
 
 document.querySelector(".signout").addEventListener("click", async function () {
   await supabaseClient.auth.signOut();
   localStorage.clear();
   location.href = "./authentication.html";
 });
-
-// adding group id to user's list
-
-document
-  .querySelector(".join-group-btn")
-  .addEventListener("click", async function () {
-    let currentGroup_id_list = JSON.parse(
-      localStorage.getItem("all_group_ids")
-    );
-    let newGroup_ids_array = currentGroup_id_list;
-    newGroup_ids_array.push(document.querySelector(".input-group-id").value);
-    localStorage.setItem("all_group_ids", JSON.stringify(newGroup_ids_array));
-
-    var { addingUserData, addingUserError } = await supabaseClient
-      .from("groups")
-      .update({
-        group_id: localStorage.getItem("all_group_ids"),
-      })
-      .eq(
-        "user_id",
-        JSON.parse(localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token"))[
-          "user"
-        ]["id"]
-      );
-
-    if (addingUserError) {
-      console.log(addingUserError);
-    } else {
-      location.reload();
-    }
-  });
 
 let calendarEventsList = Array(31).fill("");
 
