@@ -59,21 +59,32 @@ window.onload = async function () {
   initializeUserFromLocalStorage();
 
   try {
-    const group_id = await getgroup_id(); // Await the fetching of group_id.
-    if (group_id) {
-      localStorage.setItem("group_id", parseInt(JSON.parse(group_id)[0]));
-      localStorage.setItem("all_group_ids", group_id);
-      fetchEvents(currentYear, currentMonth, localStorage.getItem("group_id"));
+    const userGroupsString = await getgroup_id(); // Assuming this gets a JSON string of group IDs.
+    const userGroupIds = JSON.parse(userGroupsString); // Parse it into an array.
+
+    if (userGroupIds && userGroupIds.length > 0) {
+      const currentGroupId = localStorage.getItem("group_id");
+      const isValidGroup = userGroupIds.includes(currentGroupId);
+
+      if (!isValidGroup && currentGroupId) {
+        console.warn(
+          "Current group ID is not valid for the user. Please ensure selection is updated accordingly."
+        );
+        // Somehow handle invalid group ID (like notify the user, select a valid group)
+      } else {
+        // If currentGroupId is valid or no group_id is set, proceed without changing it.
+        // This ensures the user's selection is preserved across page reloads.
+      }
+
+      localStorage.setItem("all_group_ids", JSON.stringify(userGroupIds)); // Store all group IDs for future reference or validation.
+      document.getElementById("group-selector").value = currentGroupId; // Set the group selector to the current group ID.
+      fetchEvents(currentYear, currentMonth, currentGroupId); // Use the currentGroupId directly, as it's already been validated.
     } else {
       console.log("No group_id found for the current user.");
     }
   } catch (error) {
     console.error(`Failed loading events or group_id: ${error}`);
   }
-
-  console.log(
-    `Group ID from local storage: ${localStorage.getItem("group_id")}`
-  ); // This will still log the initial value on page load.
 };
 
 async function getgroup_id() {
@@ -159,6 +170,8 @@ try {
           "all_group_ids",
           JSON.stringify(newGroup_ids_array)
         );
+
+        localStorage.setItem("group_id", elementToExtract.value);
 
         let { addingUserData, addingUserError } = await supabaseClient
           .from("groups")
