@@ -229,6 +229,18 @@ dialog[open]::backdrop {
   transition: all 0.2s;
 }
 
+.events-stack {
+  position: relative;
+  min-height: 4.5rem;
+  overflow: hidden; /* Optional, to keep everything contained */
+}
+
+.stacked-event {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .inputting-event {
   display: none;
   position: absolute;

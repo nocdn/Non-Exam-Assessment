@@ -400,6 +400,8 @@ function populateCalendar() {
   for (let i = 0; i < calendarEventsList.length; i++) {
     if (calendarEventsList[i] !== null) {
       let dayCell = document.querySelector(`.day-${i + 1}`);
+      let eventsOnSameDayCount = 0;
+
       calendarEventsList[i].forEach((event) => {
         let eventElement = document.createElement("div");
         eventElement.classList.add("event");
@@ -471,6 +473,29 @@ function populateCalendar() {
         });
         dayCell.appendChild(eventElement);
       });
+
+      const eventCells = document.querySelectorAll(".cell");
+      eventCells.forEach((cell) => {
+        // check how many children elements are in this cell element
+        const childCount = cell.children.length;
+        if (childCount > 2) {
+          cell.classList.add("multiple-events");
+          // get all the elements with class "event" inside this cell
+          const cellEventElements = cell.querySelectorAll(".event");
+          // add a class of "stacked-event" to each cell element selected here to make them stacked later in scss
+          cellEventElements.forEach((eventElement) => {
+            eventElement.classList.add("stacked-event");
+          });
+          // move all these elements into a new container with class "events-stack"
+          const eventsStack = document.createElement("div");
+          eventsStack.classList.add("events-stack");
+          cellEventElements.forEach((eventElement) => {
+            eventsStack.appendChild(eventElement);
+          });
+          cell.appendChild(eventsStack);
+        }
+      });
+      stackEvents();
     }
   }
 
@@ -859,7 +884,26 @@ async function deleteEvent(eventID, group_id) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", (event) => {});
+function stackEvents() {
+  let stackedEvents = document.querySelectorAll(".events-stack .stacked-event");
+  console.log(stackedEvents);
+  let baseZIndex = 1000; // Starting Z-index
+  let rotation = 0; // Starting rotation angle
+
+  stackedEvents.forEach(function (event, index) {
+    event.style.zIndex = baseZIndex - index; // Stack them on top of each other
+    event.style.transform = "rotate(" + rotation + "deg)"; // Apply rotation
+    event.style.position = "absolute"; // Make them absolute
+    rotation += 4; // Increase rotation for the next element
+  });
+
+  const cellWidth = document.querySelector(".event").offsetWidth;
+  console.log(cellWidth);
+  const stackedCells = document.querySelectorAll(".events-stack");
+  stackedCells.forEach(function (cell) {
+    cell.style.width = cellWidth + "px";
+  });
+}
 
 const deleteEventButton = document.querySelector(".delete-event-btn");
 const deleteEventInputField = document.querySelector(".input-delete");
