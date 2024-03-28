@@ -940,18 +940,21 @@ const currentDayForPrompt = daysOfWeek[dayIndex];
 
 const sendToOpenAI = function (textToParse) {
   const startTime = performance.now();
-  const prompt = `Today is ${joinedDate} and it is a ${currentDayForPrompt}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “startDate”, “endDate”, “startTime”, “endTime”, “location”.
+  const prompt = `Today is ${joinedDate} and it is a ${currentDayForPrompt}. You are an NLU to calendar converter. Output in JSON with the following keys: "name", "startDate", "endDate", "startTime", "endTime", "location".
 
-  YOU MUST OUTPUT NOTHING BUT THE RAW JSON, NO CODEBLOCKS, NO COMMENTS OR ANYTHING ELSE.
+  YOU MUST OUTPUT ONLY THE RAW JSON, NO CODEBLOCKS, NO COMMENTS OR ANYTHING ELSE.
   Instructions:
   - Extract relevant info (morning: 7:00, afternoon: 15:00, evening: 19:00, night: 23:00)
   - Use 24-hour clock
   - Assume current day if no date given
   - Date in format DD/MM/YYYY
   - Assume all-day event if no time given (startTime: "allDay", endTime: "allDay")
-  - Never ommit any JSON keys
+  - Never omit any JSON keys
   - Assume 1-hour duration if no end time
-  - You may repeat info in multiple keys, eg. in "location" and "name"
+  - the Name key should never contain any dates or times
+  - Capitalize any names in the fields 
+  - You may repeat info in multiple keys, if you need to.
+  - If location not given, you can use "None" exactly
   - Capitalize first letters in "name" and "location"
   - For the "location", use comedic slang if not provided, like "gaff"`;
   const data = {
