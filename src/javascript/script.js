@@ -938,32 +938,38 @@ const daysOfWeek = [
 ];
 const currentDayForPrompt = daysOfWeek[dayIndex];
 
+const currentTime = new Date();
+const currentHour = currentTime.getHours();
+const currentMinute = currentTime.getMinutes();
+const currentTimeString = `${currentHour}:${currentMinute}`;
+
+const universalPrompt = `Today is ${joinedDate} and it is a ${currentDayForPrompt}. The time is ${currentTimeString}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “startDate”, “endDate”, “startTime”, “endTime”, “location”.
+
+YOU MUST OUTPUT ONLY THE RAW JSON, NO CODEBLOCKS, NO COMMENTS OR ANYTHING ELSE.
+Instructions:
+- Extract relevant info (morning: 7:00, afternoon: 15:00, evening: 19:00, night: 23:00)
+- Use 24-hour clock
+- Assume current day if no date given
+- Date in format DD/MM/YYYY
+- Assume all-day event if no time given (startTime: "allDay", endTime: "allDay")
+- Never omit any JSON keys
+- Assume 1-hour duration if no end time
+- the Name key should never contain any dates or times
+- Capitalize any names in the fields 
+- You may repeat info in multiple keys, if you need to.
+- If location not given, you can use "None" exactly
+- Capitalize first letters in "name" and "location"
+- For the "location", use comedic slang if not provided, like "gaff"`;
+
 const sendToOpenAI = function (textToParse) {
   const startTime = performance.now();
-  const prompt = `Today is ${joinedDate} and it is a ${currentDayForPrompt}. You are an NLU to calendar converter. Output in JSON with the following keys: "name", "startDate", "endDate", "startTime", "endTime", "location".
-
-  YOU MUST OUTPUT ONLY THE RAW JSON, NO CODEBLOCKS, NO COMMENTS OR ANYTHING ELSE.
-  Instructions:
-  - Extract relevant info (morning: 7:00, afternoon: 15:00, evening: 19:00, night: 23:00)
-  - Use 24-hour clock
-  - Assume current day if no date given
-  - Date in format DD/MM/YYYY
-  - Assume all-day event if no time given (startTime: "allDay", endTime: "allDay")
-  - Never omit any JSON keys
-  - Assume 1-hour duration if no end time
-  - the Name key should never contain any dates or times
-  - Capitalize any names in the fields 
-  - You may repeat info in multiple keys, if you need to.
-  - If location not given, you can use "None" exactly
-  - Capitalize first letters in "name" and "location"
-  - For the "location", use comedic slang if not provided, like "gaff"`;
   const data = {
     model: "gpt-3.5-turbo-0125",
     response_format: { type: "json_object" },
     messages: [
       {
         role: "system",
-        content: prompt,
+        content: universalPrompt,
       },
       {
         role: "user",
@@ -1015,20 +1021,6 @@ const sendToOpenAI = function (textToParse) {
 
 const sendToMixtral = function (textToParse) {
   const startTime = performance.now();
-  const prompt = `Today is ${joinedDate} and it is a ${currentDayForPrompt}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “startDate”, “endDate”, “startTime”, “endTime”, “location”.
-
-  YOU MUST OUTPUT NOTHING BUT THE RAW JSON, NO CODEBLOCKS, NO COMMENTS OR ANYTHING ELSE.
-  Instructions:
-  - Extract relevant info (morning: 7:00, afternoon: 15:00, evening: 19:00, night: 23:00)
-  - Use 24-hour clock
-  - Assume current day if no date given
-  - Date in format DD/MM/YYYY
-  - Assume all-day event if no time given (startTime: "allDay", endTime: "allDay")
-  - Never ommit any JSON keys
-  - Assume 1-hour duration if no end time
-  - You may repeat info in multiple keys, eg. in "location" and "name"
-  - Capitalize first letters in "name" and "location"
-  - For the "location", use comedic slang if not provided, like "gaff"`;
   const data = {
     model: "accounts/fireworks/models/mixtral-8x7b-instruct",
     stream: false,
@@ -1036,7 +1028,7 @@ const sendToMixtral = function (textToParse) {
     messages: [
       {
         role: "user",
-        content: prompt,
+        content: universalPrompt,
       },
     ],
     stop: ["<|im_start|>", "<|im_end|>", "<|endoftext|>"],
