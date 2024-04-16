@@ -118,14 +118,8 @@ const togetherModelStrings = [
   "togethercomputer/LLaMA-2-7B-32K-Instruct",
   "togethercomputer/llama-2-13b-chat",
   "togethercomputer/llama-2-70b-chat",
-  "togethercomputer/mpt-30b-chat",
   "zero-one-ai/Yi-34B-Chat",
-  "OpenAssistant/oasst-sft-4-pythia-12b-epoch-3.5",
-  "lmsys/vicuna-13b-v1.3",
-  "lmsys/vicuna-13b-v1.5-16k",
   "meta-llama/Llama-2-13b-hf",
-  "togethercomputer/GPT-NeoXT-Chat-Base-20B",
-  "togethercomputer/Koala-13B",
 ];
 
 submitButton.addEventListener("click", async () => {
@@ -226,6 +220,6 @@ submitButton.addEventListener("click", async () => {
         .catch((error) => {
           console.error("Error fetching Mixtral:", error);
         });
-    }, i * 1500);
+    }, 1000 + i * 1500);
   }
 });
