@@ -54,16 +54,23 @@ body {
   .model-output {
     height: 10rem;
   }
+  padding: 0 0.5rem;
 }
 
 .model-output-title {
-  font-size: 1rem;
+  font-size: 0.75rem;
   font-family: sans-serif;
   font-weight: bold;
   margin-bottom: 1rem;
 }
 
 .model-output-text {
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   font-family: monospace;
+}
+
+.model-output-container {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: rgba(143, 143, 143, 0.143);
 }

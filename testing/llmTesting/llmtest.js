@@ -152,6 +152,7 @@ submitButton.addEventListener("click", async () => {
         finishingOrder.push(fireworksModelsStrings[i]);
         // add the model output to the grid of ouputs, make a new element of the model title, and the actual output and add them to a new div then add that to the grid
         const modelOutput = document.createElement("div");
+        modelOutput.classList.add("model-output-container");
 
         const modelTitle = document.createElement("p");
         modelTitle.classList.add("model-output-title");
@@ -160,10 +161,23 @@ submitButton.addEventListener("click", async () => {
 
         const modelOutputText = document.createElement("p");
         modelOutputText.classList.add("model-output-text");
-        modelOutputText.innerText = mixtral;
-        modelOutput.appendChild(modelOutputText);
+        try {
+          const parsedOutput = JSON.parse(mixtral);
+          const name = parsedOutput.name;
+          console.log(parsedOutput);
+          const startDate = parsedOutput.startDate;
+          const endDate = parsedOutput.endDate;
+          const startTime = parsedOutput.startTime;
+          const endTime = parsedOutput.endTime;
+          const location = parsedOutput.location;
 
-        modelOutputGrid.appendChild(modelOutput);
+          modelOutputText.innerText = `${name}\n${startDate}\n${endDate}\n${startTime}\n${endTime}\n${location}`;
+
+          modelOutput.appendChild(modelOutputText);
+          modelOutputGrid.appendChild(modelOutput);
+        } catch (error) {
+          console.error("Error parsing output:", error);
+        }
       })
       .catch((error) => {
         console.error("Error fetching Mixtral:", error);
