@@ -65,6 +65,7 @@ async function sendToModel(userPrompt, baseUrl, temp, apiKey, modelString) {
         },
       ],
       temperature: temp,
+      max_tokens: 128,
     }),
   });
 
@@ -131,8 +132,6 @@ const togetherModelStrings = [
   "togethercomputer/Koala-13B",
 ];
 
-const modelOutputFields = modelOutputGrid.querySelectorAll(".model-output");
-
 submitButton.addEventListener("click", async () => {
   const userPrompt = promptInput.value;
 
@@ -151,32 +150,46 @@ submitButton.addEventListener("click", async () => {
         console.log(justModelName);
         console.log(mixtral);
         finishingOrder.push(fireworksModelsStrings[i]);
+        // add the model output to the grid of ouputs, make a new element of the model title, and the actual output and add them to a new div then add that to the grid
+        const modelOutput = document.createElement("div");
+
+        const modelTitle = document.createElement("p");
+        modelTitle.classList.add("model-output-title");
+        modelTitle.innerText = justModelName;
+        modelOutput.appendChild(modelTitle);
+
+        const modelOutputText = document.createElement("p");
+        modelOutputText.classList.add("model-output-text");
+        modelOutputText.innerText = mixtral;
+        modelOutput.appendChild(modelOutputText);
+
+        modelOutputGrid.appendChild(modelOutput);
       })
       .catch((error) => {
         console.error("Error fetching Mixtral:", error);
       });
   }
 
-  for (let i = 0; i < togetherModelStrings.length; i++) {
-    setTimeout(() => {
-      const modelString = togetherModelStrings[i];
-      sendToModel(
-        userPrompt,
-        "https://api.together.xyz/v1/chat/completions",
-        0.5,
-        "cf2be16d4bcc109c94d53eb228a7033bbd62861239b1ce57e55993756ca82c38",
-        modelString
-      )
-        .then((together) => {
-          const fullModelString = togetherModelStrings[i];
-          const justModelName = fullModelString.split("/")[1];
-          console.log(justModelName);
-          console.log(together);
-          finishingOrder.push(togetherModelStrings[i]);
-        })
-        .catch((error) => {
-          console.error("Error fetching Together:", error);
-        });
-    }, i * 1500);
-  }
+  // for (let i = 0; i < togetherModelStrings.length; i++) {
+  //   setTimeout(() => {
+  //     const modelString = togetherModelStrings[i];
+  //     sendToModel(
+  //       userPrompt,
+  //       "https://api.together.xyz/v1/chat/completions",
+  //       0.5,
+  //       "cf2be16d4bcc109c94d53eb228a7033bbd62861239b1ce57e55993756ca82c38",
+  //       modelString
+  //     )
+  //       .then((together) => {
+  //         const fullModelString = togetherModelStrings[i];
+  //         const justModelName = fullModelString.split("/")[1];
+  //         console.log(justModelName);
+  //         console.log(together);
+  //         finishingOrder.push(togetherModelStrings[i]);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching Together:", error);
+  //       });
+  //   }, i * 1500);
+  // }
 });
