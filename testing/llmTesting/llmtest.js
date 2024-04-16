@@ -38,8 +38,7 @@ Instructions:
 - Capitalize any names in the fields 
 - You may repeat info in multiple keys, if you need to.
 - If location not given, you can use "None" exactly
-- Capitalize first letters in "name" and "location"
-- For the "location", use comedic slang if not provided, like "gaff"`;
+- Capitalize first letters in "name" and "location"`;
 
 const promptInput = document.getElementById("input");
 const submitButton = document.getElementById("submit");
@@ -117,9 +116,6 @@ const togetherModelStrings = [
   "microsoft/WizardLM-2-8x22B",
   "mistralai/Mixtral-8x7B-Instruct-v0.1",
   "togethercomputer/LLaMA-2-7B-32K-Instruct",
-  "togethercomputer/guanaco-13b",
-  "togethercomputer/guanaco-33b",
-  "togethercomputer/guanaco-65b",
   "togethercomputer/llama-2-13b-chat",
   "togethercomputer/llama-2-70b-chat",
   "togethercomputer/mpt-30b-chat",
@@ -150,9 +146,8 @@ submitButton.addEventListener("click", async () => {
         console.log(justModelName);
         console.log(mixtral);
         finishingOrder.push(fireworksModelsStrings[i]);
-        // add the model output to the grid of ouputs, make a new element of the model title, and the actual output and add them to a new div then add that to the grid
         const modelOutput = document.createElement("div");
-        modelOutput.classList.add("model-output-container");
+        modelOutput.classList.add("model-output-container-fireworks");
 
         const modelTitle = document.createElement("p");
         modelTitle.classList.add("model-output-title");
@@ -184,26 +179,53 @@ submitButton.addEventListener("click", async () => {
       });
   }
 
-  // for (let i = 0; i < togetherModelStrings.length; i++) {
-  //   setTimeout(() => {
-  //     const modelString = togetherModelStrings[i];
-  //     sendToModel(
-  //       userPrompt,
-  //       "https://api.together.xyz/v1/chat/completions",
-  //       0.5,
-  //       "cf2be16d4bcc109c94d53eb228a7033bbd62861239b1ce57e55993756ca82c38",
-  //       modelString
-  //     )
-  //       .then((together) => {
-  //         const fullModelString = togetherModelStrings[i];
-  //         const justModelName = fullModelString.split("/")[1];
-  //         console.log(justModelName);
-  //         console.log(together);
-  //         finishingOrder.push(togetherModelStrings[i]);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching Together:", error);
-  //       });
-  //   }, i * 1500);
-  // }
+  for (let i = 0; i < togetherModelStrings.length; i++) {
+    setTimeout(() => {
+      const modelString = togetherModelStrings[i];
+      sendToModel(
+        userPrompt,
+        "https://api.together.xyz/v1/chat/completions",
+        0.5,
+        "cf2be16d4bcc109c94d53eb228a7033bbd62861239b1ce57e55993756ca82c38",
+        modelString
+      )
+        .then((mixtral) => {
+          const fullModelString = togetherModelStrings[i];
+          const justModelName = fullModelString.split("/")[1];
+          console.log(justModelName);
+          console.log(mixtral);
+          finishingOrder.push(togetherModelStrings[i]);
+          const modelOutput = document.createElement("div");
+          modelOutput.classList.add("model-output-container-together");
+
+          const modelTitle = document.createElement("p");
+          modelTitle.classList.add("model-output-title");
+          modelTitle.innerText = justModelName;
+          modelOutput.appendChild(modelTitle);
+
+          const modelOutputText = document.createElement("p");
+          modelOutputText.classList.add("model-output-text");
+          try {
+            const parsedOutput = JSON.parse(mixtral);
+            const name = parsedOutput.name;
+            console.log(parsedOutput);
+            const startDate = parsedOutput.startDate;
+            const endDate = parsedOutput.endDate;
+            const startTime = parsedOutput.startTime;
+            const endTime = parsedOutput.endTime;
+            const location = parsedOutput.location;
+
+            modelOutputText.innerText = `${name}\n${startDate}\n${endDate}\n${startTime}\n${endTime}\n${location}`;
+
+            modelOutput.appendChild(modelOutputText);
+            modelOutputGrid.appendChild(modelOutput);
+          } catch (error) {
+            console.error("Error parsing output:", error);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching Mixtral:", error);
+        });
+    }, i * 1500);
+  }
 });

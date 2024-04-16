@@ -64,8 +64,14 @@ body {
   font-family: monospace;
 }
 
-.model-output-container {
+.model-output-container-fireworks {
   padding: 0.5rem;
   border-radius: 0.5rem;
-  background-color: rgba(143, 143, 143, 0.143);
+  background-color: #f1e8fd;
+}
+
+.model-output-container-together {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #d9e9fd;
 }/*# sourceMappingURL=llmtest.css.map */
