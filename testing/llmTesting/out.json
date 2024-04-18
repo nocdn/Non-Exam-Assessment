@@ -1,0 +1,21 @@
+{
+  "id": "84fd1a6c-ee52-4404-a3cd-8f6426ecf50f",
+  "object": "chat.completion",
+  "created": 1713343231,
+  "model": "accounts/fireworks/models/nous-hermes-2-mixtral-8x7b-dpo-fp8",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "[1. Identify the date: \"next Thursday\" -> current day + 7 days]\n[2. No specific start or end time provided, so using \"allDay\"]\n\n{\n  \"name\": \"Bridal Shower\",\n  \"startDate\": \"25/04/2024\",\n  \"endDate\": \"25/04/2024\",\n  \"startTime\": \"allDay\",\n  \"endTime\": \"allDay\",\n  \"location\": \"None\"\n}"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 369,
+    "total_tokens": 489,
+    "completion_tokens": 120
+  }
+}
