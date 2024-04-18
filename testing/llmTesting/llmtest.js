@@ -25,7 +25,7 @@ console.log(`Today is ${joinedDate}`);
 
 const systemPrompt = `Today is ${joinedDate} (DD/MM/YYYY) and it is a ${currentDayForPrompt}. The time is ${currentTimeString}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “startDate”, “endDate”, “startTime”, “endTime”, “location”.
 
-Important: YOU MUST THINK STEP BY STEP, BUT ONLY FOR THE DATE, THEN ONLY AFTER GENERATE VALID JSON. Your responses should be in this format: [reasoning step by step for the correct date], [the actual json]. Instructions: - Extract relevant info (morning: 7:00, afternoon: 15:00, evening: 19:00, night: 23:00) - Use 24-hour clock - Assume current day if no date given - Date in format DD/MM/YYYY - Assume all-day event if no time given (startTime: \"allDay\", endTime: \"allDay\") - Never omit any JSON keys - Assume 1-hour duration if no end time - the Name key should never contain any dates or times - Capitalize any names in the fields  - You may repeat info in multiple keys, if you need to. - If location not given, you can use \"None\" exactly - Capitalize first letters in \"name\" and \"location\" - When the user writes next year or in some amount of years, you should add to the year - ALWAYS count days from the current day - if the user writes \"next...\" always use the current day as a reference`;
+Important: YOU MUST THINK STEP BY STEP, BUT ONLY FOR THE DATE, THEN ONLY AFTER GENERATE VALID JSON. BE CONCISE IN YOUR REASONING, USE SHORTHAND AND NOT FULL SENTENCES. Your responses should be in this format: [reasoning step by step for the correct date], [the actual json with curly braces {}]. Instructions: - Extract relevant info (morning: 7:00, afternoon: 15:00, evening: 19:00, night: 23:00) - Use 24-hour clock - Assume current day if no date given - Date in format DD/MM/YYYY - Assume all-day event if no time given (startTime: \"allDay\", endTime: \"allDay\") - Never omit any JSON keys - Assume 1-hour duration if no end time - the Name key should never contain any dates or times - Capitalize any names in the fields  - You may repeat info in multiple keys, if you need to. - If location not given, you can use \"None\" exactly - Capitalize first letters in \"name\" and \"location\" - When the user writes next year or in some amount of years, you should add to the year - ALWAYS count days from the current day - if the user writes \"next...\" always use the current day as a reference`;
 
 console.log(systemPrompt);
 
@@ -76,7 +76,6 @@ const finishingOrder = [];
 
 const fireworksModelsStrings = [
   "accounts/fireworks/models/nous-hermes-2-mixtral-8x7b-dpo-fp8",
-  "accounts/fireworks/models/firefunction-v1",
   "accounts/fireworks/models/mixtral-8x7b-instruct",
   "accounts/fireworks/models/mixtral-8x22b-instruct-preview",
   "accounts/fireworks/models/llama-v2-70b-chat",
@@ -87,15 +86,11 @@ const fireworksModelsStrings = [
 ];
 
 const togetherModelStrings = [
-  "Austism/chronos-hermes-13b",
-  "Gryphe/MythoMax-L2-13b",
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO",
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-SFT",
   "NousResearch/Nous-Hermes-2-Yi-34B",
   "Qwen/Qwen1.5-32B-Chat",
   "Qwen/Qwen1.5-72B-Chat",
-  "Undi95/ReMM-SLERP-L2-13B",
-  "WizardLM/WizardLM-13B-V1.2",
   "garage-bAInd/Platypus2-70B-instruct",
   "lmsys/vicuna-13b-v1.5",
   "meta-llama/Llama-2-70b-chat-hf",
@@ -108,7 +103,7 @@ const togetherModelStrings = [
 const modelString = fireworksModelsStrings[0];
 console.log(modelString);
 sendToModel(
-  "bridal shower nexth thursday",
+  "job interview in 2 weeks",
   "https://api.fireworks.ai/inference/v1/chat/completions",
   0.7,
   "YRqCJ77HbMkgVsArvHqD2G6nyqoJFqDlq640lXSFtN8SvcKG",
@@ -125,7 +120,7 @@ sendToModel(
   });
 
 sendToModel(
-  "bridal shower nexth thursday",
+  "job interview in 2 weeks",
   "https://api.openai.com/v1/chat/completions",
   0.7,
   localStorage.getItem("openAIKey"),
@@ -142,7 +137,7 @@ sendToModel(
 submitButton.addEventListener("click", async () => {
   const userPrompt = promptInput.value;
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < fireworksModelsStrings.length; i++) {
     const modelString = fireworksModelsStrings[i];
     sendToModel(
       userPrompt,
@@ -190,7 +185,7 @@ submitButton.addEventListener("click", async () => {
       });
   }
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < togetherModelStrings.length; i++) {
     setTimeout(() => {
       const modelString = togetherModelStrings[i];
       sendToModel(
