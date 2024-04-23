@@ -772,6 +772,70 @@ async function fetchOpenAIKey() {
 
 fetchOpenAIKey();
 
+const startButton = document.querySelector(".start-changing-text");
+const changingText = document.querySelector(".changingText");
+
+const loadingTexts = [
+  "Sending prompt",
+  "Understanding your request",
+  "Generating structured data",
+  "Adding event",
+];
+
+let originalText = changingText.textContent;
+let originalStyle = {
+  filter: changingText.style.filter,
+  opacity: changingText.style.opacity,
+  scale: changingText.style.scale,
+};
+
+let animationTimeout = null;
+
+function updateText(index) {
+  if (index >= loadingTexts.length) {
+    // Reset to original state
+    changingText.textContent = originalText;
+    changingText.style.filter = originalStyle.filter;
+    changingText.style.opacity = originalStyle.opacity;
+    changingText.style.scale = originalStyle.scale;
+    return;
+  }
+
+  changingText.style.filter = "blur(4px)";
+  changingText.style.opacity = "0.1";
+  changingText.style.scale = "0.975";
+
+  animationTimeout = setTimeout(() => {
+    changingText.textContent = loadingTexts[index];
+    changingText.style.filter = "blur(0px)";
+    changingText.style.opacity = "0.9";
+    changingText.style.scale = "1.0";
+
+    let nextIndex = index + 1;
+    animationTimeout = setTimeout(() => {
+      updateText(nextIndex);
+    }, 600);
+  }, 300);
+}
+
+function stopTextAnimation() {
+  if (animationTimeout) {
+    clearTimeout(animationTimeout);
+    animationTimeout = null;
+  }
+  changingText.textContent = originalText;
+  changingText.style.filter = originalStyle.filter;
+  changingText.style.opacity = originalStyle.opacity;
+  changingText.style.scale = originalStyle.scale;
+
+  document.querySelector(".natural-language-btn").style.justifyContent =
+    "center";
+}
+
+startButton.addEventListener("click", () => {
+  updateText(0);
+});
+
 async function postEvent(eventData, year, month, group_id) {
   try {
     const response = await fetch(
@@ -802,6 +866,11 @@ async function postEvent(eventData, year, month, group_id) {
     console.error("Error posting event:", error);
   }
 }
+
+modalElement.addEventListener("close", () => {
+  stopTextAnimation();
+  removeSpinner();
+});
 
 // Global array to store events to be posted
 const newEvents = [];
@@ -1073,16 +1142,20 @@ naturalLanguageInputField.addEventListener("keydown", function (event) {
 
     const textToParse = document.querySelector(".input-natural").value;
     sendToOpenAI(textToParse);
-    // sendToMixtral(textToParse);
     document.querySelector(".input-natural").value = "";
   }
 });
 
 naturalLanguageButton.addEventListener("click", function () {
   const textToParse = document.querySelector(".input-natural").value;
-  sendToOpenAI(textToParse);
-  // sendToMixtral(textToParse);
+  // sendToOpenAI(textToParse);
+  setTimeout(() => {
+    console.log("Sending to OpenAI");
+  }, 10000);
   document.querySelector(".input-natural").value = "";
+  createSpinnerAsElement(".natural-language-btn", 18, "1rem", "0rem");
+  document.querySelector(".natural-language-btn").style.justifyContent =
+    "space-between";
 });
 
 /////////// button to add a fake event ///////////

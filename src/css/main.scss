@@ -327,7 +327,6 @@ dialog[open]::backdrop {
   }
 
   .delete-event-btn {
-    padding: 0.25rem;
     outline: none;
     border: none;
     width: 100%;
@@ -338,6 +337,9 @@ dialog[open]::backdrop {
     color: #b91c1c;
     height: 2.5rem;
     margin-top: 0.25rem;
+
+    display: grid;
+    place-items: center;
   }
 }
 
@@ -347,10 +349,6 @@ dialog[open]::backdrop {
   // width: 16rem;
   margin-top: 2rem;
 
-  & * {
-    padding: 0 0 0 0.5rem;
-  }
-
   .input-natural {
     padding-top: 0.5rem;
     font-family: sans-serif;
@@ -358,10 +356,13 @@ dialog[open]::backdrop {
     outline: none;
     outline: #e9ebf3 solid 1px;
     border-radius: 5px 5px 0 0;
+
+    padding: 0.5rem 0 0 0.5rem;
   }
 
   .natural-language-btn {
-    padding: 0.25rem;
+    // padding: 0.25rem;
+    padding: 0.25rem 1rem;
     border: none;
     outline: none;
     border-radius: 0 0 5px 5px;
@@ -370,22 +371,29 @@ dialog[open]::backdrop {
     height: 2.5rem;
     margin-top: 0.25rem;
     outline: 1px solid #d9e9fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+}
+
+.add-nlu-text,
+.delete-event-text,
+.add-event-text {
+  font-size: 0.835rem;
 }
 
 .add-event {
   margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  // width: 16rem;
+  gap: 0.25rem;
 }
 
 .input-fields {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  // width: 16rem;
   outline: #e9ebf3 solid 1px;
   border-radius: 5px 5px 0 0;
   padding: 0 0.5rem;
@@ -407,9 +415,11 @@ dialog[open]::backdrop {
   border: none;
   outline: none;
   border-radius: 0 0 5px 5px;
-  border: 1px solid #f1e8fd;
   cursor: pointer;
   outline: 1px solid #f1e8fd;
+
+  display: grid;
+  place-items: center;
 }
 
 .addingGroups {
@@ -588,3 +598,77 @@ dialog {
   display: grid;
   place-content: center;
 }
+
+.changingText {
+  transition: filter 0.3s ease-in-out, opacity 0.3s ease-in-out,
+    scale 0.2s ease-in-out;
+  filter: blur(0);
+}
+
+/////////////////////////// Necessary for spinner ///////////////////////////
+
+$spinner-color: #69717d !default;
+$overlay-color: black !default;
+
+@mixin absolute-center {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.overlay {
+  background: rgba($overlay-color, 0.9);
+  @include absolute-center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  font-size: var(--spinner-size, 12px); // Use CSS variable for spinner size
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+}
+
+.spinner-blade {
+  position: absolute;
+  left: 0.4629em;
+  bottom: 0;
+  width: 0.074em;
+  height: 0.2777em;
+  border-radius: 0.5em;
+  background-color: transparent;
+  transform-origin: center -0.2222em;
+  animation: spinner-fade 1s infinite linear;
+
+  $animation-delay: 0s;
+  $blade-rotation: 0deg;
+
+  @for $i from 1 through 12 {
+    &:nth-child(#{$i}) {
+      animation-delay: $animation-delay;
+      transform: rotate($blade-rotation);
+      $blade-rotation: $blade-rotation + 30deg;
+      $animation-delay: $animation-delay + 0.083s;
+    }
+  }
+}
+
+@keyframes spinner-fade {
+  0% {
+    background-color: $spinner-color;
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}
+
+/////////////////////////// end of necessary for spinner ///////////////////////////
