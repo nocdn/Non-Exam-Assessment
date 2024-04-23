@@ -1012,24 +1012,9 @@ const currentHour = currentTime.getHours();
 const currentMinute = currentTime.getMinutes();
 const currentTimeString = `${currentHour}:${currentMinute}`;
 
-const universalPrompt = `Today is ${joinedDate} and it is a ${currentDayForPrompt}. The time is ${currentTimeString}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “startDate”, “endDate”, “startTime”, “endTime”, “location”.
+const universalPrompt = `Today is ${joinedDate} (DD/MM/YYYY) and it is a ${currentDayForPrompt}. The time is ${currentTimeString}. You are an NLU to calendar converter. Output in JSON with the following keys: “name”, “startDate”, “endDate”, “startTime”, “endTime”, “location”.
 
-YOU MUST OUTPUT ONLY THE RAW JSON, NO CODEBLOCKS, NO COMMENTS OR ANYTHING ELSE.
-Instructions:
-- Extract relevant info (morning: 7:00, afternoon: 15:00, evening: 19:00, night: 23:00)
-- Use 24-hour clock
-- Assume current day if no date given
-- Date in format DD/MM/YYYY
-- Assume all-day event if no time given (startTime: "allDay", endTime: "allDay")
-- Never omit any JSON keys
-- Assume 1-hour duration if no end time
-- the Name key should never contain any dates or times
-- Capitalize any names in the fields 
-- You may repeat info in multiple keys, if you need to.
-- If location not given, you can use "None" exactly
-- Capitalize first letters in "name" and "location"
-- For the "location", use comedic slang if not provided, like "gaff"`;
-
+Important: YOU MUST THINK STEP BY STEP, BUT ONLY FOR THE DATE, THEN ONLY AFTER GENERATE VALID JSON. BE CONCISE IN YOUR REASONING, USE SHORTHAND AND NOT FULL SENTENCES. Your responses should be in this format: [reasoning step by step for the correct date], [the actual json with curly braces {}]. Instructions: - Extract relevant info (morning: 7:00, afternoon: 15:00, evening: 19:00, night: 23:00) - Use 24-hour clock - Assume current day if no date given - Date in format DD/MM/YYYY - Assume all-day event if no time given (startTime: \"allDay\", endTime: \"allDay\") - Never omit any JSON keys - Assume 1-hour duration if no end time - the Name key should never contain any dates or times - Capitalize any names in the fields  - You may repeat info in multiple keys, if you need to. - If location not given, you can use \"None\" exactly - Capitalize first letters in \"name\" and \"location\" - When the user writes next year or in some amount of years, you should add to the year - ALWAYS count days from the current day - if the user writes \"next...\" always use the current day as a reference`;
 const sendToOpenAI = function (textToParse) {
   const startTime = performance.now();
   const data = {
@@ -1065,23 +1050,29 @@ const sendToOpenAI = function (textToParse) {
       console.log("Successfully fetched OpenAI response:", data);
       const responseMessage = data.choices[0].message.content; // The JSON string from OpenAI
 
-      // Convert JSON string to an object for easier usage
-      const eventDetails = JSON.parse(responseMessage);
+      const regex = /\{[\s\S]*\}/;
+      const match = responseMessage.match(regex);
 
-      const eventData = {
-        name: eventDetails.name,
-        startDate: eventDetails.startDate,
-        endDate: eventDetails.endDate || eventDetails.startDate,
-        startTime: eventDetails.startTime,
-        endTime: eventDetails.endTime,
-        location: eventDetails.location,
-        user_id: currentUser_id,
-        group_id: localStorage.getItem("group_id"),
-        color: generateRandomColors(),
-      };
-      const [day, month, year] = eventDetails.startDate.split("/");
-
-      postEvent(eventData, year, month, localStorage.getItem("group_id"));
+      if (match) {
+        const jsonString = match[0];
+        const jsonObject = JSON.parse(jsonString);
+        const eventData = {
+          name: jsonObject.name,
+          startDate: jsonObject.startDate,
+          endDate: jsonObject.endDate || jsonObject.startDate,
+          startTime: jsonObject.startTime,
+          endTime: jsonObject.endTime,
+          location: jsonObject.location,
+          user_id: currentUser_id,
+          group_id: localStorage.getItem("group_id"),
+          color: generateRandomColors(),
+        };
+        const [day, month, year] = eventData.startDate.split("/");
+        postEvent(eventData, year, month, localStorage.getItem("group_id"));
+      } else {
+        console.log("No JSON found");
+        return data.choices[0].message.content;
+      }
     })
     .catch((error) => {
       console.error("OpenAI Error:", error);
@@ -1148,10 +1139,8 @@ naturalLanguageInputField.addEventListener("keydown", function (event) {
 
 naturalLanguageButton.addEventListener("click", function () {
   const textToParse = document.querySelector(".input-natural").value;
-  // sendToOpenAI(textToParse);
-  setTimeout(() => {
-    console.log("Sending to OpenAI");
-  }, 10000);
+  sendToOpenAI(textToParse);
+
   document.querySelector(".input-natural").value = "";
   createSpinnerAsElement(".natural-language-btn", 18, "1rem", "0rem");
   document.querySelector(".natural-language-btn").style.justifyContent =
@@ -1272,5 +1261,3 @@ const highlightToday = () => {
   const xCenter = (boundingBox.left + boundingBox.right) / 2;
   const yCenter = (boundingBox.top + boundingBox.bottom) / 2;
 };
-
-// highlightToday();
