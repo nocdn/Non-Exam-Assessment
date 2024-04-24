@@ -3,6 +3,7 @@
   <head>
     <title>Shared Calendar</title>
     <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <link rel="stylesheet" type="text/css" href="./css/notes.css" />
     <link
       href="https://unpkg.com/css.gg@2.0.0/icons/css/add.css"
       rel="stylesheet"
@@ -18,7 +19,7 @@
     ></script>
   </head>
   <body>
-    <dialog data-modal>
+    <dialog data-modal class="main-modal">
       <div class="modal-heading" style="display: flex; gap: 10rem">
         <p>Add an event</p>
         <!-- <i class="fa-solid fa-plus"></i> -->
@@ -105,7 +106,7 @@
       </div>
     </dialog>
 
-    <dialog data-add-group class="modal-adding-group">
+    <dialog data-add-group class="modal-adding-group main-modal">
       <div class="modal-adding-events-general-container">
         <div class="modal-heading">
           <p>Add a group</p>
@@ -135,37 +136,80 @@
         </div>
       </div>
     </dialog>
+    <calendar>
+      <nav class="calendar-navigation">
+        <div class="month-switcher">
+          <i id="prevMonth" class="fa-solid fa-arrow-left"></i>
+          <i id="nextMonth" class="fa-solid fa-arrow-right"></i>
+          <div id="monthAndYear"></div>
+        </div>
 
-    <nav class="calendar-navigation">
-      <div class="month-switcher">
-        <i id="prevMonth" class="fa-solid fa-arrow-left"></i>
-        <i id="nextMonth" class="fa-solid fa-arrow-right"></i>
-        <div id="monthAndYear"></div>
+        <div class="group-choice-container">
+          <p>Group:</p>
+          <select name="group-select" id="group-selector"></select>
+        </div>
+
+        <div class="add-event-icon" data-open-modal>
+          <!-- <i class="fa-solid fa-plus"></i> -->
+          <i class="gg-add"></i>
+        </div>
+      </nav>
+      <div class="calendarAndDays">
+        <div class="days">
+          <div class="day"><p>Mon</p></div>
+          <div class="day"><p>Tue</p></div>
+          <div class="day"><p>Wed</p></div>
+          <div class="day"><p>Thu</p></div>
+          <div class="day"><p>Fri</p></div>
+          <div class="day"><p>Sat</p></div>
+          <div class="day"><p>Sun</p></div>
+        </div>
+        <div id="calendar" class="grid"></div>
+      </div>
+    </calendar>
+
+    <dialog data-new-note class="modal-new-note">
+      <div class="note-modal-heading">
+        <p>New Note</p>
+        <div class="close-new-note-modal-icon">
+          <i class="gg-add"></i>
+        </div>
       </div>
 
-      <div class="group-choice-container">
-        <p>Group:</p>
-        <select name="group-select" id="group-selector"></select>
+      <div class="note-modal-input-fields">
+        <textarea
+          name=""
+          id="new-note-textarea"
+          placeholder="Enter note..."
+        ></textarea>
+        <div class="pin-note-container">
+          <input
+            type="checkbox"
+            name="priorityNoteCheckbox"
+            id="priorityNoteCheckbox"
+          />
+          <label for="priorityNoteCheckbox">Pin Note</label>
+        </div>
       </div>
 
-      <div class="add-event-icon" data-open-modal>
-        <!-- <i class="fa-solid fa-plus"></i> -->
-        <i class="gg-add"></i>
+      <div class="new-note-submit-btn">
+        <i class="fa-regular fa-floppy-disk"></i>
+        <p>Submit</p>
       </div>
-    </nav>
-    <div class="calendarAndDays">
-      <div class="days">
-        <div class="day"><p>Mon</p></div>
-        <div class="day"><p>Tue</p></div>
-        <div class="day"><p>Wed</p></div>
-        <div class="day"><p>Thu</p></div>
-        <div class="day"><p>Fri</p></div>
-        <div class="day"><p>Sat</p></div>
-        <div class="day"><p>Sun</p></div>
-      </div>
-      <div id="calendar" class="grid"></div>
-    </div>
+    </dialog>
 
+    <notes id="main-notes-container">
+      <div class="add-note-button">
+        <i class="fa-regular fa-pen-to-square"></i>
+        <p>New Note</p>
+      </div>
+      <div class="notesHeading pinned-notes-heading">Pinned Notes</div>
+      <div id="pinned-notes-container"></div>
+      <div class="notesHeading regular-notes-heading">Other Notes</div>
+      <div id="regular-notes-container"></div>
+    </notes>
+
+    <script type="module" src="./javascript/notes.js"></script>
     <script type="module" src="./javascript/script.js"></script>
   </body>
 </html>

@@ -24,6 +24,16 @@
 }
 
 body {
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+}
+
+calendar {
+  width: 100vw;
   margin-top: 2rem;
   display: grid;
   row-gap: 2rem;
@@ -138,7 +148,7 @@ body {
   width: 15px;
 }
 
-dialog:modal {
+.main-modal {
   font-family: sans-serif;
   background-color: white;
   outline: 1px solid rgba(216, 215, 223, 0.244);
@@ -547,7 +557,7 @@ select {
   font-size: 1.25rem;
 }
 
-dialog {
+.main-modal {
   box-shadow: 0px 0px 50px 15px grey;
 }
 
