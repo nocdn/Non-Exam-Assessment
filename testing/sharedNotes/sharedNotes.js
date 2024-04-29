@@ -542,13 +542,3 @@ const createSpinner = (
     elementRect.top + elementRect.height / 2 - spinner.offsetHeight / 2
   }px`;
 };
-
-const removeSpinner = () => {
-  const spinner = document.querySelector(".ispinner");
-  if (spinner) {
-    spinner.remove();
-  }
-};
-
-// create initial loading spinner
-createSpinner(".notesHeading", 18, "right", 3);
