@@ -114,24 +114,67 @@ function createNoteElement(note) {
   noteElement.classList.add("note");
 
   const noteText = createNoteTextElement(note);
-  const creationDateTime = createCreationDateTimeElement(note);
   noteElement.appendChild(noteText);
-  noteElement.appendChild(creationDateTime);
-
-  if (note.updated_date) {
-    const updatedDateTime = createUpdatedDateTimeElement(note);
-    noteElement.appendChild(updatedDateTime);
-  }
 
   const iconContainer = createIconContainer();
   const deleteIcon = createDeleteIcon(note);
   const editIcon = createEditIcon(note);
+  const infoIcon = createInfoIcon(note);
+
   iconContainer.appendChild(deleteIcon);
   iconContainer.appendChild(editIcon);
+  iconContainer.appendChild(infoIcon);
 
   noteElement.appendChild(iconContainer);
 
   return noteElement;
+}
+
+function createInfoIcon(note) {
+  const infoIconContainer = document.createElement("div");
+  infoIconContainer.classList.add("info-icon-container");
+
+  const infoIcon = document.createElement("i");
+  infoIcon.className = "fa-solid fa-info-circle";
+  infoIcon.style.cursor = "pointer";
+  infoIcon.style.opacity = "0.55";
+
+  const tooltipContainer = document.createElement("div");
+  tooltipContainer.classList.add("tooltip-container");
+  tooltipContainer.style.display = "none";
+  tooltipContainer.style.position = "absolute";
+  tooltipContainer.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+  tooltipContainer.style.color = "white";
+  tooltipContainer.style.padding = "8px";
+  tooltipContainer.style.borderRadius = "4px";
+  tooltipContainer.style.marginTop = "1rem";
+  tooltipContainer.style.zIndex = "1";
+
+  const creationDateTime = document.createElement("span");
+  creationDateTime.textContent = `Created on: ${note.creation_date} at ${note.creation_time}`;
+  tooltipContainer.appendChild(creationDateTime);
+
+  const br = document.createElement("br");
+  tooltipContainer.appendChild(br);
+
+  if (note.updated_date) {
+    const updatedDateTime = document.createElement("span");
+    updatedDateTime.textContent = `Updated on: ${note.updated_date} at ${note.updated_time}`;
+    tooltipContainer.appendChild(updatedDateTime);
+  }
+
+  infoIcon.addEventListener("mouseenter", () => {
+    tooltipContainer.style.display = "block";
+  });
+
+  infoIcon.addEventListener("mouseleave", () => {
+    tooltipContainer.style.display = "none";
+  });
+
+  infoIconContainer.appendChild(infoIcon);
+  infoIconContainer.appendChild(tooltipContainer);
+
+  return infoIconContainer;
 }
 
 function createNoteTextElement(note) {
@@ -170,6 +213,7 @@ function createDeleteIcon(note) {
   deleteIcon.style.cursor = "pointer";
   deleteIcon.title = "Delete note";
   deleteIcon.style.color = "red";
+  deleteIcon.style.opacity = "0.55";
   deleteIcon.onclick = function () {
     console.log("Delete action clicked");
     deleteNote(note.note_id);
@@ -179,7 +223,7 @@ function createDeleteIcon(note) {
 
 function createEditIcon(note) {
   const editIcon = document.createElement("i");
-  editIcon.className = `fa-solid fa-pen edit-icon-${note.note_id}`;
+  editIcon.className = `fa-solid fa-pen edit-icon-${note.note_id} edit-icon`;
   editIcon.style.cursor = "pointer";
   editIcon.title = "Edit note";
   editIcon.classList.add(note.note_id);
