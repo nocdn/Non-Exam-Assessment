@@ -514,6 +514,8 @@ dialog[open]::backdrop {
   * {
     font-family: $mono-font;
   }
+
+  // width: 8rem;
 }
 
 .custom-select {
@@ -526,9 +528,9 @@ select {
   /*  safari  */
   -webkit-appearance: none;
   /*  other styles for aesthetics */
-  width: 100%;
+  width: 3.5rem;
   font-size: 1rem;
-  padding: 0.5rem 2rem 0.5rem 0.5rem;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   background-color: #fff;
   // border: 1px solid #caced1;
   border: none;
@@ -682,3 +684,21 @@ $overlay-color: black !default;
 }
 
 /////////////////////////// end of necessary for spinner ///////////////////////////
+
+.files-page-button {
+  display: flex;
+  justify-content: space-between;
+  background-color: #e2efe5;
+  color: #264724;
+  width: 7rem;
+  padding: 1rem;
+  border-radius: 10px;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+
+  .files-page-button-icon {
+    font-size: 1.2rem;
+    color: #264724;
+  }
+}

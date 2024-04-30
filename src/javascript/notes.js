@@ -108,7 +108,8 @@ document
     parseNoteData(noteData);
 
     const refreshIcon = document.querySelector(".refresh-note-button-icon");
-    refreshIcon.style.transition = "transform 0.8s ease-out";
+    refreshIcon.style.transition =
+      "transform 0.8s cubic-bezier(.17,1.08,.68,.98)";
     refreshIcon.style.transform = "rotate(360deg)";
     setTimeout(() => {
       refreshIcon.style.transition = "none";

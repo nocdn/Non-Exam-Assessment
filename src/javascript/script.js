@@ -1261,3 +1261,9 @@ const highlightToday = () => {
   const xCenter = (boundingBox.left + boundingBox.right) / 2;
   const yCenter = (boundingBox.top + boundingBox.bottom) / 2;
 };
+
+document
+  .querySelector(".files-page-button")
+  .addEventListener("click", function () {
+    location.href = "./files.html";
+  });
