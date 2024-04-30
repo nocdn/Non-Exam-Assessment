@@ -1,3 +1,17 @@
+let currentUser_id = null;
+
+function initializeUserFromLocalStorage() {
+  const tokenString = localStorage.getItem(
+    "sb-zbudweocjxngitnjautt-auth-token"
+  );
+  if (tokenString) {
+    const tokenObj = JSON.parse(tokenString);
+    currentUser_id = tokenObj.user.id; // Set the global variable with user details
+  } else {
+    console.log("No authentication token found in localStorage.");
+  }
+}
+
 const pinnedNotesContainer = document.getElementById("pinned-notes-container");
 const regularNotesContainer = document.getElementById(
   "regular-notes-container"
@@ -31,10 +45,14 @@ newNoteSubmitBtn.addEventListener("click", function () {
     note_text: noteText,
     creation_date: new Date().toLocaleDateString("en-GB"),
     is_pinned: isPinned,
+    user_id: currentUser_id,
+    group_id: localStorage.getItem("group_id"),
   };
 
   fetch(
-    "https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/",
+    `https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/?group_id=${localStorage.getItem(
+      "group_id"
+    )}`,
     {
       method: "POST",
       headers: {
@@ -59,7 +77,9 @@ newNoteSubmitBtn.addEventListener("click", function () {
 async function fetchNotes() {
   try {
     const response = await fetch(
-      `https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/`
+      `https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/?group_id=${localStorage.getItem(
+        "group_id"
+      )}`
     );
     const data = await response.json();
     if (data.notes.length === 0) {
@@ -74,7 +94,9 @@ async function fetchNotes() {
 function deleteNote(noteId) {
   console.log("Delete note function called with note ID: ", noteId);
   fetch(
-    `https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/?noteId=${noteId}`,
+    `https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/?noteId=${noteId}&group_id=${localStorage.getItem(
+      "group_id"
+    )}`,
     {
       method: "DELETE",
       headers: {
@@ -93,6 +115,7 @@ function deleteNote(noteId) {
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
+  initializeUserFromLocalStorage();
   const noteData = await fetchNotes();
   parseNoteData(noteData);
 });
@@ -110,6 +133,8 @@ function parseNoteData(noteData) {
 }
 
 function createNoteElement(note) {
+  console.log(note);
+
   const noteElement = document.createElement("div");
   noteElement.classList.add("note");
 
@@ -121,8 +146,11 @@ function createNoteElement(note) {
   const editIcon = createEditIcon(note);
   const infoIcon = createInfoIcon(note);
 
-  iconContainer.appendChild(deleteIcon);
-  iconContainer.appendChild(editIcon);
+  if (note.user_id === currentUser_id) {
+    iconContainer.appendChild(deleteIcon);
+    iconContainer.appendChild(editIcon);
+  }
+
   iconContainer.appendChild(infoIcon);
 
   noteElement.appendChild(iconContainer);

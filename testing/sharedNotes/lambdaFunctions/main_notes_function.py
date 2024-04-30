@@ -47,8 +47,10 @@ def lambda_handler(event, context):
 
 def handle_get_request(event):
     try:
-        # List objects in the S3 bucket
-        response = s3_client.list_objects_v2(Bucket=bucket_name)
+        # List objects in the S3 bucket based on group_id
+        group_id = event['queryStringParameters']['group_id']  # Extract group_id from the query string parameters
+        prefix = f'{group_id}/'  # Update the prefix to include the group_id
+        response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
         notes = []
 
         # Iterate over each object (if any) in the bucket
@@ -89,6 +91,7 @@ def handle_post_request(event, context):
         # Load and log the event body
         note_body = json.loads(event['body'])
         logger.info(f"Event Body: {note_body}")
+        group_id = note_body.get('group_id')
 
         # Extracting data from the event body
         note_text = note_body['note_text']
@@ -106,7 +109,7 @@ def handle_post_request(event, context):
         note_body['creation_time'] = creation_time
 
         # Prepare and store the note in S3
-        object_key = f'{note_id}.json'
+        object_key = f'{group_id}/{note_id}.json'
         s3_client.put_object(Bucket=bucket_name, Key=object_key, Body=json.dumps(note_body))
         logger.info(f"Stored note in S3: {object_key}")
 
@@ -134,7 +137,9 @@ def handle_post_request(event, context):
 def handle_delete_request(event):
     try:
         # Extract note_id from the query string parameters
+        group_id = event['queryStringParameters']['group_id']  # Extract group_id from the query string parameters
         note_id = event.get('queryStringParameters', {}).get('noteId')
+        object_key = f'{group_id}/{note_id}.json'
 
 
         if not note_id:
@@ -145,7 +150,7 @@ def handle_delete_request(event):
 
 
         # Perform delete operation on S3 object
-        s3_client.delete_object(Bucket=bucket_name, Key=f'{note_id}.json')
+        s3_client.delete_object(Bucket=bucket_name, Key=object_key)
         logger.info(f"Deleted note from S3: {note_id}")
 
         return {
@@ -168,11 +173,13 @@ def handle_delete_request(event):
 
 def handle_put_request(event):
     try:
+        group_id = event.get('queryStringParameters', {}).get('groupId')
         note_id = event.get('queryStringParameters', {}).get('noteId')
         body = json.loads(event['body'])
 
         # Load the existing note from S3
-        existing_note_object = s3_client.get_object(Bucket=bucket_name, Key=f'{note_id}.json')
+        object_key = f'{group_id}/{note_id}.json'
+        existing_note_object = s3_client.get_object(Bucket=bucket_name, Key=object_key)
         existing_note_content = existing_note_object['Body'].read().decode('utf-8')
         existing_note_data = json.loads(existing_note_content)
 
@@ -180,9 +187,10 @@ def handle_put_request(event):
         existing_note_data['note_text'] = body['note_text']
         existing_note_data['updated_date'] = body['updated_date']
         existing_note_data['updated_time'] = body['updated_time']
-        existing_note_data['is_pinned'] = body.get('is_pinned', existing_note_data.get('is_pinned', 0))
+        existing_note_data['is_pinned'] = body.get('is_pinned', existing_note_data.get('is_pinned', 0))  # Update if provided, else keep current state
+
         # Save the updated note back to S3
-        s3_client.put_object(Bucket=bucket_name, Key=f'{note_id}.json', Body=json.dumps(existing_note_data))
+        s3_client.put_object(Bucket=bucket_name, Key=object_key, Body=json.dumps(existing_note_data))
 
         return {
             'statusCode': 200,
