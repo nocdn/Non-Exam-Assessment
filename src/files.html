@@ -5,8 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>File Uploads</title>
     <link rel="stylesheet" href="./css/files.css" />
+    <script
+      src="https://kit.fontawesome.com/7d2900409e.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
+    <main>
+      <div class="general-file-picker-container">
+        <input type="file" name="file" id="file" class="inputfile" />
+        <label class="file-input-label" for="file">Choose a file</label>
+        <p class="selected-files-text">Select a File</p>
+        <button class="upload-btn">
+          <span>Upload</span>
+        </button>
+      </div>
+
+      <div class="general-uploading-container">
+        <div class="uploading-text-details-container">
+          <div class="uploading-text-container">
+            <span class="uploading-text">Choose a file</span>
+            <span class="percentage-and-speed"
+              ><p id="progressPercentage">0%</p>
+              <i class="fa-solid fa-circle"></i>
+              <p class="upload-speed" id="uploadSpeed">0 MB/s</p></span
+            >
+          </div>
+          <div class="cancel-upload-btn">
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+        </div>
+        <progress
+          class="progress"
+          id="progressBar"
+          value="0"
+          max="100"
+        ></progress>
+      </div>
+      <div class="file-list"></div>
+    </main>
+    <div class="files-heading-container">
+      <h1 class="files-heading">Files</h1>
+    </div>
+    <ul id="file-list"></ul>
     <script src="./javascript/files.js"></script>
   </body>
 </html>
