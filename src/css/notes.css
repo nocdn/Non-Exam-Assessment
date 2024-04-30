@@ -138,6 +138,27 @@ dialog {
   border: none;
 }
 
+.note-data-control-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 500;
+}
+.note-data-control-container .refresh-note-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  cursor: pointer;
+  width: 7.5rem;
+  padding: 1rem;
+  background-color: #d9e9fd;
+  color: #303970;
+  border-radius: 10px;
+}
+
 .edit-icon {
   opacity: 0;
   transition: opacity 0.3s ease-in-out;

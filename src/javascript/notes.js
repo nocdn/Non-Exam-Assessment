@@ -75,6 +75,9 @@ newNoteSubmitBtn.addEventListener("click", function () {
 });
 
 async function fetchNotes() {
+  pinnedNotesContainer.innerHTML = "";
+  regularNotesContainer.innerHTML = "";
+
   try {
     const response = await fetch(
       `https://eopcsfkmlwkil4fzaqz6u4nqam0unwxc.lambda-url.eu-west-2.on.aws/?group_id=${localStorage.getItem(
@@ -90,6 +93,28 @@ async function fetchNotes() {
     console.error("Error:", error);
   }
 }
+
+document
+  .getElementById("group-selector")
+  .addEventListener("change", async function () {
+    const noteData = await fetchNotes();
+    parseNoteData(noteData);
+  });
+
+document
+  .querySelector(".refresh-note-button")
+  .addEventListener("click", async function () {
+    const noteData = await fetchNotes();
+    parseNoteData(noteData);
+
+    const refreshIcon = document.querySelector(".refresh-note-button-icon");
+    refreshIcon.style.transition = "transform 0.8s ease-out";
+    refreshIcon.style.transform = "rotate(360deg)";
+    setTimeout(() => {
+      refreshIcon.style.transition = "none";
+      refreshIcon.style.transform = "rotate(0deg)";
+    }, 800);
+  });
 
 function deleteNote(noteId) {
   console.log("Delete note function called with note ID: ", noteId);

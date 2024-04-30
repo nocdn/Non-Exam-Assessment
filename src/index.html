@@ -17,6 +17,7 @@
       src="https://kit.fontawesome.com/7d2900409e.js"
       crossorigin="anonymous"
     ></script>
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
   </head>
   <body>
     <dialog data-modal class="main-modal">
@@ -199,9 +200,21 @@
     </dialog>
 
     <notes id="main-notes-container">
-      <div class="add-note-button">
-        <i class="fa-regular fa-pen-to-square"></i>
-        <p>New Note</p>
+      <div class="note-data-control-container">
+        <div class="add-note-button">
+          <i class="fa-regular fa-pen-to-square"></i>
+          <p>New Note</p>
+        </div>
+        <div class="refresh-note-button">
+          <iconify-icon
+            icon="tabler:refresh"
+            width="1.2rem"
+            height="1.2rem"
+            style="color: black"
+            class="refresh-note-button-icon"
+          ></iconify-icon>
+          <p>Refresh</p>
+        </div>
       </div>
       <div class="notesHeading pinned-notes-heading">Pinned Notes</div>
       <div id="pinned-notes-container"></div>
