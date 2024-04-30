@@ -13,6 +13,8 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+
+  margin-bottom: 4rem;
 }
 
 .add-note-button {
@@ -148,5 +150,5 @@ dialog {
 }
 
 .note:hover .edit-icon {
-  opacity: 1;
+  opacity: 0.55;
 }
