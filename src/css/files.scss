@@ -1,3 +1,6 @@
+@import "_fonts.scss";
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -26,6 +29,10 @@ main {
   flex-direction: column;
   gap: 1rem;
   width: fit-content;
+
+  * {
+    font-family: "Space Grotesk", sans-serif;
+  }
 }
 
 .upload-btn {
@@ -202,6 +209,7 @@ main {
 }
 
 .uploading-text {
+  font-weight: 500;
 }
 
 .percentage-and-speed {
@@ -313,4 +321,26 @@ $overlay-color: black !default;
 
 a {
   cursor: pointer;
+}
+
+.back-arrow-container {
+  position: absolute;
+  text-decoration: none;
+  color: #1c0000;
+
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  opacity: 0.7;
+  top: 10px;
+  left: 10px;
+  width: fit-content;
+  height: 2rem;
+  cursor: pointer;
+  z-index: 1000;
+
+  p {
+    font-weight: 500;
+    font-family: "Space Grotesk", sans-serif;
+  }
 }

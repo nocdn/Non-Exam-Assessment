@@ -1,3 +1,9 @@
+import {
+  createSpinner,
+  createSpinnerAsElement,
+  removeSpinner,
+} from "../assets/functions/spinner.js";
+
 document.querySelector(".inputfile").addEventListener("change", (event) => {
   const files = event.target.files;
   const fileList = document.querySelector(".selected-files-text");
@@ -21,6 +27,7 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
   const file = files[0];
   console.log(`Starting upload for: ${file.name}`);
   document.querySelector(".uploading-text").innerText = `Starting upload`;
+  createSpinner(".uploading-text", 14, "right");
 
   // Create URL with query parameters
   const lambdaUrl =
@@ -64,6 +71,7 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
               .appendChild(uploadCompleteIcon);
             document.getElementById("uploadSpeed").innerHTML = "";
             fetchFileList();
+            removeSpinner();
             document.querySelector(
               ".uploading-text"
             ).innerText = `Upload complete`;
@@ -89,6 +97,7 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
         document.getElementById("progressPercentage").innerText = "Aborted";
         document.getElementById("uploadSpeed").innerText = `Speed: 0.00 MB/s`;
         document.querySelector(".uploading-text").innerText = `Upload aborted`;
+        removeSpinner();
         console.log("Upload aborted");
       };
 
@@ -114,6 +123,11 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
     .catch((error) => console.error("Error:", error));
 });
 
+// on DOMContentLoaded
+document.addEventListener("DOMContentLoaded", async function () {
+  createSpinner(".files-heading", 24, "right");
+});
+
 // Function to calculate and display upload speed
 function calculateSpeed(loaded, startTime, lastLoaded) {
   const currentTime = Date.now();
@@ -137,6 +151,7 @@ function fetchFileList() {
     .then((response) => response.json())
     .then((files) => {
       console.log(files);
+      removeSpinner();
       const fileList = document.getElementById("file-list");
       fileList.innerHTML = ""; // Clear existing list items if any
 
@@ -167,9 +182,11 @@ function fetchFileList() {
 
         // Create the delete icon
         const deleteIcon = document.createElement("a");
-        deleteIcon.className = `delete-icon delete-icon-${file.Key}`;
+        const fileKeyNoSpaces = file.Key.replaceAll(" ", "-");
+        deleteIcon.className = `delete-icon delete-icon-${i}`;
         deleteIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="1.2rem" height="1.2rem" viewBox="0 0 24 24"><path fill="none" stroke="#a62626" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3m-5 5l4 4m0-4l-4 4"/></svg>`;
         deleteIcon.onclick = () => {
+          createSpinner(`.delete-icon-${i}`, 15, "right");
           deleteFile(file.Key);
         };
 

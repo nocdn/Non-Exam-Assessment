@@ -1,3 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
+@font-face {
+  font-family: "Basier Circle";
+  src: url("../../assets/fonts/basiercircle-regular-webfont.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Basier Square";
+  src: url("../../assets/fonts/basiersquare-regular-webfont.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Geomanist";
+  src: url(../../assets/fonts/geomanist-regular-webfont.woff2) format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
 * {
   box-sizing: border-box;
   margin: 0;
@@ -25,6 +45,9 @@ main {
   gap: 1rem;
   width: -moz-fit-content;
   width: fit-content;
+}
+main * {
+  font-family: "Space Grotesk", sans-serif;
 }
 
 .upload-btn {
@@ -195,6 +218,10 @@ main {
   border-radius: 50px;
 }
 
+.uploading-text {
+  font-weight: 500;
+}
+
 .percentage-and-speed {
   font-size: 0.75rem;
 }
@@ -331,4 +358,25 @@ main {
 
 a {
   cursor: pointer;
+}
+
+.back-arrow-container {
+  position: absolute;
+  text-decoration: none;
+  color: #1c0000;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  opacity: 0.7;
+  top: 10px;
+  left: 10px;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: 2rem;
+  cursor: pointer;
+  z-index: 1000;
+}
+.back-arrow-container p {
+  font-weight: 500;
+  font-family: "Space Grotesk", sans-serif;
 }/*# sourceMappingURL=files.css.map */
