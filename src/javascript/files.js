@@ -30,8 +30,11 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
   createSpinner(".uploading-text", 14, "right");
 
   // Create URL with query parameters
-  const lambdaUrl =
-    "https://jvvtcm6ogy3bybmpnxw4gwwtre0drgzl.lambda-url.eu-west-2.on.aws/";
+  const lambdaUrl = `https://jvvtcm6ogy3bybmpnxw4gwwtre0drgzl.lambda-url.eu-west-2.on.aws/?file_name=${
+    file.name
+  }&content_type=${file.type}&group_id=${localStorage.getItem("group_id")}`;
+
+  console.log(localStorage.getItem("group_id"));
   const queryParams = new URLSearchParams({
     file_name: file.name,
     content_type: file.type,
@@ -41,7 +44,7 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
   let lastLoaded = 0; // Last loaded amount to calculate speed
 
   // Make a request to Lambda function
-  fetch(`${lambdaUrl}?${queryParams}`, {
+  fetch(`${lambdaUrl}`, {
     method: "GET",
   })
     .then((response) => response.json())
@@ -145,8 +148,13 @@ function calculateSpeed(loaded, startTime, lastLoaded) {
 
 // Function to fetch file list and generate HTML
 function fetchFileList() {
-  const lambdaUrl =
-    "https://24qvw7hqnnxazjuc5ahawcb43a0qdzwp.lambda-url.eu-west-2.on.aws/";
+  const lambdaUrl = `https://24qvw7hqnnxazjuc5ahawcb43a0qdzwp.lambda-url.eu-west-2.on.aws/?group_id=${localStorage.getItem(
+    "group_id"
+  )}`;
+  console.log(
+    `Fetching file list for group ID: ${localStorage.getItem("group_id")}`
+  );
+  console.log(lambdaUrl);
   fetch(lambdaUrl)
     .then((response) => response.json())
     .then((files) => {
@@ -206,11 +214,11 @@ function fetchFileList() {
 fetchFileList();
 
 function deleteFile(fileName) {
-  const lambdaDeleteUrl =
-    "https://igfzklwuqn5kwxn64icdmbekye0hndew.lambda-url.eu-west-2.on.aws/";
-  const queryParams = new URLSearchParams({ file_name: fileName });
+  const lambdaDeleteUrl = `https://igfzklwuqn5kwxn64icdmbekye0hndew.lambda-url.eu-west-2.on.aws/?group_id=${localStorage.getItem(
+    "group_id"
+  )}&file_name=${fileName}`;
 
-  fetch(`${lambdaDeleteUrl}?${queryParams}`, {
+  fetch(lambdaDeleteUrl, {
     method: "DELETE",
   })
     .then((response) => response.json())

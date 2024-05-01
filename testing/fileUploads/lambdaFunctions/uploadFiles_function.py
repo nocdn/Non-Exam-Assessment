@@ -25,21 +25,25 @@ def lambda_handler(event, context):
 
     file_name = query_params.get('file_name')
     content_type = query_params.get('content_type')
+    group_id = query_params.get('group_id')
 
     # Log the extracted parameters
-    logger.info(f"File name: {file_name}, Content Type: {content_type}")
+    logger.info(f"File name: {file_name}, Content Type: {content_type}, Group ID: {group_id}")
 
-    # Check if file_name or content_type is None
-    if not file_name or not content_type:
+    # Check if file_name, content_type, or group_id is None
+    if not file_name or not content_type or not group_id:
         return {
             'statusCode': 400,
-            'body': json.dumps({'message': 'Missing file name or content type'})
+            'body': json.dumps({'message': 'Missing file name, content type, or group ID'})
         }
+
+    # Generate S3 key with group_id as the root "folder"
+    s3_key = f"{group_id}/{file_name}"
 
     # Generate presigned URL
     presigned_url = s3_client.generate_presigned_url('put_object',
                                                      Params={'Bucket': 'sharedfileuploads',
-                                                             'Key': file_name,
+                                                             'Key': s3_key,
                                                              'ContentType': content_type},
                                                      ExpiresIn=3600)
 
