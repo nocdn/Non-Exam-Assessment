@@ -4,6 +4,20 @@ import {
   removeSpinner,
 } from "../assets/functions/spinner.js";
 
+let currentUser_id = null;
+
+function initializeUserFromLocalStorage() {
+  const tokenString = localStorage.getItem(
+    "sb-zbudweocjxngitnjautt-auth-token"
+  );
+  if (tokenString) {
+    const tokenObj = JSON.parse(tokenString);
+    currentUser_id = tokenObj.user.id; // Set the global variable with user details
+  } else {
+    console.log("No authentication token found in localStorage.");
+  }
+}
+
 document.querySelector(".inputfile").addEventListener("change", (event) => {
   const files = event.target.files;
   const fileList = document.querySelector(".selected-files-text");
@@ -32,7 +46,9 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
   // Create URL with query parameters
   const lambdaUrl = `https://jvvtcm6ogy3bybmpnxw4gwwtre0drgzl.lambda-url.eu-west-2.on.aws/?file_name=${
     file.name
-  }&content_type=${file.type}&group_id=${localStorage.getItem("group_id")}`;
+  }&content_type=${file.type}&group_id=${localStorage.getItem(
+    "group_id"
+  )}&user_id=${currentUser_id}`;
 
   console.log(localStorage.getItem("group_id"));
   const queryParams = new URLSearchParams({
@@ -54,6 +70,7 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
       const abortBtn = document.querySelector(".cancel-upload-btn");
       xhr.open("PUT", data.url, true);
       xhr.setRequestHeader("Content-Type", file.type);
+      xhr.setRequestHeader("x-amz-meta-user_id", currentUser_id);
 
       // Update progress
       xhr.upload.onprogress = function (event) {
@@ -129,6 +146,8 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
 // on DOMContentLoaded
 document.addEventListener("DOMContentLoaded", async function () {
   createSpinner(".files-heading", 24, "right");
+
+  initializeUserFromLocalStorage();
 });
 
 // Function to calculate and display upload speed

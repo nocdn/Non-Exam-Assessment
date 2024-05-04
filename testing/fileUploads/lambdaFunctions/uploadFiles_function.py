@@ -26,25 +26,26 @@ def lambda_handler(event, context):
     file_name = query_params.get('file_name')
     content_type = query_params.get('content_type')
     group_id = query_params.get('group_id')
-
+    user_id = query_params.get('user_id')
     # Log the extracted parameters
-    logger.info(f"File name: {file_name}, Content Type: {content_type}, Group ID: {group_id}")
+    logger.info(f"File name: {file_name}, Content Type: {content_type}, Group ID: {group_id}, User ID: {user_id}")
 
-    # Check if file_name, content_type, or group_id is None
-    if not file_name or not content_type or not group_id:
+    # Check if file_name, content_type, group_id, or user_id is None
+    if not file_name or not content_type or not group_id or not user_id:
         return {
             'statusCode': 400,
-            'body': json.dumps({'message': 'Missing file name, content type, or group ID'})
+            'body': json.dumps({'message': 'Missing file name, content type, group ID, or user ID'})
         }
 
     # Generate S3 key with group_id as the root "folder"
     s3_key = f"{group_id}/{file_name}"
 
-    # Generate presigned URL
+    # Generate presigned URL with custom metadata
     presigned_url = s3_client.generate_presigned_url('put_object',
                                                      Params={'Bucket': 'sharedfileuploads',
                                                              'Key': s3_key,
-                                                             'ContentType': content_type},
+                                                             'ContentType': content_type,
+                                                             'Metadata': {'user_id': user_id}},  # Include the user_id as metadata
                                                      ExpiresIn=3600)
 
     # Return the presigned URL
