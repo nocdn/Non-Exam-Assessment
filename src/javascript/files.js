@@ -208,19 +208,22 @@ function fetchFileList() {
         fileNameSpan.textContent = file.Key;
 
         // Create the delete icon
-        const deleteIcon = document.createElement("a");
-        const fileKeyNoSpaces = file.Key.replaceAll(" ", "-");
-        deleteIcon.className = `delete-icon delete-icon-${i}`;
-        deleteIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="1.2rem" height="1.2rem" viewBox="0 0 24 24"><path fill="none" stroke="#a62626" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3m-5 5l4 4m0-4l-4 4"/></svg>`;
-        deleteIcon.onclick = () => {
-          createSpinner(`.delete-icon-${i}`, 15, "right");
-          deleteFile(file.Key);
-        };
 
         // Append elements to the container
         fileContainer.appendChild(downloadLink);
         fileContainer.appendChild(fileNameSpan);
-        fileContainer.appendChild(deleteIcon);
+
+        if (file.user_id === currentUser_id) {
+          const deleteIcon = document.createElement("a");
+          const fileKeyNoSpaces = file.Key.replaceAll(" ", "-");
+          deleteIcon.className = `delete-icon delete-icon-${i}`;
+          deleteIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="1.2rem" height="1.2rem" viewBox="0 0 24 24"><path fill="none" stroke="#a62626" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3m-5 5l4 4m0-4l-4 4"/></svg>`;
+          deleteIcon.onclick = () => {
+            createSpinner(`.delete-icon-${i}`, 15, "right");
+            deleteFile(file.Key);
+          };
+          fileContainer.appendChild(deleteIcon);
+        }
 
         // Append the container to the file list
         fileList.appendChild(fileContainer);
