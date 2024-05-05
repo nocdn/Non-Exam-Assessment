@@ -142,8 +142,6 @@ function deleteNote(noteId) {
 
 document.addEventListener("DOMContentLoaded", async function () {
   initializeUserFromLocalStorage();
-  const noteData = await fetchNotes();
-  parseNoteData(noteData);
 });
 
 function parseNoteData(noteData) {
@@ -540,3 +538,14 @@ const removeSpinner = () => {
     spinner.remove();
   }
 };
+
+window.addEventListener("message", async (event) => {
+  if (event.data === "group_id_set") {
+    try {
+      const noteData = await fetchNotes();
+      parseNoteData(noteData);
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
+  }
+});

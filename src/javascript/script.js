@@ -72,8 +72,8 @@ window.onload = async function () {
         );
         // Somehow handle invalid group ID (like notify the user, select a valid group)
       } else {
-        // If currentGroupId is valid or no group_id is set, proceed without changing it.
-        // This ensures the user's selection is preserved across page reloads.
+        // localStorage.setItem("group_id", userGroupIds[0]);
+        // location.reload();
       }
 
       localStorage.setItem("all_group_ids", JSON.stringify(userGroupIds)); // Store all group IDs for future reference or validation.
@@ -138,6 +138,11 @@ const positionGroupModal = function () {
 try {
   var group_id = await getgroup_id();
   group_id = JSON.parse(group_id);
+  console.log(group_id[0]);
+  localStorage.setItem("group_id", group_id[0]);
+
+  window.parent.postMessage("group_id_set", "*");
+
   // const group_id_list = document.querySelector(".group_ids");
   group_id.forEach((element) => {
     const option = document.createElement("option");
@@ -147,6 +152,7 @@ try {
 
     group_id_list.add(option);
   });
+
   const addNewGroupOption = document.createElement("option");
   addNewGroupOption.value = "Add new group";
   addNewGroupOption.text = "Add new group";
@@ -967,7 +973,6 @@ function stackEvents() {
   });
 
   const cellWidth = document.querySelector(".event").offsetWidth;
-  console.log(cellWidth);
   const stackedCells = document.querySelectorAll(".events-stack");
   stackedCells.forEach(function (cell) {
     cell.style.width = cellWidth + "px";
