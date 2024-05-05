@@ -27,6 +27,8 @@
   border-radius: 10px;
   font-family: "Space Grotesk", sans-serif;
   font-weight: 500;
+
+  cursor: pointer;
 }
 
 .notesHeading {
@@ -118,6 +120,8 @@
     gap: 0.5rem;
     align-items: center;
 
+    cursor: pointer;
+
     i {
       font-size: 1rem;
       color: #4856a8;
@@ -172,6 +176,8 @@ dialog {
 .edit-icon {
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
+  font-size: 0.85rem;
+  color: #264724;
 }
 
 .note:hover .edit-icon {

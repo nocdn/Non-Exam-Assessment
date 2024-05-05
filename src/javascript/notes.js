@@ -191,8 +191,7 @@ function createInfoIcon(note) {
   infoIconContainer.classList.add("info-icon-container");
 
   const infoIcon = document.createElement("i");
-  infoIcon.className = "fa-solid fa-info-circle";
-  infoIcon.style.cursor = "pointer";
+  infoIcon.className = "fa-solid fa-info";
   infoIcon.style.opacity = "0.55";
 
   const tooltipContainer = document.createElement("div");
@@ -265,7 +264,7 @@ function createIconContainer() {
 
 function createDeleteIcon(note) {
   const deleteIcon = document.createElement("i");
-  deleteIcon.className = `fa-solid fa-trash delete-icon-${note.note_id}`;
+  deleteIcon.className = `fa-solid fa-xmark delete-icon-${note.note_id}`;
   deleteIcon.style.cursor = "pointer";
   deleteIcon.title = "Delete note";
   deleteIcon.style.color = "red";
