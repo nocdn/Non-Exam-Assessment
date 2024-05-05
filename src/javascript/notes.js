@@ -101,20 +101,24 @@ document
     parseNoteData(noteData);
   });
 
+async function refreshButtonAnimation() {
+  const refreshIcon = document.querySelector(".refresh-note-button-icon");
+  refreshIcon.style.transition =
+    "transform 1.2s cubic-bezier(.17,1.08,.68,.98)";
+  refreshIcon.style.transform = "rotate(360deg)";
+  setTimeout(() => {
+    refreshIcon.style.transition = "none";
+    refreshIcon.style.transform = "rotate(0deg)";
+  }, 1200);
+}
+
 document
   .querySelector(".refresh-note-button")
   .addEventListener("click", async function () {
     const noteData = await fetchNotes();
     parseNoteData(noteData);
 
-    const refreshIcon = document.querySelector(".refresh-note-button-icon");
-    refreshIcon.style.transition =
-      "transform 0.8s cubic-bezier(.17,1.08,.68,.98)";
-    refreshIcon.style.transform = "rotate(360deg)";
-    setTimeout(() => {
-      refreshIcon.style.transition = "none";
-      refreshIcon.style.transform = "rotate(0deg)";
-    }, 800);
+    refreshButtonAnimation();
   });
 
 function deleteNote(noteId) {
