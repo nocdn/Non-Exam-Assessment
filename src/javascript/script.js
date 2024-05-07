@@ -963,7 +963,6 @@ async function deleteEvent(eventID, group_id) {
 
 function stackEvents() {
   let stackedEvents = document.querySelectorAll(".events-stack .stacked-event");
-  console.log(stackedEvents);
   let baseZIndex = 1000; // Starting Z-index
   let rotation = 0; // Starting rotation angle
 
@@ -1295,6 +1294,7 @@ function showEmojiPicker() {
   emojiPickerContainer.appendChild(emojisGrid);
 
   addEmojisToGrid();
+  addIconClickHandlers();
 }
 
 const icons = [
@@ -1346,8 +1346,6 @@ const icons = [
   "tabler:book",
 ];
 
-// <iconify-icon icon="tabler:calendar" width="1.2rem" height="1.2rem"  style="color: #075692"></iconify-icon>
-
 function addEmojisToGrid() {
   const emojisGrid = document.querySelector(".emojis-grid");
   emojisGrid.innerHTML = "";
@@ -1368,4 +1366,19 @@ function addEmojisToGrid() {
 function removeEmojiGrid() {
   const emojisGrid = document.querySelector(".emojis-grid");
   emojisGrid.remove();
+}
+
+function addIconClickHandlers() {
+  const allIcons = document.querySelectorAll(".icon");
+  const previewIcon = document.querySelector(".preview-icon");
+
+  allIcons.forEach((icon) => {
+    icon.addEventListener("click", () => {
+      const iconName = icon.getAttribute("icon");
+      console.log(iconName);
+
+      previewIcon.setAttribute("icon", iconName);
+      removeEmojiGrid();
+    });
+  });
 }
