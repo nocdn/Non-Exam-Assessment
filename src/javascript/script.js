@@ -876,6 +876,8 @@ async function postEvent(eventData, year, month, group_id) {
 modalElement.addEventListener("close", () => {
   stopTextAnimation();
   removeSpinner();
+
+  removeEmojiGrid();
 });
 
 // Global array to store events to be posted
@@ -1272,3 +1274,98 @@ document
   .addEventListener("click", function () {
     location.href = "./files.html";
   });
+
+// Emoji picker
+
+const emojiPickerButton = document.querySelector(".chosen-icon-container");
+emojiPickerButton.addEventListener("click", showEmojiPicker);
+const emojiPickerContainer = document.querySelector(".icon-choice-container");
+
+function showEmojiPicker() {
+  const emojisGrid = document.createElement("div");
+  emojisGrid.classList.add("emojis-grid");
+  emojisGrid.style.display = "grid";
+  emojisGrid.style.rowGap = "1.5rem";
+  emojisGrid.style.placeItems = "center";
+  emojisGrid.style.gridTemplateColumns = "repeat(5, 20%)";
+  emojisGrid.style.height = "fit-content";
+  emojisGrid.style.width = "100%";
+  emojisGrid.style.paddingTop = "1.5rem";
+  emojisGrid.style.paddingBottom = "1.5rem";
+  emojiPickerContainer.appendChild(emojisGrid);
+
+  addEmojisToGrid();
+}
+
+const icons = [
+  "tabler:calendar",
+  "tabler:clock",
+  "tabler:star",
+  "tabler:bell-ringing",
+  "tabler:cake",
+  "tabler:baby-carriage",
+  "tabler:confetti",
+  "tabler:lollipop",
+  "tabler:briefcase",
+  "tabler:pencil",
+  "tabler:certificate",
+  "tabler:medical-cross",
+  "tabler:cross",
+  "tabler:pill",
+  "tabler:smoking",
+  "tabler:device-tv",
+  "tabler:movie",
+  "tabler:apple",
+  "tabler:brand-apple-arcade",
+  "tabler:yoga",
+  "tabler:bike",
+  "tabler:plane-arrival",
+  "tabler:plane-departure",
+  "tabler:plane-inflight",
+  "tabler:planet",
+  "tabler:home",
+  "tabler:hotel-service",
+  "tabler:beach",
+  "tabler:air-balloon",
+  "tabler:ball-basketball",
+  "tabler:ball-football",
+  "tabler:ball-volleyball",
+  "tabler:ball-tennis",
+  "tabler:barbell",
+  "tabler:shoe",
+  "tabler:mountain",
+  "tabler:chess-knight",
+  "tabler:meat",
+  "tabler:device-laptop",
+  "tabler:headphones",
+  "tabler:video",
+  "tabler:photo-video",
+  "tabler:cloud-network",
+  "tabler:gift",
+  "tabler:music",
+  "tabler:book",
+];
+
+// <iconify-icon icon="tabler:calendar" width="1.2rem" height="1.2rem"  style="color: #075692"></iconify-icon>
+
+function addEmojisToGrid() {
+  const emojisGrid = document.querySelector(".emojis-grid");
+  emojisGrid.innerHTML = "";
+  for (let i = 0; i < icons.length; i++) {
+    const emoji = icons[i];
+    const icon = document.createElement("iconify-icon");
+    icon.classList.add("icon");
+    icon.setAttribute("icon", emoji);
+    icon.setAttribute("width", "1.76rem");
+    icon.setAttribute("height", "1.76rem");
+    icon.style.color = "#023265";
+    icon.style.width = "fit-content";
+    icon.style.height = "100%";
+    emojisGrid.appendChild(icon);
+  }
+}
+
+function removeEmojiGrid() {
+  const emojisGrid = document.querySelector(".emojis-grid");
+  emojisGrid.remove();
+}

@@ -389,9 +389,6 @@ dialog[open]::backdrop {
   border-radius: 5px 5px 0 0;
   padding: 0 0.5rem;
 }
-.input-fields .input-user {
-  margin-bottom: 0.35rem;
-}
 
 .input-fields *:focus {
   outline: none;
@@ -684,4 +681,32 @@ select {
 .files-page-button .files-page-button-icon {
   font-size: 1.2rem;
   color: #264724;
+}
+
+.icon-choice-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 4px 4px 12px 16px;
+}
+.icon-choice-container .icon-choice-container-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+}
+.icon-choice-container .chosen-icon-container {
+  display: grid;
+  place-items: center;
+  background-color: #f5f4f4;
+  padding: 4px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.icon-choice-container p {
+  font-size: 0.835rem;
 }/*# sourceMappingURL=main.css.map */
