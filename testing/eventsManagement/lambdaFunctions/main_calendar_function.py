@@ -133,7 +133,6 @@ def handle_post_request(event):
             'months': months, # List of months like ['2023/10', '2023/11']
             'startDate': startDate,
             'endDate': endDate,
-            # Include other event details as needed
         })
         logger.info(f"Stored event in DynamoDB with eventID: {event_id}")
 
@@ -154,7 +153,6 @@ def handle_delete_request(event):
         event_id = event['queryStringParameters']['eventID']
         group_id = event['queryStringParameters']['group_id']
         
-        # year = event['queryStringParameters']['year']
         
         table = dynamodb.Table('eventsIndex')
         response = table.get_item(Key={'eventID': event_id})
@@ -163,12 +161,10 @@ def handle_delete_request(event):
         if not item:
             return {'statusCode': 404, 'body': json.dumps({'message': 'Event not found'})}
         
-        # Delete the object from S3 for each month it spans
         for month in item['months']:
             object_key = f'{group_id}/{month}/{event_id}.json'
             s3_client.delete_object(Bucket=bucket_name, Key=object_key)
         
-        # Delete the item from DynamoDB
         table.delete_item(Key={'eventID': event_id})
         
         return {'statusCode': 200, 'body': json.dumps({'message': 'Event deleted successfully'})}

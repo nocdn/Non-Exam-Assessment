@@ -329,6 +329,7 @@ async function fetchEvents(year, month, group_id) {
           group_id: event.group_id,
           color: event.color,
           eventID: event.eventID,
+          icon: event.icon,
         });
       }
     }
@@ -413,6 +414,20 @@ function populateCalendar() {
         eventElement.classList.add("event");
         eventElement.classList.add(`event-${event.eventID}`);
         eventElement.innerText = `${event.name}`;
+
+        let iconElement = document.createElement("iconify-icon");
+        console.log(event);
+        console.log(event.icon);
+        iconElement.setAttribute("icon", "tabler:apple");
+        iconElement.setAttribute("height", "1.25rem");
+        iconElement.setAttribute("width", "1.25rem");
+        iconElement.classList.add("event-icon");
+        iconElement.style.position = "absolute";
+        iconElement.style.left = "4px";
+        iconElement.style.bottom = "4px";
+
+        eventElement.appendChild(iconElement);
+
         if (currentUser_id === event.user_id) {
           let eventRemoveIcon = document.createElement("div");
           eventRemoveIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
@@ -901,9 +916,10 @@ addEventButton.addEventListener("click", function () {
   const extractedMonth = startDateToPost.slice(5, 7);
   const extractedYear = startDateToPost.slice(0, 4);
   let userToPost = document.querySelector(".input-user").value;
-  const user_id = JSON.parse(
-    localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token").user.id
+  const fullToken = JSON.parse(
+    localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token")
   );
+  const user_id = fullToken.user.id;
 
   if (userToPost === "") {
     userToPost = "Bartek";
@@ -912,6 +928,8 @@ addEventButton.addEventListener("click", function () {
   const startTimeToPost = document.querySelector(".input-start").value;
   const endTimeToPost = document.querySelector(".input-end").value;
   const locationToPost = document.querySelector(".input-location").value;
+  const previewIcon = document.querySelector(".preview-icon");
+  const iconToPost = previewIcon.getAttribute("icon");
 
   const eventToPost = {
     name: nameToPost,
@@ -924,6 +942,7 @@ addEventButton.addEventListener("click", function () {
     user_id: user_id,
     group_id: localStorage.getItem("group_id"),
     color: generateRandomColors(),
+    icon: iconToPost,
   };
 
   newEvents.push(eventToPost);
@@ -1247,6 +1266,7 @@ function createFakeEvent() {
     group_id: localStorage.getItem("group_id"),
     user: "Bartek",
     color: generateRandomColors(),
+    icon: "tabler:apple",
   };
   return event;
 }
