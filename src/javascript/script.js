@@ -428,7 +428,7 @@ function populateCalendar() {
         let iconElement = document.createElement("iconify-icon");
         console.log(event);
         console.log(event.icon);
-        iconElement.setAttribute("icon", "tabler:apple");
+        iconElement.setAttribute("icon", event.icon);
         iconElement.setAttribute("height", "1.25rem");
         iconElement.setAttribute("width", "1.25rem");
         iconElement.classList.add("event-icon");

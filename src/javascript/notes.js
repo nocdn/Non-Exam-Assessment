@@ -1,3 +1,9 @@
+import {
+  createSpinner,
+  createSpinnerAsElement,
+  setSpinnerSize,
+} from "../assets/functions/spinner.js";
+
 let currentUser_id = null;
 
 function initializeUserFromLocalStorage() {
