@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
 @font-face {
   font-family: "Basier Circle";
   src: url("../../assets/fonts/basiercircle-regular-webfont.woff2") format("woff2");
@@ -119,7 +120,7 @@ body {
 .signUpContainer h1 {
   margin-bottom: 1rem;
   color: rgb(83, 82, 82);
-  font-family: sans-serif;
+  font-family: "Space Grotesk", sans-serif;
 }
 .signInContainer input,
 .signUpContainer input {
@@ -219,4 +220,9 @@ body {
   transition: width 0.25s, opacity 0.25s;
   border-radius: 0.5rem;
   z-index: -1;
+}
+
+.sign-up-btn {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 500;
 }/*# sourceMappingURL=authentication.css.map */

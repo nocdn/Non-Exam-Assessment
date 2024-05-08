@@ -52,7 +52,20 @@ async function login() {
   });
 
   if (error) {
-    console.log(error);
+    if (error.message === "Invalid login credentials") {
+      console.log("Invalid username or password");
+      const signUpBtn = document.querySelector(".sign-up-btn");
+      signUpBtn.style.transition = "all 0.2s ease-out";
+      signUpBtn.innerText = "Invalid username or password";
+      signUpBtn.style.backgroundColor = "rgba(255, 0, 0, 0.8)";
+      setTimeout(() => {
+        signUpBtn.style.transition = "all 0.2s ease-in";
+        signUpBtn.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+        signUpBtn.innerText = "Sign In";
+      }, 2000);
+    } else {
+      console.log(error);
+    }
   } else {
     location.href = "./index.html";
   }
