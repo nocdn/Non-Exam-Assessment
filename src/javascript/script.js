@@ -413,6 +413,16 @@ function populateCalendar() {
         let eventElement = document.createElement("div");
         eventElement.classList.add("event");
         eventElement.classList.add(`event-${event.eventID}`);
+        eventElement.setAttribute("event-id", event.eventID);
+        eventElement.setAttribute("event-name", event.name);
+        eventElement.setAttribute("event-start-date", event.startDate);
+        eventElement.setAttribute("event-end-date", event.endDate);
+        eventElement.setAttribute("event-start-time", event.startTime);
+        eventElement.setAttribute("event-end-time", event.endTime);
+        eventElement.setAttribute("event-location", event.location);
+        eventElement.setAttribute("event-user", event.user);
+        eventElement.setAttribute("event-icon", event.icon);
+
         eventElement.innerText = `${event.name}`;
 
         let iconElement = document.createElement("iconify-icon");
@@ -906,11 +916,20 @@ addEventButton.addEventListener("click", function () {
     const year = date.slice(0, 4);
     return `${day}/${month}/${year}`;
   };
-
+  if (document.querySelector(".input-title").value === "") {
+    document.querySelector(".input-title").classList.add("shake");
+    setTimeout(() => {
+      document.querySelector(".input-title").classList.remove("shake");
+    }, 1000);
+  }
   const nameToPost = document.querySelector(".input-title").value;
+
   let startDateToPost = document.querySelector(".input-start-date").value;
   if (startDateToPost === "") {
-    startDateToPost = joinedDate;
+    document.querySelector(".input-start-date").classList.add("shake");
+    setTimeout(() => {
+      document.querySelector(".input-start-date").classList.remove("shake");
+    }, 1000);
   }
   const endDateToPost = document.querySelector(".input-end-date").value;
   const extractedMonth = startDateToPost.slice(5, 7);
@@ -1402,3 +1421,5 @@ function addIconClickHandlers() {
     });
   });
 }
+
+const editEventModal = document.querySelector(".edit-event-modal");

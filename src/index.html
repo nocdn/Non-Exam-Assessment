@@ -251,6 +251,65 @@
       <div id="regular-notes-container"></div>
     </notes>
 
+    <dialog data-edit-event class="modal edit-event-modal">
+      <div class="modal-heading">
+        <p>Edit Event</p>
+        <div class="close-edit-event-modal-icon">
+          <i class="gg-add"></i>
+        </div>
+      </div>
+
+      <div class="modal-editing-event-container">
+        <div class="modal-editing-event-input-fields">
+          <input
+            type="text"
+            class="event-editing input-title"
+            name="event-title"
+            placeholder="Event title"
+          />
+          <input
+            type="date"
+            class="event-editing input-start-date"
+            name="date"
+            placeholder="Start date"
+          />
+          <input
+            type="date"
+            class="event-editing input-end-date"
+            name="date"
+            placeholder="End date"
+          />
+          <input
+            type="time"
+            class="event-editing input-start"
+            name="start_time"
+            placeholder="Start time"
+          />
+          <input
+            type="time"
+            class="event-editing input-end"
+            name="end_time"
+            placeholder="End time"
+          />
+          <input
+            type="text"
+            class="event-editing input-location"
+            name="location"
+            placeholder="Location"
+          />
+          <input
+            type="text"
+            class="event-editing input-user"
+            name="user"
+            placeholder="Enter user's name"
+          />
+        </div>
+        <div class="modal-editing-event-btn">
+          <p class="edit-event-text">Save changes</p>
+        </div>
+      </div>
+    </dialog>
+
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script type="module" src="./javascript/notes.js"></script>
     <script type="module" src="./javascript/script.js"></script>
