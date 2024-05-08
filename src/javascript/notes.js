@@ -86,6 +86,11 @@ async function fetchNotes() {
     );
     const data = await response.json();
     if (data.notes.length === 0) {
+      removeSpinner();
+      console.log("No notes found");
+      pinnedNotesContainer.innerHTML = `<p class="no-notes-message">No notes found</p>`;
+      regularNotesContainer.innerHTML = `<p class="no-notes-message">No notes found</p>`;
+      return;
     } else {
       return data.notes;
     }
@@ -149,6 +154,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 function parseNoteData(noteData) {
+  if (!noteData) {
+    return;
+  }
+
   noteData.forEach((note) => {
     const noteElement = createNoteElement(note);
 
