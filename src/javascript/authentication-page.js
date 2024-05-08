@@ -13,7 +13,21 @@ async function signUp() {
   });
 
   if (error) {
-    console.log(error);
+    if (error.message === "User already registered") {
+      console.log("User is already registered");
+      const signUpBtn = document.querySelector(".new-sign-up-btn");
+      console.log(signUpBtn);
+      signUpBtn.style.transition = "all 0.2s ease-out";
+      signUpBtn.innerText = "Already registered: Sign In instead!";
+      signUpBtn.style.backgroundColor = "darkblue";
+      setTimeout(() => {
+        signUpBtn.style.transition = "all 0.2s ease-in";
+        signUpBtn.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+        signUpBtn.innerText = "Sign Up";
+      }, 4000);
+    } else {
+      console.log(error);
+    }
     return; // Stop execution if there's an error
   } else {
     // Assuming signup was successful, now attempt to insert the user into the "groups" table
