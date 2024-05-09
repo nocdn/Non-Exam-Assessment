@@ -148,7 +148,7 @@ function deleteNote(noteId) {
     .then((response) => response.json())
     .then((data) => {
       console.log("Delete successful:", data);
-      fetchNotes(); // Refetch notes to update the list after deletion
+      fetchNotes();
     })
     .catch((error) => {
       console.error("Error:", error);
