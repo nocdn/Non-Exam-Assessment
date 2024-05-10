@@ -176,8 +176,6 @@ function parseNoteData(noteData) {
 }
 
 function createNoteElement(note) {
-  console.log(note);
-
   const noteElement = document.createElement("div");
   noteElement.classList.add("note");
 

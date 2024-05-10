@@ -138,7 +138,7 @@ const positionGroupModal = function () {
 try {
   var group_id = await getgroup_id();
   group_id = JSON.parse(group_id);
-  console.log(group_id[0]);
+  console.log(`Active group ID: ${group_id[0]}`);
   localStorage.setItem("group_id", group_id[0]);
 
   window.parent.postMessage("group_id_set", "*");
@@ -426,8 +426,6 @@ function populateCalendar() {
         eventElement.innerText = `${event.name}`;
 
         let iconElement = document.createElement("iconify-icon");
-        console.log(event);
-        console.log(event.icon);
         iconElement.setAttribute("icon", event.icon);
         iconElement.setAttribute("height", "1.25rem");
         iconElement.setAttribute("width", "1.25rem");
@@ -1423,3 +1421,35 @@ function addIconClickHandlers() {
 }
 
 const editEventModal = document.querySelector(".edit-event-modal");
+
+const startDatePicker = document.querySelector(".input-start-date");
+const endDatePicker = document.querySelector(".input-end-date");
+
+startDatePicker.addEventListener("change", (e) => {
+  endDatePicker.min = e.target.value;
+});
+
+endDatePicker.addEventListener("change", (e) => {
+  startDatePicker.max = e.target.value;
+});
+
+const startTimePicker = document.querySelector(".input-start");
+const endTimePicker = document.querySelector(".input-end");
+
+// swapping the times if the end time is before the start time
+
+let tempTime;
+
+startTimePicker.addEventListener("change", (e) => {
+  if (endTimePicker.value < e.target.value) {
+    endTimePicker.value = e.target.value;
+  }
+});
+
+endTimePicker.addEventListener("change", (e) => {
+  if (e.target.value < startTimePicker.value) {
+    tempTime = startTimePicker.value;
+    startTimePicker.value = e.target.value;
+    endTimePicker.value = tempTime;
+  }
+});
