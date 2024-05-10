@@ -26,7 +26,8 @@ def lambda_handler(event, context):
     file_name = query_params.get('file_name')
     content_type = query_params.get('content_type')
     group_id = query_params.get('group_id')
-    user_id = query_params.get('user_id')
+    user_id = query_params.get('user_id')  # Get the user_id from the query parameters
+
     # Log the extracted parameters
     logger.info(f"File name: {file_name}, Content Type: {content_type}, Group ID: {group_id}, User ID: {user_id}")
 

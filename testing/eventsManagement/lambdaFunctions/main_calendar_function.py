@@ -133,6 +133,7 @@ def handle_post_request(event):
             'months': months, # List of months like ['2023/10', '2023/11']
             'startDate': startDate,
             'endDate': endDate,
+            # Include other event details as needed
         })
         logger.info(f"Stored event in DynamoDB with eventID: {event_id}")
 
@@ -149,6 +150,7 @@ def handle_post_request(event):
         
         
 def handle_delete_request(event):
+    
     try:
         event_id = event['queryStringParameters']['eventID']
         group_id = event['queryStringParameters']['group_id']
