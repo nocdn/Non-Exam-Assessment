@@ -148,7 +148,7 @@ body {
 
 .carousel-container {
   display: flex;
-  transition: transform 0.35s ease-in-out;
+  transition: transform 0.55s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 /* Keyframes for scaling */
