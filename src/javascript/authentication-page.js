@@ -30,8 +30,6 @@ async function signUp() {
     }
     return; // Stop execution if there's an error
   } else {
-    // Assuming signup was successful, now attempt to insert the user into the "groups" table
-    // First, safely attempt to extract the user ID from localStorage
     const authData = JSON.parse(
       localStorage.getItem("sb-zbudweocjxngitnjautt-auth-token")
     );
@@ -155,7 +153,5 @@ function showSignIn() {
 
 function showSignUp() {
   document.querySelector(".carousel-container").style.transform =
-    "translateX(-50%)"; // Adjust this value based on your actual container width
+    "translateX(-50%)";
 }
-
-// You can attach these functions to buttons or any other elements for user interaction

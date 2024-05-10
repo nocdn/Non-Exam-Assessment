@@ -104,7 +104,6 @@ calendar {
   width: fit-content;
 }
 .days .day p::after {
-  /* so that the underline under each day can just slightly extend past each day, without having to hardcode the width of the underline */
   content: "";
   display: block;
   width: 120%;

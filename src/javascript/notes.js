@@ -306,7 +306,7 @@ function revertToParagraph(noteId, noteTextToEdit, iconContainer) {
   removeSpinner();
   const editIcon = iconContainer.querySelector(`.fa-pen`);
   if (editIcon) {
-    editIcon.style.display = "inline-block"; // Ensure the display matches initial style
+    editIcon.style.display = "inline-block";
   }
 
   const textarea = document.querySelector(`.${noteId}.textarea-editable`);
@@ -355,7 +355,6 @@ function handleEditClick(note, iconContainer) {
   textarea.style.padding = "0.5rem";
   textarea.style.resize = "vertical"; // Allow the textarea to be resized vertically
 
-  // Make the textarea the same height as the original note text and resizeable
   const computedStyle = window.getComputedStyle(noteTextElement);
   const height =
     noteTextElement.offsetHeight +

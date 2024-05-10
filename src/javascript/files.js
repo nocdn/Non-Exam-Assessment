@@ -143,7 +143,6 @@ document.querySelector(".upload-btn").addEventListener("click", () => {
     .catch((error) => console.error("Error:", error));
 });
 
-// on DOMContentLoaded
 document.addEventListener("DOMContentLoaded", async function () {
   createSpinner(".files-heading", 24, "right");
 
@@ -207,8 +206,6 @@ function fetchFileList() {
         const fileNameSpan = document.createElement("span");
         fileNameSpan.textContent = file.Key;
 
-        // Create the delete icon
-
         // Append elements to the container
         fileContainer.appendChild(downloadLink);
         fileContainer.appendChild(fileNameSpan);
@@ -232,7 +229,6 @@ function fetchFileList() {
     .catch((error) => console.error("Error:", error));
 }
 
-// Call the function to fetch and display the file list
 fetchFileList();
 
 function deleteFile(fileName) {

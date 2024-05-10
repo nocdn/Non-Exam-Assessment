@@ -59,7 +59,7 @@ window.onload = async function () {
   initializeUserFromLocalStorage();
 
   try {
-    const userGroupsString = await getgroup_id(); // Assuming this gets a JSON string of group IDs.
+    const userGroupsString = await getgroup_id();
     const userGroupIds = JSON.parse(userGroupsString); // Parse it into an array.
 
     if (userGroupIds && userGroupIds.length > 0) {
@@ -70,15 +70,14 @@ window.onload = async function () {
         console.warn(
           "Current group ID is not valid for the user. Please ensure selection is updated accordingly."
         );
-        // Somehow handle invalid group ID (like notify the user, select a valid group)
       } else {
         // localStorage.setItem("group_id", userGroupIds[0]);
         // location.reload();
       }
 
-      localStorage.setItem("all_group_ids", JSON.stringify(userGroupIds)); // Store all group IDs for future reference or validation.
-      document.getElementById("group-selector").value = currentGroupId; // Set the group selector to the current group ID.
-      fetchEvents(currentYear, currentMonth, currentGroupId); // Use the currentGroupId directly, as it's already been validated.
+      localStorage.setItem("all_group_ids", JSON.stringify(userGroupIds));
+      document.getElementById("group-selector").value = currentGroupId;
+      fetchEvents(currentYear, currentMonth, currentGroupId);
     } else {
       console.log("No group_id found for the current user.");
     }
@@ -115,7 +114,6 @@ async function getgroup_id() {
 const group_id_list = document.getElementById("group-selector");
 
 const positionGroupModal = function () {
-  // Reset the modal's transform to ensure its position is calculated from its original state
   document.querySelector(".modal-adding-group").style.transform = "none";
 
   const selectRect = group_id_list.getBoundingClientRect();
@@ -289,7 +287,7 @@ async function fetchEvents(year, month, group_id) {
     const keys = xmlDoc.getElementsByTagName("Key");
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i].childNodes[0].nodeValue;
-      await fetchFiles(key); // Consider awaiting fetchFiles if the order matters or if you need all files fetched before proceeding
+      await fetchFiles(key);
     }
     console.log(eventsList);
     const endTime = performance.now();
@@ -344,64 +342,6 @@ async function fetchEvents(year, month, group_id) {
     }, 10000);
   }
 }
-// async function fetchEvents(year, month, group_id) {
-//   try {
-//     let fetchURL = `https://kaosevxmrvkc2qvjjonfwae4z40bylve.lambda-url.eu-west-2.on.aws/calendarManager?year=${year}&month=${getFormattedMonth(
-//       month
-//     )}&group_id=${group_id}`;
-//     const response = await fetch(fetchURL);
-
-//     const events = await response.json();
-//     console.log(events);
-//     eventsList = events;
-
-//     // Reset and populate the calendarEventsList array with new events
-//     calendarEventsList = Array(31).fill(null); // Initialize with null indicating no events
-//     for (let event of eventsList.events) {
-//       let startDateComponents = event.startDate
-//         .split("/")
-//         .map((num) => parseInt(num));
-//       let endDateComponents = event.endDate
-//         .split("/")
-//         .map((num) => parseInt(num));
-//       let startDay = startDateComponents[0];
-//       let endDay = endDateComponents[0];
-
-//       for (let day = startDay; day <= endDay; day++) {
-//         // Adjust index for 0-based array
-//         let index = day - 1;
-//         if (!calendarEventsList[index]) {
-//           calendarEventsList[index] = [];
-//         }
-
-//         calendarEventsList[index].push({
-//           name: event.name,
-//           startTime: event.startTime,
-//           endTime: event.endTime,
-//           startDate: event.startDate,
-//           endDate: event.endDate,
-//           location: event.location,
-//           user: event.user,
-//           user_id: event.user_id,
-//           group_id: event.group_id,
-//           color: event.color,
-//           eventID: event.eventID,
-//         });
-//       }
-//     }
-
-//     // Update the calendar after fetching new events
-//     updateCalendar(currentMonth, currentYear);
-//     populateCalendar();
-//   } catch (error) {
-//     console.error("Error fetching events:", error);
-//     setTimeout(() => {
-//       fetchEvents(year, month, localStorage.getItem("group_id"));
-//     }, 10000);
-//   }
-// }
-
-// fetchEvents(currentYear, currentMonth, group_id).then(() => {});
 
 function populateCalendar() {
   for (let i = 0; i < calendarEventsList.length; i++) {
@@ -478,7 +418,6 @@ function populateCalendar() {
             });
 
             discardDelete.addEventListener("click", (e) => {
-              // Stop the event from bubbling up, so when I press the confirm discard button, it doesn't also trigger the original delete button, and override the effects of this function
               e.stopPropagation();
               eventRemoveIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
             });
@@ -1311,7 +1250,7 @@ document
     location.href = "./files.html";
   });
 
-// Emoji picker
+// Icon picker
 
 const emojiPickerButton = document.querySelector(".chosen-icon-container");
 emojiPickerButton.addEventListener("click", showEmojiPicker);
